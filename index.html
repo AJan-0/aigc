@@ -1364,7 +1364,7 @@
             };
             
             return (
-                <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+                <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
                     {/* Animated Background Orbs - Disabled on mobile */}
                     {!isMobile && (
                         <div className="absolute inset-0">
@@ -1455,7 +1455,7 @@
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1.8, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center relative z-20"
+                            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center relative z-30"
                         >
                             <MagneticButton href="#projects" primary isMobile={isMobile}>
                                 <span className="relative z-10">View Work</span>
@@ -1498,15 +1498,15 @@
                         </motion.div>
                     )}
 
-                    {/* Personal Introduction Section */}
+                    {/* Personal Introduction Section - Relative positioning */}
                     <motion.div
                         initial={{ opacity: 0, y: 60 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="absolute bottom-0 left-0 right-0 w-full z-10"
+                        className="relative w-full z-10 mt-40 md:mt-32"
                     >
-                        <div className="bg-gradient-to-t from-primary via-primary/80 to-transparent pt-20 pb-12 px-6 pointer-events-none">
+                        <div className="bg-gradient-to-t from-primary via-primary/80 to-transparent pt-20 md:pt-32 pb-12 px-6 pointer-events-none">
                             <div className="max-w-3xl mx-auto">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     {/* Stats Cards */}
