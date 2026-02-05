@@ -520,9 +520,9 @@
                 min-height: 300px;
             }
 
-            /* Reduce animation complexity */
-            * {
-                animation-duration: 0.5s !important;
+            /* Preserve gradient text animation on mobile */
+            .gradient-text {
+                animation: gradient-shift 18s ease-in-out infinite !important;
             }
 
             /* Optimize gradient dividers */
@@ -1104,9 +1104,15 @@
             }, []);
         }
         
-        // Enhanced Custom Cursor with Throttling
+        // Enhanced Custom Cursor with Throttling & Mobile Detection
         function useCustomCursor() {
             useEffect(() => {
+                // Disable custom cursor on mobile devices
+                const isMobile = window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                if (isMobile) {
+                    return;
+                }
+                
                 const cursor = document.querySelector('.cursor');
                 const cursorDot = document.querySelector('.cursor-dot');
                 
@@ -1404,7 +1410,7 @@
                         </div>
                     )}
                     
-                    <div className="relative z-10 text-center px-6 max-w-6xl">
+                    <div className="relative z-30 text-center px-6 max-w-6xl">
                         <motion.h1
                             variants={containerVariants}
                             initial="hidden"
@@ -1449,7 +1455,7 @@
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1.8, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
+                            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center relative z-20"
                         >
                             <MagneticButton href="#projects" primary isMobile={isMobile}>
                                 <span className="relative z-10">View Work</span>
@@ -1498,9 +1504,9 @@
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="absolute bottom-0 left-0 right-0 w-full"
+                        className="absolute bottom-0 left-0 right-0 w-full z-10"
                     >
-                        <div className="bg-gradient-to-t from-primary via-primary/80 to-transparent pt-20 pb-12 px-6">
+                        <div className="bg-gradient-to-t from-primary via-primary/80 to-transparent pt-20 pb-12 px-6 pointer-events-none">
                             <div className="max-w-3xl mx-auto">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     {/* Stats Cards */}
@@ -1589,8 +1595,18 @@
             const [position, setPosition] = useState({ x: 0, y: 0 });
             const [ripples, setRipples] = useState([]);
             const [isTouch, setIsTouch] = useState(isMobile);
+            const [enableMagnetic, setEnableMagnetic] = useState(!isMobile);
             
             useEffect(() => {
+                // Check device type and disable magnetic effect on mobile
+                const checkMobile = () => {
+                    const isMobileDevice = window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                    setEnableMagnetic(!isMobileDevice);
+                };
+                
+                checkMobile();
+                window.addEventListener('resize', checkMobile);
+                
                 const handleTouchStart = () => setIsTouch(true);
                 const handleMouseMove = () => setIsTouch(false);
                 
@@ -1598,13 +1614,14 @@
                 window.addEventListener('mousemove', handleMouseMove);
                 
                 return () => {
+                    window.removeEventListener('resize', checkMobile);
                     window.removeEventListener('touchstart', handleTouchStart);
                     window.removeEventListener('mousemove', handleMouseMove);
                 };
             }, []);
             
             const handleMouseMove = useCallback((e) => {
-                if (isTouch || !buttonRef.current) return;
+                if (!enableMagnetic || isTouch || !buttonRef.current) return;
                 
                 const rect = buttonRef.current.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
@@ -1613,17 +1630,23 @@
                 const distanceX = e.clientX - centerX;
                 const distanceY = e.clientY - centerY;
                 
+                // Limit the movement to prevent button from going off-screen
+                const maxDistance = 15;
+                const constrainedX = Math.max(-maxDistance, Math.min(maxDistance, distanceX * 0.2));
+                const constrainedY = Math.max(-maxDistance, Math.min(maxDistance, distanceY * 0.2));
+                
                 setPosition({
-                    x: distanceX * 0.2,
-                    y: distanceY * 0.2
+                    x: constrainedX,
+                    y: constrainedY
                 });
-            }, [isTouch]);
+            }, [isTouch, enableMagnetic]);
             
             const handleMouseLeave = useCallback(() => {
                 setPosition({ x: 0, y: 0 });
             }, []);
             
             const handleClick = useCallback((e) => {
+                if (!buttonRef.current) return;
                 const rect = buttonRef.current.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -1648,9 +1671,9 @@
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     onClick={handleClick}
-                    animate={{ x: position.x, y: position.y }}
-                    transition={isTouch ? {} : { type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-                    whileHover={!isTouch ? { scale: 1.05 } : {}}
+                    animate={enableMagnetic ? { x: position.x, y: position.y } : { x: 0, y: 0 }}
+                    transition={!enableMagnetic || isTouch ? {} : { type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+                    whileHover={enableMagnetic && !isTouch ? { scale: 1.05 } : {}}
                     whileTap={{ scale: 0.98 }}
                     className={`
                         hoverable relative inline-flex items-center px-8 py-4 rounded-full 
