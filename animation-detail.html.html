@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动画短片作品集 - AIGC可视化</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0e14;
+            --secondary-bg: #111820;
+            --card-bg: #151b24;
+            --accent-blue: #4a9eff;
+            --accent-cyan: #00d4ff;
+            --text-primary: #e8eef5;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(74, 158, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 14, 20, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--accent-blue);
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 项目头部 */
+        .project-header {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+        }
+
+        .project-category {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-intro {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .project-meta-info {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 视频部分 */
+        .video-section {
+            padding: 6rem 5%;
+        }
+
+        .video-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding: 56.25% 0 0 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-info {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .video-info-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .video-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .video-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* 更多作品部分 */
+        .more-works {
+            padding: 6rem 5%;
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .more-works-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .more-works-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .work-placeholder {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .placeholder-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .placeholder-subtext {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 页脚 */
+        footer {
+            padding: 4rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-cta {
+            margin-bottom: 2rem;
+        }
+
+        .footer-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 1.5rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(74, 158, 255, 0.4);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .project-meta-info {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .video-info {
+                padding: 2rem;
+            }
+
+            .video-details {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 加载动画 */
+        .video-wrapper {
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+        }
+
+        .video-info {
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="back-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            返回主页
+        </a>
+        <div class="logo">AIGC VISUAL</div>
+    </nav>
+
+    <!-- 项目头部 -->
+    <section class="project-header">
+        <div class="project-category">动画短片 · Animation</div>
+        <h1 class="project-title">AIGC 动画作品集</h1>
+        <p class="project-intro">
+            运用人工智能技术辅助创作的动画短片，探索AI在动态视觉叙事中的创意应用
+        </p>
+        
+        <div class="project-meta-info">
+            <div class="meta-item">
+                <div class="meta-label">项目类型</div>
+                <div class="meta-value">动画短片</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">视频数量</div>
+                <div class="meta-value">1 部</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">制作工具</div>
+                <div class="meta-value">AI + 传统动画</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">视频时长</div>
+                <div class="meta-value">待更新</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频部分 -->
+    <section class="video-section">
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://player.vimeo.com/video/1161639782?badge=0&autopause=0&player_id=0&app_id=58479" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    title="AIGC 动画短片">
+                </iframe>
+            </div>
+            
+            <div class="video-info">
+                <h2 class="video-info-title">作品介绍</h2>
+                <p class="video-description">
+                    这是一部探索AIGC技术在动画创作中应用的实验性作品。通过结合人工智能图像生成、
+                    视频合成和传统动画技术，创造出独特的视觉叙事体验。作品展现了AI辅助创作在
+                    动态视觉表达中的无限可能性。
+                </p>
+                
+                <div class="video-details">
+                    <div class="detail-item">
+                        <span class="detail-label">制作周期</span>
+                        <span class="detail-value">2周</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">使用技术</span>
+                        <span class="detail-value">Runway, Pika, After Effects</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">分辨率</span>
+                        <span class="detail-value">1920x1080</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">帧率</span>
+                        <span class="detail-value">24 FPS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 更多作品 -->
+    <section class="more-works">
+        <h2 class="more-works-title">更多动画作品</h2>
+        <p class="more-works-subtitle">持续更新中...</p>
+        
+        <div class="works-grid">
+            <div class="work-placeholder">
+                <div class="placeholder-icon">🎬</div>
+                <div class="placeholder-text">更多作品</div>
+                <div class="placeholder-subtext">即将上线</div>
+            </div>
+            
+            <div class="work-placeholder">
+                <div class="placeholder-icon">✨</div>
+                <div class="placeholder-text">实验性动画</div>
+                <div class="placeholder-subtext">制作中</div>
+            </div>
+            
+            <div class="work-placeholder">
+                <div class="placeholder-icon">🎨</div>
+                <div class="placeholder-text">概念短片</div>
+                <div class="placeholder-subtext">筹备中</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        ↑
+    </button>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-cta">
+            <h2 class="footer-title">查看更多项目</h2>
+            <a href="index.html" class="footer-link">返回作品集主页</a>
+        </div>
+        <p>&copy; 2026 AIGC Visual Studio</p>
+    </footer>
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+        // 返回顶部按钮
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>
