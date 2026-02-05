@@ -65,28 +65,82 @@
         .loading-screen {
             position: fixed;
             inset: 0;
-            background: #0F172A;
+            background: linear-gradient(135deg, #0F172A 0%, #1a2847 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10001;
             transition: opacity 0.5s ease, visibility 0.5s ease;
+            overflow: hidden;
         }
-        
+
         .loading-screen.hidden {
             opacity: 0;
             visibility: hidden;
         }
-        
+
+        .loading-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #3B82F6, transparent);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float-particle 6s infinite;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
         .loading-spinner {
             width: 60px;
             height: 60px;
             border: 3px solid rgba(59, 130, 246, 0.1);
             border-top-color: #3B82F6;
+            border-right-color: #8B5CF6;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 2.5s linear infinite;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
         }
-        
+
+        .loading-text {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(148, 163, 184, 0.7);
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fade-in-out 2s ease-in-out infinite;
+        }
+
+        @keyframes fade-in-out {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -241,6 +295,36 @@
             will-change: transform;
         }
 
+        .floating-particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-particle {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .floating-particle-dot {
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle, #3B82F6, rgba(59, 130, 246, 0.3));
+            border-radius: 50%;
+            opacity: 0.4;
+            box-shadow: 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .floating-particles-bg {
+                display: none;
+            }
+        }
+
         .deco-line::before {
             content: '';
             position: absolute;
@@ -290,6 +374,55 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3);
+            }
+        }
+
+        @keyframes bounce-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-50px);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes fade-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile-specific animations */
+        @media (max-width: 768px) {
+            .section-title {
+                animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            button, a[role="button"] {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            button:active, a[role="button"]:active {
+                transform: scale(0.97);
             }
         }
 
@@ -540,6 +673,59 @@
             }
         }
 
+        /* Mobile interactive elements enhancement */
+        @media (max-width: 768px) {
+            .hoverable {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hoverable::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                transition: left 0.5s ease;
+                pointer-events: none;
+            }
+
+            .hoverable:active::before {
+                left: 100%;
+            }
+
+            /* Smooth touch feedback */
+            a, button {
+                -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+                transition: all 0.2s ease;
+            }
+        }
+
+        /* Visual indicators for interactive elements */
+        .interactive-indicator {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #06B6D4, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse-indicator 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-indicator {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
         /* Reduce motion for users who prefer it */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -644,7 +830,9 @@
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
+        <div class="loading-particles" id="loadingParticles"></div>
         <div class="loading-spinner"></div>
+        <div class="loading-text">加载中...</div>
     </div>
     
     <!-- Scroll Progress -->
@@ -656,6 +844,9 @@
     
     <!-- Noise Overlay -->
     <div class="noise-overlay"></div>
+
+    <!-- Floating Background Particles -->
+    <div class="floating-particles-bg" id="floatingParticlesBg"></div>
     
     <!-- React Root -->
     <div id="root"></div>
@@ -731,11 +922,38 @@
         // CUSTOM HOOKS
         // ============================================
         
-        // Loading Hook
+        // Loading Hook with Particles
         function usePageLoading() {
             const [loading, setLoading] = useState(true);
             
             useEffect(() => {
+                // Generate particles for loading screen
+                const particlesContainer = document.getElementById('loadingParticles');
+                if (particlesContainer) {
+                    for (let i = 0; i < 30; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        const size = Math.random() * 3 + 2;
+                        const x = Math.random() * window.innerWidth;
+                        const y = Math.random() * window.innerHeight;
+                        const tx = (Math.random() - 0.5) * 200;
+                        const ty = (Math.random() - 0.5) * 200;
+                        const duration = Math.random() * 3 + 3;
+                        const delay = Math.random() * 0.5;
+                        
+                        particle.style.left = x + 'px';
+                        particle.style.top = y + 'px';
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        particle.style.setProperty('--tx', tx + 'px');
+                        particle.style.setProperty('--ty', ty + 'px');
+                        particle.style.animationDuration = duration + 's';
+                        particle.style.animationDelay = delay + 's';
+                        
+                        particlesContainer.appendChild(particle);
+                    }
+                }
+                
                 const timer = setTimeout(() => {
                     setLoading(false);
                     document.getElementById('loadingScreen')?.classList.add('hidden');
@@ -764,6 +982,60 @@
                 
                 window.addEventListener('scroll', updateProgress);
                 return () => window.removeEventListener('scroll', updateProgress);
+            }, []);
+        }
+
+        // Floating Background Particles Hook
+        function useFloatingParticles() {
+            useEffect(() => {
+                const container = document.getElementById('floatingParticlesBg');
+                if (!container || window.innerWidth < 768) return;
+                
+                const particleCount = Math.min(20, Math.floor(window.innerWidth / 80));
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'floating-particle';
+                    
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    const duration = Math.random() * 8 + 8;
+                    const delay = Math.random() * 2;
+                    
+                    particle.style.left = x + '%';
+                    particle.style.top = y + '%';
+                    
+                    const dot = document.createElement('div');
+                    dot.className = 'floating-particle-dot';
+                    dot.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                    
+                    particle.appendChild(dot);
+                    container.appendChild(particle);
+                }
+                
+                // Animation keyframe for floating
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0%, 100% {
+                            transform: translateY(0px) translateX(0px);
+                            opacity: 0.3;
+                        }
+                        25% {
+                            transform: translateY(-30px) translateX(20px);
+                            opacity: 0.6;
+                        }
+                        50% {
+                            transform: translateY(-60px) translateX(-20px);
+                            opacity: 0.4;
+                        }
+                        75% {
+                            transform: translateY(-30px) translateX(30px);
+                            opacity: 0.5;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
             }, []);
         }
         
@@ -1606,6 +1878,7 @@
             const loading = usePageLoading();
             useScrollProgress();
             useCustomCursor();
+            useFloatingParticles();
             
             if (loading) {
                 return null;
