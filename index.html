@@ -384,7 +384,7 @@
 
             /* Optimize project card layout */
             .project-card-mobile {
-                gap: 24px;
+                gap: 16px;
             }
 
             /* Better spacing for tags */
@@ -392,15 +392,41 @@
                 flex-wrap: wrap;
                 gap: 8px;
             }
+
+            /* Enhanced touch targets - minimum 48px for mobile */
+            button, a[role="button"], .hoverable {
+                min-height: 48px;
+                min-width: 48px;
+            }
+
+            /* Improve button padding for touch */
+            button, a[role="button"] {
+                padding: 14px 24px !important;
+            }
+
+            /* Optimize navbar links for touch */
+            nav a {
+                padding: 8px 12px;
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            /* Reduce background animations on mobile */
+            .deco-blob {
+                animation: none !important;
+            }
         }
 
         @media (max-width: 640px) {
             h1, .font-display {
                 font-size: 1.75rem !important;
+                line-height: 1.2;
             }
 
             h2, h3, h4 {
                 line-height: 1.3;
+                margin-top: 8px;
             }
 
             .section-title::after {
@@ -422,10 +448,11 @@
                 gap: 16px !important;
             }
 
-            /* Optimize button size */
+            /* Optimize button size for small screens */
             button, a[role="button"] {
-                padding: 12px 20px !important;
-                min-height: 44px;
+                padding: 14px 24px !important;
+                min-height: 48px !important;
+                min-width: 48px !important;
                 font-size: 14px;
             }
 
@@ -446,6 +473,22 @@
             .py-32 {
                 padding-top: 48px !important;
                 padding-bottom: 48px !important;
+            }
+
+            /* Optimize feature cards for small screens */
+            .feature-card-mobile {
+                min-height: auto !important;
+                min-h-72: auto !important;
+            }
+
+            /* Improve text readability on small screens */
+            body {
+                line-height: 1.6;
+            }
+
+            /* Enhance tag visibility */
+            .tag-container span {
+                padding: 8px 16px !important;
             }
         }
 
@@ -468,12 +511,33 @@
                 max-height: 300px;
             }
 
-            /* Remove complex animations on small screens */
-            @media (prefers-reduced-motion: reduce) {
-                * {
-                    animation: none !important;
-                    transition: none !important;
-                }
+            /* Disable background animations on very small screens */
+            .noise-overlay {
+                display: none;
+            }
+
+            /* Reduce header size on very small screens */
+            h1 {
+                font-size: 1.5rem !important;
+            }
+
+            h2 {
+                font-size: 1.375rem !important;
+            }
+
+            /* Optimize footer for small screens */
+            footer {
+                padding: 16px 12px !important;
+            }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
             }
         }
         
@@ -545,12 +609,25 @@
         /* ============================================
            RESPONSIVE
            ============================================ */
-        @media (max-width: 768px) {
+        /* Hide custom cursor on touch devices */
+        @media (max-width: 768px), (hover: none) and (pointer: coarse) {
             body {
                 cursor: auto;
             }
             .cursor, .cursor-dot {
-                display: none;
+                display: none !important;
+            }
+        }
+
+        /* Optimize for landscape mode on mobile */
+        @media (max-height: 500px) and (max-width: 768px) {
+            section {
+                padding-top: 20px !important;
+                padding-bottom: 20px !important;
+            }
+            .py-20, .py-32 {
+                padding-top: 20px !important;
+                padding-bottom: 20px !important;
             }
         }
     </style>
@@ -746,19 +823,29 @@
         // COMPONENTS
         // ============================================
         
-        // Enhanced Navbar with Hide on Scroll
+        // Enhanced Navbar with Mobile Optimization
         function Navbar() {
+            const [isMobileOpen, setIsMobileOpen] = useState(false);
+            const [isMobile, setIsMobile] = useState(false);
             const [scrolled, setScrolled] = useState(false);
             const [visible, setVisible] = useState(true);
             const [lastScrollY, setLastScrollY] = useState(0);
             
             useEffect(() => {
+                const checkScreenSize = () => {
+                    setIsMobile(window.innerWidth < 768);
+                };
+                
+                checkScreenSize();
+                window.addEventListener('resize', checkScreenSize);
+                return () => window.removeEventListener('resize', checkScreenSize);
+            }, []);
+            
+            useEffect(() => {
                 const handleScroll = () => {
                     const currentScrollY = window.scrollY;
-                    
                     setScrolled(currentScrollY > 100);
                     
-                    // Hide navbar when scrolling down, show when scrolling up
                     if (currentScrollY > lastScrollY && currentScrollY > 100) {
                         setVisible(false);
                     } else {
@@ -772,6 +859,19 @@
                 return () => window.removeEventListener('scroll', handleScroll);
             }, [lastScrollY]);
             
+            useEffect(() => {
+                if (!isMobile) {
+                    setIsMobileOpen(false);
+                }
+            }, [isMobile]);
+            
+            const navItems = ['Projects', 'About', 'Contact'];
+            const navLinks = {
+                'Projects': '#projects',
+                'About': '#about',
+                'Contact': '#contact'
+            };
+            
             return (
                 <motion.nav
                     initial={{ y: -100 }}
@@ -784,43 +884,93 @@
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 flex justify-between items-center">
                         <motion.a
                             href="#"
-                            whileHover={{ scale: 1.05 }}
+                            whileHover={!isMobile ? { scale: 1.05 } : {}}
                             whileTap={{ scale: 0.95 }}
-                            className="font-display text-xl md:text-2xl lg:text-3xl font-bold gradient-text hoverable"
+                            className="font-display text-xl md:text-2xl lg:text-3xl font-bold gradient-text hoverable min-h-12 flex items-center px-2"
                         >
                             AIGC
                         </motion.a>
                         
-                        <div className="flex gap-4 md:gap-8 lg:gap-12">
-                            {['Projects', 'About', 'Contact'].map((item, i) => (
-                                <motion.a
-                                    key={item}
-                                    href={`#${item.toLowerCase()}`}
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 * i + 0.3 }}
-                                    whileHover={{ y: -2 }}
-                                    className="relative font-body text-xs md:text-sm lg:text-base font-medium text-slate-400 hover:text-white transition-colors hoverable group whitespace-nowrap"
-                                >
-                                    {item}
-                                    <motion.div
-                                        className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-accent-blue to-accent-purple"
-                                        initial={{ width: 0 }}
-                                        whileHover={{ width: '100%' }}
-                                        transition={{ duration: 0.3 }}
-                                    />
-                                </motion.a>
-                            ))}
-                        </div>
+                        {isMobile ? (
+                            <motion.button
+                                onClick={() => setIsMobileOpen(!isMobileOpen)}
+                                className="p-2 hover:bg-white/10 rounded-lg transition-colors min-h-12 min-w-12 flex items-center justify-center"
+                                whileTap={{ scale: 0.9 }}
+                                aria-label="Toggle menu"
+                                aria-expanded={isMobileOpen}
+                            >
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {isMobileOpen ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </motion.button>
+                        ) : (
+                            <div className="flex gap-6 md:gap-8 lg:gap-12">
+                                {navItems.map((item, i) => (
+                                    <motion.a
+                                        key={item}
+                                        href={navLinks[item]}
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1 * i + 0.3 }}
+                                        whileHover={{ y: -2 }}
+                                        className="relative font-body text-sm lg:text-base font-medium text-slate-400 hover:text-white transition-colors hoverable group min-h-12 flex items-center px-2"
+                                    >
+                                        {item}
+                                        <motion.div
+                                            className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-accent-blue to-accent-purple"
+                                            initial={{ width: 0 }}
+                                            whileHover={{ width: '100%' }}
+                                            transition={{ duration: 0.3 }}
+                                        />
+                                    </motion.a>
+                                ))}
+                            </div>
+                        )}
                     </div>
+                    
+                    {/* Mobile Menu */}
+                    {isMobile && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={isMobileOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+                            transition={{ duration: 0.2 }}
+                            className={`absolute top-full left-0 right-0 glass-strong border-t border-slate-800 overflow-hidden ${isMobileOpen ? 'block' : 'pointer-events-none'}`}
+                        >
+                            <div className="flex flex-col divide-y divide-slate-800">
+                                {navItems.map((item) => (
+                                    <motion.a
+                                        key={item}
+                                        href={navLinks[item]}
+                                        onClick={() => setIsMobileOpen(false)}
+                                        className="px-6 py-4 min-h-12 flex items-center font-body text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        {item}
+                                    </motion.a>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
                 </motion.nav>
             );
         }
         
-        // Enhanced Hero with Typewriter Effect
+        // Enhanced Hero with Mobile Optimization
         function HeroSection() {
             const mainTitle = "AI-POWERED CREATIVITY";
             const subtitle = "探索人工智能与创意设计的无限可能";
+            const [isMobile, setIsMobile] = useState(false);
+            
+            useEffect(() => {
+                const checkMobile = () => setIsMobile(window.innerWidth < 768);
+                checkMobile();
+                window.addEventListener('resize', checkMobile);
+                return () => window.removeEventListener('resize', checkMobile);
+            }, []);
             
             const titleChars = mainTitle.split("");
             const subtitleChars = subtitle.split("");
@@ -830,13 +980,19 @@
                 visible: {
                     opacity: 1,
                     transition: {
-                        staggerChildren: 0.03,
+                        staggerChildren: isMobile ? 0.01 : 0.03,
                         delayChildren: 0.2
                     }
                 }
             };
             
-            const charVariants = {
+            const charVariants = isMobile ? {
+                hidden: { opacity: 0 },
+                visible: { 
+                    opacity: 1,
+                    transition: { duration: 0.2 }
+                }
+            } : {
                 hidden: { opacity: 0, y: 50, rotateX: -90 },
                 visible: { 
                     opacity: 1, 
@@ -852,48 +1008,50 @@
             
             return (
                 <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-                    {/* Animated Background Orbs */}
-                    <div className="absolute inset-0">
-                        <motion.div
-                            animate={{
-                                x: [0, 100, 0],
-                                y: [0, -50, 0],
-                                scale: [1, 1.2, 1],
-                            }}
-                            transition={{
-                                duration: 20,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                            className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-blue opacity-20 rounded-full blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                x: [0, -80, 0],
-                                y: [0, 80, 0],
-                                scale: [1, 1.3, 1],
-                            }}
-                            transition={{
-                                duration: 25,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-purple opacity-20 rounded-full blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                x: [0, 60, 0],
-                                y: [0, -60, 0],
-                                scale: [1, 1.1, 1],
-                            }}
-                            transition={{
-                                duration: 18,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                            className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent-cyan opacity-15 rounded-full blur-3xl"
-                        />
-                    </div>
+                    {/* Animated Background Orbs - Disabled on mobile */}
+                    {!isMobile && (
+                        <div className="absolute inset-0">
+                            <motion.div
+                                animate={{
+                                    x: [0, 100, 0],
+                                    y: [0, -50, 0],
+                                    scale: [1, 1.2, 1],
+                                }}
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-blue opacity-20 rounded-full blur-3xl"
+                            />
+                            <motion.div
+                                animate={{
+                                    x: [0, -80, 0],
+                                    y: [0, 80, 0],
+                                    scale: [1, 1.3, 1],
+                                }}
+                                transition={{
+                                    duration: 25,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-purple opacity-20 rounded-full blur-3xl"
+                            />
+                            <motion.div
+                                animate={{
+                                    x: [0, 60, 0],
+                                    y: [0, -60, 0],
+                                    scale: [1, 1.1, 1],
+                                }}
+                                transition={{
+                                    duration: 18,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent-cyan opacity-15 rounded-full blur-3xl"
+                            />
+                        </div>
+                    )}
                     
                     <div className="relative z-10 text-center px-6 max-w-6xl">
                         <motion.h1
@@ -908,7 +1066,7 @@
                                     variants={charVariants}
                                     className="inline-block gradient-text neon-text"
                                     style={{ 
-                                        perspective: '1000px',
+                                        perspective: isMobile ? 'none' : '1000px',
                                         display: char === ' ' ? 'inline' : 'inline-block'
                                     }}
                                 >
@@ -920,7 +1078,7 @@
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 1.5, duration: 1 }}
+                            transition={{ delay: 1.2, duration: 0.8 }}
                             className="mb-12"
                         >
                             {subtitleChars.map((char, i) => (
@@ -928,7 +1086,7 @@
                                     key={i}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    transition={{ delay: 1.5 + i * 0.02 }}
+                                    transition={{ delay: 1.2 + i * (isMobile ? 0.01 : 0.02) }}
                                     className="inline-block font-body text-xl md:text-2xl lg:text-3xl text-slate-400"
                                 >
                                     {char}
@@ -939,59 +1097,75 @@
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 2.5, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                            transition={{ delay: 1.8, duration: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
                         >
-                            <MagneticButton href="#projects" primary>
+                            <MagneticButton href="#projects" primary isMobile={isMobile}>
                                 <span className="relative z-10">View Work</span>
                                 <svg className="relative z-10 w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
                             </MagneticButton>
                             
-                            <MagneticButton href="#about">
+                            <MagneticButton href="#about" isMobile={isMobile}>
                                 <span className="relative z-10">Learn More</span>
                             </MagneticButton>
                         </motion.div>
                     </div>
                     
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 3.5, duration: 1 }}
-                        className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-                    >
+                    {!isMobile && (
                         <motion.div
-                            animate={{ y: [0, 12, 0] }}
-                            transition={{
-                                duration: 1.5,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                            className="w-6 h-10 border-2 border-slate-600 rounded-full flex justify-center pt-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 2.5, duration: 1 }}
+                            className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
                         >
-                            <motion.div 
-                                className="w-1.5 h-3 bg-accent-blue rounded-full"
-                                animate={{ opacity: [0.3, 1, 0.3] }}
+                            <motion.div
+                                animate={{ y: [0, 12, 0] }}
                                 transition={{
                                     duration: 1.5,
-                                    repeat: Infinity
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
                                 }}
-                            />
+                                className="w-6 h-10 border-2 border-slate-600 rounded-full flex justify-center pt-2"
+                            >
+                                <motion.div 
+                                    className="w-1.5 h-3 bg-accent-blue rounded-full"
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity
+                                    }}
+                                />
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
+                    )}
                 </section>
             );
         }
         
-        // Enhanced Magnetic Button with Ripple
-        function MagneticButton({ children, href, primary }) {
+        // Enhanced Magnetic Button with Mobile Optimization
+        function MagneticButton({ children, href, primary, isMobile }) {
             const buttonRef = useRef(null);
             const [position, setPosition] = useState({ x: 0, y: 0 });
             const [ripples, setRipples] = useState([]);
+            const [isTouch, setIsTouch] = useState(isMobile);
+            
+            useEffect(() => {
+                const handleTouchStart = () => setIsTouch(true);
+                const handleMouseMove = () => setIsTouch(false);
+                
+                window.addEventListener('touchstart', handleTouchStart);
+                window.addEventListener('mousemove', handleMouseMove);
+                
+                return () => {
+                    window.removeEventListener('touchstart', handleTouchStart);
+                    window.removeEventListener('mousemove', handleMouseMove);
+                };
+            }, []);
             
             const handleMouseMove = useCallback((e) => {
-                if (!buttonRef.current) return;
+                if (isTouch || !buttonRef.current) return;
                 
                 const rect = buttonRef.current.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
@@ -1001,10 +1175,10 @@
                 const distanceY = e.clientY - centerY;
                 
                 setPosition({
-                    x: distanceX * 0.3,
-                    y: distanceY * 0.3
+                    x: distanceX * 0.2,
+                    y: distanceY * 0.2
                 });
-            }, []);
+            }, [isTouch]);
             
             const handleMouseLeave = useCallback(() => {
                 setPosition({ x: 0, y: 0 });
@@ -1036,13 +1210,13 @@
                     onMouseLeave={handleMouseLeave}
                     onClick={handleClick}
                     animate={{ x: position.x, y: position.y }}
-                    transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    transition={isTouch ? {} : { type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+                    whileHover={!isTouch ? { scale: 1.05 } : {}}
+                    whileTap={{ scale: 0.98 }}
                     className={`
                         hoverable relative inline-flex items-center px-8 py-4 rounded-full 
                         font-body font-semibold text-sm overflow-hidden group
-                        transition-all duration-300
+                        transition-all duration-300 active:scale-95
                         ${primary 
                             ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white neon-glow' 
                             : 'glass border border-slate-700 text-white hover:border-accent-blue'
@@ -1051,7 +1225,7 @@
                 >
                     {children}
                     
-                    {!primary && (
+                    {!primary && !isTouch && (
                         <motion.div
                             className="absolute inset-0 bg-gradient-to-r from-accent-blue/20 to-accent-purple/20 rounded-full"
                             initial={{ scale: 0, opacity: 0 }}
