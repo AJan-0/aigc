@@ -245,7 +245,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             background-size: 200% auto;
-            animation: gradient-shift 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            animation: gradient-shift 18s ease-in-out infinite;
         }
         
         @keyframes gradient-shift {
@@ -1104,7 +1104,7 @@
             }, []);
         }
         
-        // Enhanced Custom Cursor
+        // Enhanced Custom Cursor with Throttling
         function useCustomCursor() {
             useEffect(() => {
                 const cursor = document.querySelector('.cursor');
@@ -1118,18 +1118,22 @@
                 let cursorY = 0;
                 let dotX = 0;
                 let dotY = 0;
+                let isMoving = false;
                 
                 const animateCursor = () => {
-                    cursorX += (mouseX - cursorX) * 0.15;
-                    cursorY += (mouseY - cursorY) * 0.15;
-                    dotX += (mouseX - dotX) * 0.25;
-                    dotY += (mouseY - dotY) * 0.25;
-                    
-                    cursor.style.left = cursorX + 'px';
-                    cursor.style.top = cursorY + 'px';
-                    cursorDot.style.left = dotX + 'px';
-                    cursorDot.style.top = dotY + 'px';
-                    
+                    if (isMoving) {
+                        cursorX += (mouseX - cursorX) * 0.15;
+                        cursorY += (mouseY - cursorY) * 0.15;
+                        dotX += (mouseX - dotX) * 0.25;
+                        dotY += (mouseY - dotY) * 0.25;
+                        
+                        cursor.style.left = cursorX + 'px';
+                        cursor.style.top = cursorY + 'px';
+                        cursorDot.style.left = dotX + 'px';
+                        cursorDot.style.top = dotY + 'px';
+                        
+                        isMoving = false;
+                    }
                     requestAnimationFrame(animateCursor);
                 };
                 
@@ -1138,6 +1142,7 @@
                 const moveCursor = (e) => {
                     mouseX = e.clientX;
                     mouseY = e.clientY;
+                    isMoving = true;
                 };
                 
                 const handleHover = (e) => {
@@ -1151,7 +1156,7 @@
                     cursor.classList.remove('hover', 'view');
                 };
                 
-                window.addEventListener('mousemove', moveCursor);
+                window.addEventListener('mousemove', moveCursor, { passive: true });
                 
                 const hoverElements = document.querySelectorAll('a, button, .hoverable, .project-image');
                 hoverElements.forEach(el => {
