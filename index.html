@@ -1618,7 +1618,8 @@
         // Enhanced Hero with Mobile Optimization
         function HeroSection() {
             const mainTitle = "AI-POWERED CREATIVITY";
-            const subtitle = "探索人工智能与创意设计的无限可能";
+            const subtitleTop = "探索人工智能与创意";
+            const subtitleBottom = "设计的无限可能";
             const [isMobile, setIsMobile] = useState(false);
             
             useEffect(() => {
@@ -1715,47 +1716,17 @@
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1.2, duration: 0.8 }}
-                            className="mb-12 max-w-2xl mx-auto px-4 relative group"
+                            className="mb-12 max-w-2xl mx-auto px-4"
                         >
-                            {/* Decorative Background Glow */}
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 1.3, duration: 0.8 }}
-                                className="absolute inset-0 bg-gradient-to-r from-accent-purple/10 via-accent-blue/5 to-accent-cyan/10 rounded-lg blur-xl -z-10 group-hover:opacity-100 opacity-50 transition-opacity duration-500"
-                            />
-                            
-                            {/* Animated Border */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1.4, duration: 0.8 }}
-                                className="absolute inset-0 rounded-lg border border-gradient-to-r from-accent-purple/30 to-accent-cyan/30 group-hover:border-accent-blue/50 transition-all duration-500 pointer-events-none"
-                                style={{
-                                    backgroundImage: 'linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent)',
-                                    backgroundSize: '200% 100%',
-                                    animation: 'shimmer 3s infinite'
-                                }}
-                            />
-                            
-                            <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1.3, duration: 0.6 }}
-                                whileHover={{ scale: 1.02 }}
-                                className="font-body text-lg md:text-xl lg:text-2xl text-slate-200 leading-relaxed break-words relative z-10 transition-colors duration-300"
-                                style={{ wordSpacing: '0.1em', letterSpacing: '0.01em' }}
+                                className="font-body text-lg md:text-xl lg:text-2xl text-slate-200 leading-relaxed break-words"
                             >
-                                {subtitle}
-                            </motion.p>
-                            
-                            {/* Bottom accent line */}
-                            <motion.div
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ delay: 1.6, duration: 0.8, ease: "easeOut" }}
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-24 bg-gradient-to-r from-accent-purple via-accent-blue to-accent-cyan rounded-full mt-4 origin-center"
-                            />
+                                <div className="mb-3">{subtitleTop}</div>
+                                <div>{subtitleBottom}</div>
+                            </motion.div>
                         </motion.div>
                         
                         <motion.div
