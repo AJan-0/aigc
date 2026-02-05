@@ -477,8 +477,7 @@
 
             /* Optimize feature cards for small screens */
             .feature-card-mobile {
-                min-height: auto !important;
-                min-h-72: auto !important;
+                min-height: 280px !important;
             }
 
             /* Improve text readability on small screens */
@@ -489,6 +488,11 @@
             /* Enhance tag visibility */
             .tag-container span {
                 padding: 8px 16px !important;
+            }
+
+            /* Grid to single column on very small screens */
+            .sm\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
             }
         }
 
@@ -528,6 +532,11 @@
             /* Optimize footer for small screens */
             footer {
                 padding: 16px 12px !important;
+            }
+
+            /* Optimize feature card for very small screens */
+            .feature-card-mobile {
+                min-height: 320px !important;
             }
         }
 
@@ -1443,8 +1452,16 @@
         // Enhanced Feature Card
         function FeatureCard({ feature, index }) {
             const [flipped, setFlipped] = useState(false);
+            const [isMobile, setIsMobile] = useState(false);
             const ref = useRef(null);
             const isInView = useInView(ref, { once: true, margin: "-10%" });
+            
+            useEffect(() => {
+                const checkMobile = () => setIsMobile(window.innerWidth < 768);
+                checkMobile();
+                window.addEventListener('resize', checkMobile);
+                return () => window.removeEventListener('resize', checkMobile);
+            }, []);
             
             return (
                 <motion.div
@@ -1452,8 +1469,8 @@
                     initial={{ opacity: 0, y: 60 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, delay: index * 0.15 }}
-                    onMouseEnter={() => setFlipped(true)}
-                    onMouseLeave={() => setFlipped(false)}
+                    onMouseEnter={() => !isMobile && setFlipped(true)}
+                    onMouseLeave={() => !isMobile && setFlipped(false)}
                     className="hoverable h-full group"
                 >
                     <motion.div
@@ -1472,72 +1489,113 @@
                             className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-blue to-transparent"
                         />
                         
-                        {/* Front Side */}
-                        <motion.div
-                            animate={{ opacity: flipped ? 0 : 1, scale: flipped ? 0.9 : 1 }}
-                            transition={{ duration: 0.4 }}
-                            className="absolute inset-0 p-8 flex flex-col justify-start"
-                        >
+                        {/* Mobile: Simple Layout */}
+                        {isMobile ? (
                             <motion.div
-                                animate={{ scale: flipped ? 0.9 : 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="text-6xl mb-6"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.4 }}
+                                className="relative inset-0 p-6 flex flex-col justify-start h-full"
                             >
-                                {feature.icon}
-                            </motion.div>
-                            <h4 className="font-display text-2xl md:text-3xl font-bold mb-4 gradient-text">
-                                {feature.title}
-                            </h4>
-                            <p className="font-body text-slate-400 text-sm md:text-base leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </motion.div>
-                        
-                        {/* Back Side */}
-                        <motion.div
-                            animate={{ opacity: flipped ? 1 : 0, scale: flipped ? 1 : 0.9 }}
-                            transition={{ duration: 0.4 }}
-                            className="absolute inset-0 p-8 flex flex-col justify-between bg-gradient-to-br from-accent-blue/20 to-accent-purple/20 rounded-3xl"
-                        >
-                            <div>
-                                <h4 className="font-display text-lg font-bold gradient-text mb-4">
-                                    核心能力
-                                </h4>
-                                <div className="space-y-2">
-                                    {feature.highlights && feature.highlights.map((highlight, i) => (
-                                        <motion.div
-                                            key={i}
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={flipped ? { opacity: 1, x: 0 } : {}}
-                                            transition={{ delay: i * 0.1 }}
-                                            className="flex items-center gap-2 text-sm text-slate-300"
-                                        >
-                                            <motion.span 
-                                                animate={{ scale: flipped ? 1 : 0.5, opacity: flipped ? 1 : 0 }}
-                                                className="w-2 h-2 rounded-full bg-accent-cyan"
-                                            ></motion.span>
-                                            {highlight}
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </div>
-                            <motion.div
-                                animate={{ scale: flipped ? 1 : 0.8, opacity: flipped ? 1 : 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex items-center justify-center gap-2 text-accent-cyan hover:text-accent-blue transition-colors cursor-pointer mt-4 pt-4 border-t border-slate-700/50"
-                            >
-                                <span className="text-sm font-medium">深入探索</span>
-                                <motion.svg 
-                                    animate={{ x: flipped ? 4 : 0 }}
-                                    className="w-4 h-4" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24"
+                                <motion.div
+                                    className="text-5xl md:text-6xl mb-4"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                </motion.svg>
+                                    {feature.icon}
+                                </motion.div>
+                                <h4 className="font-display text-xl md:text-2xl font-bold mb-3 gradient-text">
+                                    {feature.title}
+                                </h4>
+                                <p className="font-body text-slate-400 text-sm md:text-base leading-relaxed mb-4">
+                                    {feature.description}
+                                </p>
+                                {feature.highlights && (
+                                    <div className="space-y-2 mt-auto">
+                                        {feature.highlights.map((highlight, i) => (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.3 + i * 0.05 }}
+                                                className="flex items-center gap-2 text-xs md:text-sm text-slate-300"
+                                            >
+                                                <span className="w-2 h-2 rounded-full bg-accent-cyan"></span>
+                                                {highlight}
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
                             </motion.div>
-                        </motion.div>
+                        ) : (
+                            <>
+                                {/* Desktop: Flip Animation */}
+                                {/* Front Side */}
+                                <motion.div
+                                    animate={{ opacity: flipped ? 0 : 1, scale: flipped ? 0.9 : 1 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="absolute inset-0 p-8 flex flex-col justify-start"
+                                >
+                                    <motion.div
+                                        animate={{ scale: flipped ? 0.9 : 1 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="text-6xl mb-6"
+                                    >
+                                        {feature.icon}
+                                    </motion.div>
+                                    <h4 className="font-display text-2xl md:text-3xl font-bold mb-4 gradient-text">
+                                        {feature.title}
+                                    </h4>
+                                    <p className="font-body text-slate-400 text-sm md:text-base leading-relaxed">
+                                        {feature.description}
+                                    </p>
+                                </motion.div>
+                                
+                                {/* Back Side */}
+                                <motion.div
+                                    animate={{ opacity: flipped ? 1 : 0, scale: flipped ? 1 : 0.9 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="absolute inset-0 p-8 flex flex-col justify-between bg-gradient-to-br from-accent-blue/20 to-accent-purple/20 rounded-3xl"
+                                >
+                                    <div>
+                                        <h4 className="font-display text-lg font-bold gradient-text mb-4">
+                                            核心能力
+                                        </h4>
+                                        <div className="space-y-2">
+                                            {feature.highlights && feature.highlights.map((highlight, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    animate={flipped ? { opacity: 1, x: 0 } : {}}
+                                                    transition={{ delay: i * 0.1 }}
+                                                    className="flex items-center gap-2 text-sm text-slate-300"
+                                                >
+                                                    <motion.span 
+                                                        animate={{ scale: flipped ? 1 : 0.5, opacity: flipped ? 1 : 0 }}
+                                                        className="w-2 h-2 rounded-full bg-accent-cyan"
+                                                    ></motion.span>
+                                                    {highlight}
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <motion.div
+                                        animate={{ scale: flipped ? 1 : 0.8, opacity: flipped ? 1 : 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="flex items-center justify-center gap-2 text-accent-cyan hover:text-accent-blue transition-colors cursor-pointer mt-4 pt-4 border-t border-slate-700/50"
+                                    >
+                                        <span className="text-sm font-medium">深入探索</span>
+                                        <motion.svg 
+                                            animate={{ x: flipped ? 4 : 0 }}
+                                            className="w-4 h-4" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </motion.svg>
+                                    </motion.div>
+                                </motion.div>
+                            </>
+                        )}
                     </motion.div>
                 </motion.div>
             );
