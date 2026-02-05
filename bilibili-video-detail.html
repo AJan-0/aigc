@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIGC F1宣传片 - AI创意视频</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0e14;
+            --secondary-bg: #111820;
+            --card-bg: #151b24;
+            --accent-blue: #4a9eff;
+            --accent-cyan: #00d4ff;
+            --text-primary: #e8eef5;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(74, 158, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 14, 20, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--accent-blue);
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 封面Hero区域 */
+        .cover-hero {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+            overflow: hidden;
+            margin-top: 70px;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4rem 5%;
+            background: linear-gradient(to top, rgba(10, 14, 20, 1) 0%, rgba(10, 14, 20, 0.8) 50%, transparent 100%);
+            text-align: center;
+        }
+
+        .cover-content {
+            max-width: 1200px;
+        }
+
+        .cover-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(72, 202, 228, 0.2);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        .cover-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cover-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+        }
+
+        /* 项目头部信息 */
+        .project-header {
+            padding: 4rem 5% 2rem;
+        }
+
+        .project-meta-info {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 视频部分 */
+        .video-section {
+            padding: 4rem 5%;
+        }
+
+        .video-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-top: 56.25%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+        }
+
+        .video-info-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .video-description {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            color: var(--text-secondary);
+        }
+
+        .video-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* 页脚 */
+        footer {
+            padding: 4rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .footer-cta {
+            margin-bottom: 2rem;
+        }
+
+        .footer-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 999;
+            font-size: 1.5rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(74, 158, 255, 0.4);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .cover-hero {
+                height: 50vh;
+                min-height: 400px;
+            }
+
+            .project-meta-info {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .video-info {
+                padding: 2rem;
+            }
+
+            .video-details {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* 加载动画 */
+        .video-wrapper, .video-info {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .video-wrapper { animation-delay: 0.2s; }
+        .video-info { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="back-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            返回主页
+        </a>
+        <div class="logo">AIGC VISUAL</div>
+    </nav>
+
+    <!-- 封面Hero -->
+    <section class="cover-hero">
+        <div class="cover-overlay">
+            <div class="cover-content">
+                <div class="cover-tag">VIDEO SHOWCASE</div>
+                <h1 class="cover-title">AIGC F1宣传片</h1>
+                <p class="cover-subtitle">探索AI在体育营销中的创意应用</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目信息 -->
+    <section class="project-header">
+        <div class="project-meta-info">
+            <div class="meta-item">
+                <div class="meta-label">项目类型</div>
+                <div class="meta-value">视频宣传片</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">制作工具</div>
+                <div class="meta-value">Google Gemini, Veo3</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">发布平台</div>
+                <div class="meta-value">哔哩哔哩</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">制作周期</div>
+                <div class="meta-value">3周</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频播放 -->
+    <section class="video-section">
+        <div class="video-container">
+            <h2 class="section-title">在线观看</h2>
+            
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://player.bilibili.com/player.html?bvid=BV1i3FazNE6j&page=1&high_quality=1&danmaku=0" 
+                    scrolling="no" 
+                    border="0" 
+                    frameborder="no" 
+                    framespacing="0" 
+                    allowfullscreen="true"
+                    title="AIGC F1宣传片">
+                </iframe>
+            </div>
+            
+            <div class="video-info">
+                <h2 class="video-info-title">项目介绍</h2>
+                <p class="video-description">
+                    《AIGC F1宣传片》是一部创意视频作品，展现人工智能技术在体育营销领域的应用。
+                    通过Google Gemini的智能生成、Veo3的视频生成和Nano Banana Pro的渲染处理，
+                    创造出融合高科技与体育激情的视觉大片。项目完整展现了AIGC工作流程在商业创意制作中的强大潜力，
+                    将传统体育宣传与AI创新完美融合，为新时代的内容创作提供了新的思路。
+                    <br><br>
+                    <em style="color: var(--text-muted); font-size: 0.9rem;">
+                    💡 提示：视频托管在哔哩哔哩，建议全屏观看以获得最佳体验
+                    </em>
+                </p>
+                
+                <div class="video-details">
+                    <div class="detail-item">
+                        <span class="detail-label">制作周期</span>
+                        <span class="detail-value">3周</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">核心技术</span>
+                        <span class="detail-value">Google Gemini, Veo3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">分辨率</span>
+                        <span class="detail-value">1920x1080</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">帧率</span>
+                        <span class="detail-value">24 FPS</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">后期处理</span>
+                        <span class="detail-value">Nano Banana Pro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">应用领域</span>
+                        <span class="detail-value">体育营销</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        ↑
+    </button>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-cta">
+            <h2 class="footer-title">查看更多项目</h2>
+            <a href="index.html" class="footer-link">返回作品集主页</a>
+        </div>
+        <p>&copy; 2026 AIGC Visual Studio</p>
+    </footer>
+
+    <script>
+        // 返回顶部按钮
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>
