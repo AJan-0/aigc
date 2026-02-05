@@ -979,6 +979,108 @@
             }
         }
 
+        /* ============================================
+           TAG BADGE OPTIMIZATION
+           ============================================ */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag-container > div {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 20px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            line-height: 1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tag-container > div:hover {
+            background: rgba(148, 163, 184, 0.15);
+            border-color: rgba(148, 163, 184, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .tag-container span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 20px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            line-height: 1;
+            color: #06B6D4;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.06));
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 2px rgba(6, 182, 212, 0.1);
+            white-space: nowrap;
+        }
+
+        .tag-container span::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 9999px;
+        }
+
+        .tag-container span:hover {
+            color: #0DD9FF;
+            border-color: rgba(6, 182, 212, 0.7);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(59, 130, 246, 0.1));
+            box-shadow: 
+                inset 0 1px 3px rgba(6, 182, 212, 0.2),
+                0 0 20px rgba(6, 182, 212, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tag-container span:hover::before {
+            opacity: 1;
+        }
+
+        .tag-container span:active {
+            transform: translateY(-1px);
+            box-shadow: 
+                inset 0 1px 2px rgba(6, 182, 212, 0.1),
+                0 0 10px rgba(6, 182, 212, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .tag-container {
+                gap: 8px;
+            }
+
+            .tag-container > div {
+                height: 36px;
+                padding: 0 16px;
+                font-size: 11px;
+            }
+
+            .tag-container span {
+                height: 36px;
+                padding: 0 16px;
+                font-size: 12px;
+            }
+        }
+
         /* Reduce motion for users who prefer it */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -2055,10 +2157,10 @@
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: 0.8 }}
-                                className="flex gap-2 md:gap-3 flex-wrap items-center tag-container"
+                                className="flex gap-2.5 md:gap-3 flex-wrap items-center tag-container"
                             >
-                                <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 rounded-full glass border border-slate-700/50">
-                                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">技术栈</span>
+                                <div className="inline-flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-full glass border border-slate-700/50 hover:border-slate-600/70 transition-colors">
+                                    <span className="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider leading-tight">技术栈</span>
                                 </div>
                                 {project.tags.map((tag, i) => (
                                     <motion.span
@@ -2066,10 +2168,12 @@
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={isInView ? { opacity: 1, scale: 1 } : {}}
                                         transition={{ delay: 0.9 + i * 0.1 }}
-                                        whileHover={{ scale: 1.1, y: -3 }}
-                                        className="px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold text-accent-cyan border border-accent-cyan/30 hover:border-accent-cyan/80 glass-strong cursor-pointer transition-all hoverable backdrop-blur-sm"
+                                        whileHover={{ scale: 1.08, y: -2 }}
+                                        className="px-4 md:px-5 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold text-accent-cyan border border-accent-cyan/40 hover:border-accent-cyan/70 glass-strong cursor-pointer transition-all hoverable backdrop-blur-sm leading-tight"
                                         style={{
-                                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.05))'
+                                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.06))',
+                                            boxShadow: 'inset 0 1px 2px rgba(6, 182, 212, 0.1)',
+                                            letterSpacing: '0.3px'
                                         }}
                                     >
                                         {tag}
