@@ -245,7 +245,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             background-size: 200% auto;
-            animation: gradient-shift 3s ease infinite;
+            animation: gradient-shift 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         
         @keyframes gradient-shift {
@@ -411,6 +411,27 @@
             }
         }
 
+        /* Personal Introduction Section Styles */
+        .intro-stats-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .intro-stats-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-2px);
+        }
+
         /* Mobile-specific animations */
         @media (max-width: 768px) {
             .section-title {
@@ -423,6 +444,18 @@
 
             button:active, a[role="button"]:active {
                 transform: scale(0.97);
+            }
+
+            /* Personal intro mobile adjustments */
+            .intro-stats-card {
+                min-height: 100px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .intro-stats-card:active {
+                background: rgba(30, 41, 59, 0.9);
             }
         }
 
@@ -627,6 +660,20 @@
             .sm\:grid-cols-2 {
                 grid-template-columns: 1fr !important;
             }
+
+            /* Personal intro mobile optimization */
+            .md\:grid-cols-3 {
+                grid-template-columns: 1fr !important;
+            }
+
+            .intro-stats-card {
+                padding: 16px !important;
+            }
+
+            .skill-tag {
+                font-size: 12px !important;
+                padding: 8px 12px !important;
+            }
         }
 
         /* High DPI mobile devices */
@@ -670,6 +717,24 @@
             /* Optimize feature card for very small screens */
             .feature-card-mobile {
                 min-height: 320px !important;
+            }
+
+            /* Personal intro very small screen optimization */
+            .intro-stats-card {
+                padding: 12px !important;
+            }
+
+            .intro-stats-card .text-3xl {
+                font-size: 1.875rem !important;
+            }
+
+            .intro-stats-card .text-sm {
+                font-size: 11px !important;
+            }
+
+            .skill-tag {
+                font-size: 10px !important;
+                padding: 6px 10px !important;
             }
         }
 
@@ -1421,6 +1486,94 @@
                             </motion.div>
                         </motion.div>
                     )}
+
+                    {/* Personal Introduction Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 60 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="absolute bottom-0 left-0 right-0 w-full"
+                    >
+                        <div className="bg-gradient-to-t from-primary via-primary/80 to-transparent pt-20 pb-12 px-6">
+                            <div className="max-w-3xl mx-auto">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {/* Stats Cards */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: 0.3 }}
+                                        className="intro-stats-card glass rounded-2xl p-6 border border-slate-700/50 text-center"
+                                    >
+                                        <div className="text-3xl font-bold gradient-text mb-2">10+</div>
+                                        <div className="text-sm text-slate-400 font-body">年创意设计经验</div>
+                                    </motion.div>
+
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: 0.4 }}
+                                        className="intro-stats-card glass rounded-2xl p-6 border border-slate-700/50 text-center"
+                                    >
+                                        <div className="text-3xl font-bold gradient-text mb-2">100+</div>
+                                        <div className="text-sm text-slate-400 font-body">完成的项目作品</div>
+                                    </motion.div>
+
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: 0.5 }}
+                                        className="intro-stats-card glass rounded-2xl p-6 border border-slate-700/50 text-center"
+                                    >
+                                        <div className="text-3xl font-bold gradient-text mb-2">98%</div>
+                                        <div className="text-sm text-slate-400 font-body">客户满意度评分</div>
+                                    </motion.div>
+                                </div>
+
+                                {/* Introduction Text */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.5 }}
+                                    className="mt-12 text-center"
+                                >
+                                    <p className="font-body text-slate-300 mb-4">
+                                        我是一位资深创意设计师，专注于AI驱动的视觉创意与交互设计。
+                                    </p>
+                                    <p className="font-body text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
+                                        通过融合传统设计理念与最新AI技术，为全球顶尖品牌打造突破性的视觉体验。
+                                        从建筑可视化、产品渲染到交互设计，每一个项目都是技术与艺术的完美融合。
+                                    </p>
+                                </motion.div>
+
+                                {/* Skills Tags */}
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.7 }}
+                                    className="mt-8 flex flex-wrap justify-center gap-3"
+                                >
+                                    {['AI设计', '3D渲染', '交互设计', '视觉创意'].map((skill, i) => (
+                                        <motion.span
+                                            key={skill}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            whileInView={{ opacity: 1, scale: 1 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 0.8 + i * 0.1 }}
+                                            className="skill-tag px-4 py-2 rounded-full bg-gradient-to-r from-accent-blue/20 to-accent-purple/20 border border-accent-blue/30 text-xs md:text-sm text-slate-300 font-body"
+                                        >
+                                            {skill}
+                                        </motion.span>
+                                    ))}
+                                </motion.div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </section>
             );
         }
