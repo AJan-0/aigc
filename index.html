@@ -313,6 +313,169 @@
         @keyframes expand-width {
             to { width: 100%; }
         }
+
+        /* ============================================
+           MOBILE OPTIMIZATION
+           ============================================ */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .glass {
+                background: rgba(30, 41, 59, 0.6);
+                backdrop-filter: blur(10px) saturate(150%);
+                -webkit-backdrop-filter: blur(10px) saturate(150%);
+            }
+
+            .glass-strong {
+                background: rgba(30, 41, 59, 0.8);
+                backdrop-filter: blur(15px) saturate(180%);
+                -webkit-backdrop-filter: blur(15px) saturate(180%);
+            }
+
+            /* Disable 3D tilt on mobile */
+            .tilt-card {
+                transform-style: flat !important;
+            }
+
+            .tilt-card-inner {
+                transform: none !important;
+            }
+
+            /* Optimize section padding */
+            section {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+
+            /* Better feature card height for mobile */
+            .feature-card-mobile {
+                min-height: 300px;
+            }
+
+            /* Reduce animation complexity */
+            * {
+                animation-duration: 0.5s !important;
+            }
+
+            /* Optimize gradient dividers */
+            .gradient-divider {
+                margin: 40px 0;
+            }
+
+            /* Better navbar on mobile */
+            nav {
+                padding: 12px 16px !important;
+            }
+
+            /* Optimize hero section on mobile */
+            .hero-mobile-optimized {
+                min-height: auto;
+                padding-top: 80px;
+                padding-bottom: 40px;
+            }
+
+            /* Reduce deco-blob opacity on mobile for performance */
+            .deco-blob {
+                opacity: 0.08 !important;
+                filter: blur(40px) !important;
+            }
+
+            /* Optimize project card layout */
+            .project-card-mobile {
+                gap: 24px;
+            }
+
+            /* Better spacing for tags */
+            .tag-container {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1, .font-display {
+                font-size: 1.75rem !important;
+            }
+
+            h2, h3, h4 {
+                line-height: 1.3;
+            }
+
+            .section-title::after {
+                bottom: -8px;
+                height: 2px;
+            }
+
+            /* Optimize grid for small screens */
+            .sm\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Reduce gap in grids */
+            .gap-6 {
+                gap: 12px !important;
+            }
+
+            .gap-12 {
+                gap: 16px !important;
+            }
+
+            /* Optimize button size */
+            button, a[role="button"] {
+                padding: 12px 20px !important;
+                min-height: 44px;
+                font-size: 14px;
+            }
+
+            /* Better spacing */
+            .mb-20 {
+                margin-bottom: 40px !important;
+            }
+
+            .mb-32 {
+                margin-bottom: 48px !important;
+            }
+
+            .py-20 {
+                padding-top: 40px !important;
+                padding-bottom: 40px !important;
+            }
+
+            .py-32 {
+                padding-top: 48px !important;
+                padding-bottom: 48px !important;
+            }
+        }
+
+        /* High DPI mobile devices */
+        @media (max-width: 480px) {
+            .font-display {
+                line-height: 1.2;
+                letter-spacing: -0.5px;
+            }
+
+            /* Stack layouts properly */
+            .lg\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Optimize aspect ratio images */
+            .aspect-\[16\/10\] {
+                aspect-ratio: auto;
+                min-height: 200px;
+                max-height: 300px;
+            }
+
+            /* Remove complex animations on small screens */
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            }
+        }
         
         /* ============================================
            3D TILT CARD
@@ -618,17 +781,17 @@
                         scrolled ? 'glass-strong shadow-2xl py-4' : 'py-6'
                     }`}
                 >
-                    <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 flex justify-between items-center">
                         <motion.a
                             href="#"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="font-display text-2xl md:text-3xl font-bold gradient-text hoverable"
+                            className="font-display text-xl md:text-2xl lg:text-3xl font-bold gradient-text hoverable"
                         >
                             AIGC
                         </motion.a>
                         
-                        <div className="flex gap-8 md:gap-12">
+                        <div className="flex gap-4 md:gap-8 lg:gap-12">
                             {['Projects', 'About', 'Contact'].map((item, i) => (
                                 <motion.a
                                     key={item}
@@ -637,7 +800,7 @@
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 * i + 0.3 }}
                                     whileHover={{ y: -2 }}
-                                    className="relative font-body text-sm md:text-base font-medium text-slate-400 hover:text-white transition-colors hoverable group"
+                                    className="relative font-body text-xs md:text-sm lg:text-base font-medium text-slate-400 hover:text-white transition-colors hoverable group whitespace-nowrap"
                                 >
                                     {item}
                                     <motion.div
@@ -921,6 +1084,14 @@
             const isInView = useInView(ref, { once: true, margin: "-15%" });
             
             const [tilt, setTilt] = useState({ x: 0, y: 0 });
+            const [isMobile, setIsMobile] = useState(false);
+            
+            useEffect(() => {
+                const checkMobile = () => setIsMobile(window.innerWidth < 768);
+                checkMobile();
+                window.addEventListener('resize', checkMobile);
+                return () => window.removeEventListener('resize', checkMobile);
+            }, []);
             
             const { scrollYProgress } = useScroll({
                 target: ref,
@@ -956,19 +1127,19 @@
                     initial={{ opacity: 0, y: 100 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 1, delay: index * 0.2, ease: [0.6, 0.05, 0.01, 0.9] }}
-                    className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32 lg:mb-40 ${reverse ? 'lg:grid-flow-dense' : ''}`}
+                    className={`grid md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-center mb-24 md:mb-32 lg:mb-40 project-card-mobile ${reverse ? 'lg:grid-flow-dense' : ''}`}
                 >
                     <motion.div
                         ref={cardRef}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
-                        animate={{
+                        onMouseMove={!isMobile ? handleMouseMove : undefined}
+                        onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+                        animate={isMobile ? {} : {
                             rotateX: tilt.x,
                             rotateY: tilt.y
                         }}
                         transition={{ type: "spring", stiffness: 200, damping: 20 }}
                         className={`relative group hoverable overflow-hidden rounded-3xl tilt-card ${reverse ? 'lg:col-start-2' : ''}`}
-                        style={{ transformStyle: 'preserve-3d' }}
+                        style={{ transformStyle: isMobile ? 'flat' : 'preserve-3d' }}
                     >
                         {/* Decorative Border Light */}
                         <motion.div
@@ -1068,9 +1239,9 @@
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: 0.8 }}
-                                className="flex gap-3 flex-wrap items-center"
+                                className="flex gap-2 md:gap-3 flex-wrap items-center tag-container"
                             >
-                                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-slate-700/50">
+                                <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 rounded-full glass border border-slate-700/50">
                                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">技术栈</span>
                                 </div>
                                 {project.tags.map((tag, i) => (
@@ -1080,7 +1251,7 @@
                                         animate={isInView ? { opacity: 1, scale: 1 } : {}}
                                         transition={{ delay: 0.9 + i * 0.1 }}
                                         whileHover={{ scale: 1.1, y: -3 }}
-                                        className="px-4 py-2 rounded-full text-sm font-semibold text-accent-cyan border border-accent-cyan/30 hover:border-accent-cyan/80 glass-strong cursor-pointer transition-all hoverable backdrop-blur-sm"
+                                        className="px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold text-accent-cyan border border-accent-cyan/30 hover:border-accent-cyan/80 glass-strong cursor-pointer transition-all hoverable backdrop-blur-sm"
                                         style={{
                                             background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.05))'
                                         }}
@@ -1116,7 +1287,7 @@
                             y: flipped ? -8 : 0,
                         }}
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="glass-strong rounded-3xl p-8 h-80 relative neon-glow cursor-pointer overflow-hidden group-hover:neon-glow"
+                        className="glass-strong rounded-3xl p-6 md:p-8 md:h-80 h-auto min-h-72 relative neon-glow cursor-pointer overflow-hidden group-hover:neon-glow feature-card-mobile"
                         style={{
                             boxShadow: flipped ? '0 20px 40px rgba(59, 130, 246, 0.2), 0 0 60px rgba(139, 92, 246, 0.1)' : 'inherit'
                         }}
@@ -1337,35 +1508,35 @@
                                 initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="flex flex-col md:flex-row justify-between items-center gap-12"
+                                className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-12"
                             >
                                 <motion.div 
                                     whileHover={{ scale: 1.05 }}
-                                    className="font-display text-3xl md:text-4xl font-bold gradient-text cursor-pointer"
+                                    className="font-display text-2xl md:text-3xl lg:text-4xl font-bold gradient-text cursor-pointer"
                                 >
                                     AIGC VISUAL
                                 </motion.div>
                                 
-                                <div className="flex flex-col items-center md:items-end gap-6">
+                                <div className="flex flex-col items-center md:items-end gap-4 md:gap-6">
                                     <motion.div
                                         whileHover={{ scale: 1.05, x: 5 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className="flex items-center gap-2"
+                                        className="flex items-center gap-2 w-full md:w-auto"
                                     >
                                         <motion.a
                                             href="mailto:1248567324@qq.com"
-                                            className="flex items-center gap-3 px-6 py-3 rounded-full glass-strong hover:glass border border-slate-700/50 hover:border-accent-cyan/50 transition-all duration-300"
+                                            className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 rounded-full glass-strong hover:glass border border-slate-700/50 hover:border-accent-cyan/50 transition-all duration-300 text-sm md:text-base justify-center md:justify-start w-full md:w-auto"
                                         >
                                             <motion.svg 
                                                 animate={{ rotate: [0, -10, 10, 0] }}
                                                 transition={{ duration: 2, repeat: Infinity }}
-                                                className="w-5 h-5 text-accent-cyan" 
+                                                className="w-4 md:w-5 h-4 md:h-5 text-accent-cyan flex-shrink-0" 
                                                 fill="currentColor" 
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                             </motion.svg>
-                                            <span className="font-body font-medium text-white">1248567324@qq.com</span>
+                                            <span className="font-body font-medium text-white truncate">1248567324@qq.com</span>
                                         </motion.a>
                                     </motion.div>
                                     
