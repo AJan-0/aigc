@@ -368,10 +368,30 @@
         ];
         
         const FEATURES_DATA = [
-            { icon: '🎨', title: 'AI驱动设计', description: '运用Midjourney、Stable Diffusion、Comfyui、Google系列等前沿AI工具，突破传统设计边界。' },
-            { icon: '⚡', title: '高效制作', description: '智能化工作流程，项目周期缩短50%，保持最高质量标准。' },
-            { icon: '✨', title: '创意无限', description: '融合传统工艺与AI技术，探索设计的新维度。' },
-            { icon: '🎬', title: '多维呈现', description: '从静态到动态，从2D到3D，提供全方位视觉解决方案。' }
+            { 
+                icon: '🎨', 
+                title: 'AI驱动设计', 
+                description: '运用Midjourney、Stable Diffusion、Comfyui、Google系列等前沿AI工具，突破传统设计边界。',
+                highlights: ['Midjourney v6', 'Stable Diffusion', 'Google Gemini', '实时渲染']
+            },
+            { 
+                icon: '⚡', 
+                title: '高效制作', 
+                description: '智能化工作流程，项目周期缩短50%，保持最高质量标准。',
+                highlights: ['自动化流程', '智能优化', '质量保证', '快速迭代']
+            },
+            { 
+                icon: '✨', 
+                title: '创意无限', 
+                description: '融合传统工艺与AI技术，探索设计的新维度。',
+                highlights: ['传统工艺', 'AI创意', '风格融合', '独特表达']
+            },
+            { 
+                icon: '🎬', 
+                title: '多维呈现', 
+                description: '从静态到动态，从2D到3D，提供全方位视觉解决方案。',
+                highlights: ['静态设计', '动态效果', '3D模型', '交互体验']
+            }
         ];
         
         // ============================================
@@ -983,18 +1003,13 @@
                     className="hoverable h-full"
                 >
                     <motion.div
-                        animate={{ rotateY: flipped ? 180 : 0 }}
-                        transition={{ duration: 0.6 }}
-                        style={{ transformStyle: 'preserve-3d' }}
-                        className="glass-strong rounded-3xl p-8 h-80 relative neon-glow cursor-pointer"
+                        className="glass-strong rounded-3xl p-8 h-80 relative neon-glow cursor-pointer overflow-hidden"
                     >
-                        <div
-                            style={{
-                                backfaceVisibility: 'hidden',
-                                WebkitBackfaceVisibility: 'hidden',
-                                transform: 'rotateY(0deg)'
-                            }}
-                            className="absolute inset-0 p-8 flex flex-col"
+                        {/* Front Side */}
+                        <motion.div
+                            animate={{ opacity: flipped ? 0 : 1, scale: flipped ? 0.9 : 1 }}
+                            transition={{ duration: 0.4 }}
+                            className="absolute inset-0 p-8 flex flex-col justify-start"
                         >
                             <motion.div
                                 animate={{ scale: flipped ? 0.9 : 1 }}
@@ -1009,30 +1024,44 @@
                             <p className="font-body text-slate-400 text-sm md:text-base leading-relaxed">
                                 {feature.description}
                             </p>
-                        </div>
+                        </motion.div>
                         
-                        <div
-                            style={{
-                                backfaceVisibility: 'hidden',
-                                WebkitBackfaceVisibility: 'hidden',
-                                transform: 'rotateY(180deg)'
-                            }}
-                            className="absolute inset-0 p-8 flex items-center justify-center bg-gradient-to-br from-accent-blue/30 to-accent-purple/30 rounded-3xl"
+                        {/* Back Side */}
+                        <motion.div
+                            animate={{ opacity: flipped ? 1 : 0, scale: flipped ? 1 : 0.9 }}
+                            transition={{ duration: 0.4 }}
+                            className="absolute inset-0 p-8 flex flex-col justify-between bg-gradient-to-br from-accent-blue/20 to-accent-purple/20 rounded-3xl"
                         >
-                            <div className="text-center" style={{ transform: 'scaleX(-1)' }}>
-                                <motion.div
-                                    animate={{ rotate: flipped ? 360 : 0, scale: flipped ? 1 : 0.8 }}
-                                    transition={{ duration: 0.6 }}
-                                    className="text-7xl mb-4"
-                                    style={{ transform: 'scaleX(-1)' }}
-                                >
-                                    {feature.icon}
-                                </motion.div>
-                                <p className="font-display text-xl font-bold gradient-text" style={{ transform: 'scaleX(-1)' }}>
-                                    探索更多
-                                </p>
+                            <div>
+                                <h4 className="font-display text-lg font-bold gradient-text mb-4">
+                                    核心能力
+                                </h4>
+                                <div className="space-y-2">
+                                    {feature.highlights && feature.highlights.map((highlight, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={flipped ? { opacity: 1, x: 0 } : {}}
+                                            transition={{ delay: i * 0.1 }}
+                                            className="flex items-center gap-2 text-sm text-slate-300"
+                                        >
+                                            <span className="w-2 h-2 rounded-full bg-accent-cyan"></span>
+                                            {highlight}
+                                        </motion.div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                            <motion.div
+                                animate={{ scale: flipped ? 1 : 0.8, opacity: flipped ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="flex items-center justify-center gap-2 text-accent-cyan hover:text-accent-blue transition-colors cursor-pointer"
+                            >
+                                <span className="text-sm font-medium">深入探索</span>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                            </motion.div>
+                        </motion.div>
                     </motion.div>
                 </motion.div>
             );
