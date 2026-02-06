@@ -82,11 +82,22 @@
             }
         }
         
-        /* 性能优化：减少阴影渲染 */
+        /* 性能优化：减少阴影和滤镜渲染 */
         @media (max-width: 767px) {
             .neon-glow {
                 filter: none;
                 box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+            }
+            
+            /* 禁用移动端复杂背景滤镜 */
+            .deco-blob {
+                display: none !important;
+            }
+            
+            /* 简化玻璃拟态效果 */
+            .glass, .glass-strong {
+                backdrop-filter: none;
+                background: rgba(30, 41, 59, 0.5) !important;
             }
         }
         
@@ -120,12 +131,13 @@
 
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #3B82F6, transparent);
+            width: 3px;
+            height: 3px;
+            background: #3B82F6;
             border-radius: 50%;
-            opacity: 0.6;
+            opacity: 0.5;
             animation: float-particle 6s infinite;
+            will-change: transform;
         }
 
         @keyframes float-particle {
@@ -134,7 +146,7 @@
                 opacity: 0;
             }
             50% {
-                opacity: 0.8;
+                opacity: 0.6;
             }
             100% {
                 transform: translate(var(--tx), var(--ty)) scale(0);
@@ -149,10 +161,11 @@
             border-top-color: #3B82F6;
             border-right-color: #8B5CF6;
             border-radius: 50%;
-            animation: spin 2.5s linear infinite;
+            animation: spin 2s linear infinite;
             position: relative;
             z-index: 10;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            /* 性能优化：移除昂贵的box-shadow */
+            will-change: transform;
         }
 
         .loading-text {
@@ -1317,24 +1330,28 @@
         // CUSTOM HOOKS
         // ============================================
         
-        // Loading Hook with Particles
+        // Loading Hook with Particles - 优化版
         function usePageLoading() {
             const [loading, setLoading] = useState(true);
             
             useEffect(() => {
-                // Generate particles for loading screen
+                // Generate particles for loading screen - 减少粒子数量提升性能
                 const particlesContainer = document.getElementById('loadingParticles');
                 if (particlesContainer) {
-                    for (let i = 0; i < 30; i++) {
+                    // 检测设备性能，手机版本减少粒子
+                    const isMobile = window.innerWidth < 768;
+                    const particleCount = isMobile ? 8 : 15;
+                    
+                    for (let i = 0; i < particleCount; i++) {
                         const particle = document.createElement('div');
                         particle.className = 'particle';
-                        const size = Math.random() * 3 + 2;
+                        const size = Math.random() * 2.5 + 1.5;
                         const x = Math.random() * window.innerWidth;
                         const y = Math.random() * window.innerHeight;
-                        const tx = (Math.random() - 0.5) * 200;
-                        const ty = (Math.random() - 0.5) * 200;
-                        const duration = Math.random() * 3 + 3;
-                        const delay = Math.random() * 0.5;
+                        const tx = (Math.random() - 0.5) * 150;
+                        const ty = (Math.random() - 0.5) * 150;
+                        const duration = Math.random() * 2 + 2.5;
+                        const delay = Math.random() * 0.3;
                         
                         particle.style.left = x + 'px';
                         particle.style.top = y + 'px';
@@ -1352,7 +1369,7 @@
                 const timer = setTimeout(() => {
                     setLoading(false);
                     document.getElementById('loadingScreen')?.classList.add('hidden');
-                }, 1500);
+                }, 1200);
                 
                 return () => clearTimeout(timer);
             }, []);
@@ -1385,13 +1402,14 @@
             }, []);
         }
 
-        // Floating Background Particles Hook
+        // Floating Background Particles Hook - 优化版
         function useFloatingParticles() {
             useEffect(() => {
                 const container = document.getElementById('floatingParticlesBg');
                 if (!container || window.innerWidth < 768) return;
                 
-                const particleCount = Math.min(20, Math.floor(window.innerWidth / 80));
+                // 减少粒子数量，更合理的计算方式
+                const particleCount = Math.min(12, Math.floor(window.innerWidth / 150));
                 
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
@@ -1399,8 +1417,8 @@
                     
                     const x = Math.random() * 100;
                     const y = Math.random() * 100;
-                    const duration = Math.random() * 8 + 8;
-                    const delay = Math.random() * 2;
+                    const duration = Math.random() * 6 + 10;
+                    const delay = Math.random() * 1.5;
                     
                     particle.style.left = x + '%';
                     particle.style.top = y + '%';
@@ -1413,24 +1431,16 @@
                     container.appendChild(particle);
                 }
                 
-                // Animation keyframe for floating
+                // Animation keyframe for floating - 简化动画减少计算
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes float {
                         0%, 100% {
-                            transform: translateY(0px) translateX(0px);
+                            transform: translateY(0px);
                             opacity: 0.3;
                         }
-                        25% {
-                            transform: translateY(-30px) translateX(20px);
-                            opacity: 0.6;
-                        }
                         50% {
-                            transform: translateY(-60px) translateX(-20px);
-                            opacity: 0.4;
-                        }
-                        75% {
-                            transform: translateY(-30px) translateX(30px);
+                            transform: translateY(-40px);
                             opacity: 0.5;
                         }
                     }
