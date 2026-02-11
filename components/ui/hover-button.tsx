@@ -72,7 +72,7 @@ const HoverButton = React.forwardRef<HTMLButtonElement, HoverButtonProps>(
       else if (ref) ref.current = node
     }
 
-    return (
+  return (
       <button
         ref={composedRef}
         className={cn(
@@ -82,7 +82,7 @@ const HoverButton = React.forwardRef<HTMLButtonElement, HoverButtonProps>(
           "cursor-pointer overflow-hidden",
           "before:content-[''] before:absolute before:inset-0",
           "before:rounded-[inherit] before:pointer-events-none",
-          "before:z-[1]",
+          "before:z-[0]",
           "before:shadow-[inset_0_0_0_1px_rgba(170,202,255,0.2),inset_0_0_16px_0_rgba(170,202,255,0.1),inset_0_-3px_12px_0_rgba(170,202,255,0.15),0_1px_3px_0_rgba(0,0,0,0.50),0_4px_12px_0_rgba(0,0,0,0.45)]",
           "before:mix-blend-multiply before:transition-transform before:duration-300",
           "active:before:scale-[0.975]",
@@ -105,7 +105,7 @@ const HoverButton = React.forwardRef<HTMLButtonElement, HoverButtonProps>(
             key={id}
             className={cn(
               "absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full",
-              "blur-lg pointer-events-none z-[-1] transition-opacity duration-300",
+              "blur-lg pointer-events-none z-[1] transition-opacity duration-300",
               fadeState === "in" && "opacity-75",
               fadeState === "out" && "opacity-0 duration-[1.2s]",
               !fadeState && "opacity-0"
@@ -117,7 +117,7 @@ const HoverButton = React.forwardRef<HTMLButtonElement, HoverButtonProps>(
             }}
           />
         ))}
-        {children}
+        <span className="relative z-[2]">{children}</span>
       </button>
     )
   }

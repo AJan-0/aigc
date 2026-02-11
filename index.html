@@ -58,7 +58,7 @@
         
         body {
             font-family: 'Manrope', sans-serif;
-            background: #0F172A;
+            background: linear-gradient(180deg, #040915 0%, #0A1327 34%, #0F172A 72%, #0F172A 100%);
             color: #F8FAFC;
             overflow-x: hidden;
             cursor: none;
@@ -408,6 +408,63 @@
         }
 
         /* ============================================
+           SECTION TRANSITIONS
+           ============================================ */
+        .section-smooth {
+            position: relative;
+            scroll-margin-top: 96px;
+            isolation: isolate;
+        }
+
+        .section-smooth::before,
+        .section-smooth::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 220px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .section-smooth::before {
+            top: -1px;
+            background: linear-gradient(to bottom, rgba(6, 11, 24, 1), rgba(15, 23, 42, 0));
+        }
+
+        .section-smooth::after {
+            bottom: -1px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0));
+        }
+
+        .section-smooth > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-transition::before,
+        .hero-transition::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hero-transition::before {
+            top: 0;
+            height: 320px;
+            background: linear-gradient(to bottom, rgba(4, 9, 21, 1), rgba(8, 15, 30, 0.92) 42%, rgba(15, 23, 42, 0));
+        }
+
+        .hero-transition::after {
+            bottom: 0;
+            height: 220px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0));
+        }
+
+        /* ============================================
            ENHANCED ANIMATIONS
            ============================================ */
         @keyframes float {
@@ -609,11 +666,11 @@
                 animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
-            button, a[role="button"] {
+            button:not(.hover-button), a[role="button"] {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            button:active, a[role="button"]:active {
+            button:not(.hover-button):active, a[role="button"]:active {
                 transform: scale(0.93);
                 animation: button-tap-scale 0.3s ease-out;
             }
@@ -731,9 +788,27 @@
 
             /* Optimize hero section on mobile */
             .hero-mobile-optimized {
-                min-height: auto;
-                padding-top: 80px;
-                padding-bottom: 40px;
+                min-height: 100svh;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            .hero-orb {
+                display: none !important;
+            }
+
+            .hero-conic {
+                opacity: 0.65;
+                transform: scale(0.88);
+            }
+
+            .hover-button {
+                width: auto !important;
+                min-width: 160px !important;
+                min-height: 40px !important;
+                padding: 8px 16px !important;
+                border-radius: 999px !important;
+                box-shadow: none !important;
             }
 
             /* Reduce deco-blob opacity on mobile for performance */
@@ -754,13 +829,13 @@
             }
 
             /* Enhanced touch targets - minimum 48px for mobile */
-            button, a[role="button"], .hoverable {
+            button:not(.hover-button), a[role="button"], .hoverable {
                 min-height: 48px;
                 min-width: 48px;
             }
 
             /* Improve button padding for touch */
-            button, a[role="button"] {
+            button:not(.hover-button), a[role="button"] {
                 padding: 14px 24px !important;
             }
 
@@ -868,7 +943,7 @@
             }
 
             /* Optimize button size for small screens */
-            button, a[role="button"] {
+            button:not(.hover-button), a[role="button"] {
                 padding: 14px 24px !important;
                 min-height: 48px !important;
                 min-width: 48px !important;
@@ -1750,11 +1825,11 @@
                 <button
                     ref={buttonRef}
                     className={cn(
-                        "relative isolate inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 py-3",
-                        "text-foreground font-medium text-sm md:text-base leading-6 text-cyan-50",
-                        "backdrop-blur-lg bg-[rgba(43,55,80,0.18)] border border-cyan-300/40",
-                        "cursor-pointer transition-all duration-300 hover:border-cyan-300/70 hover:bg-[rgba(43,55,80,0.26)] hover:shadow-[0_0_24px_rgba(56,189,248,0.28)]",
-                        "before:content-[''] before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:z-[1]",
+                        "hover-button relative isolate px-8 py-3 rounded-3xl",
+                        "text-foreground font-medium text-base leading-6",
+                        "backdrop-blur-lg bg-[rgba(43,55,80,0.1)]",
+                        "cursor-pointer overflow-hidden",
+                        "before:content-[''] before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:z-[0]",
                         "before:shadow-[inset_0_0_0_1px_rgba(170,202,255,0.2),inset_0_0_16px_0_rgba(170,202,255,0.1),inset_0_-3px_12px_0_rgba(170,202,255,0.15),0_1px_3px_0_rgba(0,0,0,0.50),0_4px_12px_0_rgba(0,0,0,0.45)]",
                         "before:mix-blend-multiply before:transition-transform before:duration-300 active:before:scale-[0.975]",
                         className
@@ -1773,7 +1848,7 @@
                         <div
                             key={id}
                             className={cn(
-                                "absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full blur-lg pointer-events-none z-[-1] transition-opacity duration-300",
+                                "absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full blur-lg pointer-events-none z-[1] transition-opacity duration-300",
                                 fadeState === "in" && "opacity-75",
                                 fadeState === "out" && "opacity-0 duration-[1.2s]",
                                 !fadeState && "opacity-0"
@@ -1785,7 +1860,7 @@
                             }}
                         />
                     ))}
-                    {children}
+                    <span className="relative z-[2]">{children}</span>
                 </button>
             );
         }
@@ -1794,32 +1869,11 @@
             return (
                 <div
                     className={cn(
-                        "relative flex min-h-[92svh] md:min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 w-full rounded-md z-0",
+                        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#050A18] via-slate-950 to-slate-950 w-full z-0",
                         className
                     )}
                 >
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(6,182,212,0.18),transparent_42%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.22),transparent_40%)]" />
-                    <motion.div
-                        animate={{ x: [0, 36, -20, 0], y: [0, 20, -12, 0], scale: [1, 1.18, 0.95, 1], opacity: [0.25, 0.45, 0.2, 0.25] }}
-                        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-                        className="pointer-events-none absolute -top-28 left-[18%] z-10 h-72 w-72 rounded-full bg-cyan-400/30 blur-3xl"
-                    />
-                    <motion.div
-                        animate={{ x: [0, -28, 20, 0], y: [0, -18, 10, 0], scale: [1, 0.88, 1.1, 1], opacity: [0.22, 0.15, 0.35, 0.22] }}
-                        transition={{ duration: 10.5, repeat: Infinity, ease: "easeInOut" }}
-                        className="pointer-events-none absolute top-[26%] right-[15%] z-10 h-72 w-72 rounded-full bg-blue-400/25 blur-3xl"
-                    />
-                    <motion.div
-                        animate={{ x: [0, 84, 0], y: [0, -12, 0], opacity: [0.18, 0.48, 0.18] }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                        className="pointer-events-none absolute left-[-20%] top-[-8%] z-10 h-[130%] w-[65%] rotate-[10deg] bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent blur-2xl"
-                    />
-                    <motion.div
-                        animate={{ x: [0, -72, 0], y: [0, 10, 0], opacity: [0.12, 0.34, 0.12] }}
-                        transition={{ duration: 9.2, repeat: Infinity, ease: "easeInOut" }}
-                        className="pointer-events-none absolute right-[-28%] top-[18%] z-10 h-[118%] w-[58%] -rotate-[11deg] bg-gradient-to-r from-transparent via-blue-300/22 to-transparent blur-2xl"
-                    />
-                    <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0">
+                    <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0 ">
                         <motion.div
                             initial={{ opacity: 0.5, width: "15rem" }}
                             whileInView={{ opacity: 1, width: "30rem" }}
@@ -1831,12 +1885,11 @@
                             style={{
                                 backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
                             }}
-                            className="absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] from-cyan-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+                            className="absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] bg-gradient-conic from-cyan-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
                         >
                             <div className="absolute w-[100%] left-0 bg-slate-950 h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
                             <div className="absolute w-40 h-[100%] left-0 bg-slate-950 bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
                         </motion.div>
-
                         <motion.div
                             initial={{ opacity: 0.5, width: "15rem" }}
                             whileInView={{ opacity: 1, width: "30rem" }}
@@ -1848,12 +1901,11 @@
                             style={{
                                 backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
                             }}
-                            className="absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-cyan-500 text-white [--conic-position:from_290deg_at_center_top]"
+                            className="absolute inset-auto left-1/2 h-56 w-[30rem] bg-gradient-conic from-transparent via-transparent to-cyan-500 text-white [--conic-position:from_290deg_at_center_top]"
                         >
                             <div className="absolute w-40 h-[100%] right-0 bg-slate-950 bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
                             <div className="absolute w-[100%] right-0 bg-slate-950 h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
                         </motion.div>
-
                         <div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
                         <div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
                         <div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500 opacity-50 blur-3xl"></div>
@@ -1881,7 +1933,7 @@
                         <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-slate-950"></div>
                     </div>
 
-                    <div className="relative z-50 flex -translate-y-44 sm:-translate-y-52 md:-translate-y-80 flex-col items-center px-4 md:px-5 w-full">
+                    <div className="hero-content relative z-50 flex translate-y-0 md:-translate-y-80 flex-col items-center px-5">
                         {children}
                     </div>
                 </div>
@@ -1891,7 +1943,7 @@
         // Lamp-style hero for first screen optimization
         function HeroSection() {
             return (
-                <LampContainer className="pt-20 md:pt-24">
+                <LampContainer className="hero-mobile-optimized">
                     <motion.h1
                         initial={{ opacity: 0.5, y: 100 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -1900,22 +1952,31 @@
                             duration: 0.8,
                             ease: "easeInOut",
                         }}
-                        className="mt-6 bg-gradient-to-br from-slate-100 via-cyan-100 to-slate-300 py-3 bg-clip-text text-center text-[2.15rem] leading-[1.05] font-semibold tracking-tight text-transparent sm:text-5xl md:text-7xl"
+                        className="mt-2 md:mt-8 bg-gradient-to-br from-slate-100 via-cyan-100 to-slate-300 py-3 bg-clip-text text-center text-[2.05rem] leading-[1.05] font-semibold tracking-tight text-transparent sm:text-5xl md:text-7xl"
                     >
                         Welcome to My Portfolio
                     </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 18 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.55, duration: 0.6 }}
+                        className="mt-4 max-w-xl text-center text-slate-200/90 text-sm sm:text-base md:text-lg"
+                    >
+                        AIGC-driven visualization, motion, and brand storytelling.
+                    </motion.p>
 
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.7 }}
-                        className="mt-8 flex w-full justify-center"
+                        className="mt-7 flex w-full justify-center"
                     >
                         <HoverButton
                             onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                            className="w-full sm:w-auto min-w-[220px]"
+                            className="min-w-[160px] px-5 py-2 text-sm md:text-base"
                         >
-                            Explore Projects
+                            View Selected Work
                         </HoverButton>
                     </motion.div>
                 </LampContainer>
@@ -2294,7 +2355,7 @@
                     <HeroSection />
                     
                     {/* Projects Section - Moved to Front as Main Focus */}
-                    <section id="projects" className="py-20 md:py-32 px-6 relative overflow-hidden">
+                    <section id="projects" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-900">
                         {/* Background Decorations */}
                         <div className="absolute top-20 right-10 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(60px)'}} />
                         <div className="absolute bottom-32 -left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(60px)'}} />
@@ -2333,11 +2394,11 @@
                                         精选项目
                                     </motion.div>
                                 </motion.div>
-                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-4">
-                                    从建筑可视化、视频创意到品牌营销，每个项目都强调技术与美学的结合。
+                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
+                                    精选建筑可视化、动画与品牌视频，强调技术与美学并重。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    点击项目可查看完整的业务价值、技术流程与最终交付效果。
+                                    点击项目查看流程与最终交付。
                                 </p>
                             </motion.div>
                             
@@ -2355,7 +2416,7 @@
                     </section>
                     
                     {/* Simplified About Section - Moved after Projects */}
-                    <section id="about" className="py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
+                    <section id="about" className="section-smooth py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.1}} />
                         
                         <div className="max-w-7xl mx-auto relative z-10">
@@ -2378,7 +2439,7 @@
                                         About
                                     </h2>
                                     <p className="font-body text-base text-slate-300 leading-relaxed">
-                                        我专注于 AI 驱动的视觉创意与交互设计，用前沿技术为品牌打造高识别度的视觉体验。
+                                        我专注于 AI 驱动的视觉创意与交互设计，为品牌打造高识别度的视觉体验。
                                     </p>
                                 </motion.div>
 
@@ -2419,7 +2480,7 @@
                         </div>
                     </section>
                     
-                    <section id="features" className="py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-transparent via-secondary/30 to-transparent">
+                    <section id="features" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-transparent via-secondary/30 to-transparent">
                         {/* Background Decorations */}
                         <div className="absolute top-0 left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.2}} />
                         <div className="absolute bottom-0 right-32 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(60px)', opacity: 0.15}} />
@@ -2457,8 +2518,8 @@
                                         为什么选择我
                                     </motion.div>
                                 </motion.div>
-                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-4">
-                                    超越传统制作方式，用前沿 AI 技术驱动视觉创新与传播效率。
+                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
+                                    用 AI 提升效率与表达，交付更具传播力的作品。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
                                     高效交付 | 创新思维 | 商业价值
