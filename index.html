@@ -442,6 +442,79 @@
             z-index: 1;
         }
 
+        .lamp-core {
+            position: absolute;
+            top: -44px;
+            left: 50%;
+            width: 220px;
+            height: 92px;
+            transform: translateX(-50%);
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(125, 211, 252, 0.85) 0%, rgba(34, 211, 238, 0.38) 45%, rgba(34, 211, 238, 0) 100%);
+            filter: blur(8px);
+            pointer-events: none;
+            z-index: 12;
+        }
+
+        .lamp-cone {
+            position: absolute;
+            top: -145px;
+            left: 50%;
+            width: min(1500px, 155vw);
+            height: 78vh;
+            transform: translateX(-50%);
+            clip-path: polygon(50% 0%, 13% 100%, 87% 100%);
+            background: linear-gradient(
+                to bottom,
+                rgba(103, 232, 249, 0.42) 0%,
+                rgba(34, 211, 238, 0.2) 26%,
+                rgba(34, 211, 238, 0.09) 53%,
+                rgba(15, 23, 42, 0) 90%
+            );
+            mix-blend-mode: screen;
+            filter: blur(1px);
+            opacity: 0.78;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .lamp-focus {
+            position: absolute;
+            top: 29svh;
+            left: 50%;
+            width: min(1000px, 110vw);
+            height: 380px;
+            transform: translateX(-50%);
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.34) 0%, rgba(34, 211, 238, 0.18) 40%, rgba(15, 23, 42, 0) 76%);
+            filter: blur(24px);
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        @media (max-width: 768px) {
+            .lamp-core {
+                top: -54px;
+                width: 180px;
+                height: 78px;
+                filter: blur(7px);
+            }
+
+            .lamp-cone {
+                top: -160px;
+                width: 190vw;
+                height: 82svh;
+                clip-path: polygon(50% 0%, 7% 100%, 93% 100%);
+                opacity: 0.86;
+            }
+
+            .lamp-focus {
+                top: 31svh;
+                width: 130vw;
+                height: 320px;
+            }
+        }
+
         .hero-transition::before,
         .hero-transition::after {
             content: '';
@@ -1873,6 +1946,22 @@
                         className
                     )}
                 >
+                    <motion.div
+                        animate={{ opacity: [0.72, 0.95, 0.72], scale: [0.96, 1.04, 0.96] }}
+                        transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
+                        className="lamp-core"
+                    />
+                    <motion.div
+                        animate={{ opacity: [0.62, 0.82, 0.62], scaleY: [0.96, 1.02, 0.96] }}
+                        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
+                        className="lamp-cone"
+                    />
+                    <motion.div
+                        animate={{ opacity: [0.38, 0.62, 0.38], scale: [0.95, 1.08, 0.95] }}
+                        transition={{ duration: 5.1, repeat: Infinity, ease: "easeInOut" }}
+                        className="lamp-focus"
+                    />
+
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-[72svh] md:h-[66vh] overflow-hidden">
                         <div className="relative flex w-full h-full scale-y-125 items-center justify-center isolate z-0 -translate-y-[30svh] md:-translate-y-[30vh]">
                             <motion.div
@@ -1886,7 +1975,7 @@
                                 style={{
                                     backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
                                 }}
-                                className="absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] bg-gradient-conic from-cyan-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+                                className="absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] bg-gradient-conic from-cyan-500/80 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
                             >
                                 <div className="absolute w-[100%] left-0 bg-slate-950 h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
                                 <div className="absolute w-40 h-[100%] left-0 bg-slate-950 bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
@@ -1902,14 +1991,14 @@
                                 style={{
                                     backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
                                 }}
-                                className="absolute inset-auto left-1/2 h-56 w-[30rem] bg-gradient-conic from-transparent via-transparent to-cyan-500 text-white [--conic-position:from_290deg_at_center_top]"
+                                className="absolute inset-auto left-1/2 h-56 w-[30rem] bg-gradient-conic from-transparent via-transparent to-cyan-500/80 text-white [--conic-position:from_290deg_at_center_top]"
                             >
                                 <div className="absolute w-40 h-[100%] right-0 bg-slate-950 bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
                                 <div className="absolute w-[100%] right-0 bg-slate-950 h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
                             </motion.div>
-                            <div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
-                            <div className="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
-                            <div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500 opacity-50 blur-3xl"></div>
+                            <div className="absolute top-1/2 h-48 w-full translate-y-10 scale-x-150 bg-slate-950/85 blur-2xl"></div>
+                            <div className="absolute top-1/2 z-50 h-44 w-full bg-transparent opacity-8 backdrop-blur-sm"></div>
+                            <div className="absolute inset-auto z-50 h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500/55 opacity-60 blur-3xl"></div>
                             <motion.div
                                 initial={{ width: "8rem" }}
                                 whileInView={{ width: "16rem" }}
@@ -1920,17 +2009,7 @@
                                 }}
                                 className="absolute inset-auto z-30 h-36 w-64 -translate-y-[6rem] rounded-full bg-cyan-400 blur-2xl"
                             />
-                            <motion.div
-                                initial={{ width: "15rem" }}
-                                whileInView={{ width: "30rem" }}
-                                transition={{
-                                    delay: 0.3,
-                                    duration: 0.8,
-                                    ease: "easeInOut",
-                                }}
-                                className="absolute inset-auto z-50 h-0.5 w-[30rem] -translate-y-[7rem] bg-cyan-400/80 blur-[1px]"
-                            />
-                            <div className="absolute inset-x-0 z-40 h-64 -translate-y-[10.5rem] bg-gradient-to-b from-transparent via-slate-950/90 to-slate-950"></div>
+                            <div className="absolute inset-x-0 z-40 h-72 -translate-y-[11rem] bg-gradient-to-b from-transparent via-slate-950/80 to-slate-950"></div>
                         </div>
                     </div>
 
