@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -71,17 +71,85 @@
         }
 
         /* 封面Hero区域 */
-        .cover-hero {
+                .cover-hero {
             position: relative;
             width: 100%;
-            height: 70vh;
-            min-height: 500px;
+            height: 76vh;
+            min-height: 520px;
             overflow: hidden;
             margin-top: 70px;
-            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%);
+            isolation: isolate;
+            background: radial-gradient(circle at 20% 15%, rgba(0, 212, 255, 0.18), transparent 36%),
+                        radial-gradient(circle at 82% 16%, rgba(74, 158, 255, 0.22), transparent 40%),
+                        linear-gradient(160deg, #070b12 0%, #0f1724 55%, #090d14 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .cover-hero::before,
+        .cover-hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(48px);
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: screen;
+            opacity: 0.65;
+            animation: heroFloat 11s ease-in-out infinite;
+        }
+
+        .cover-hero::before {
+            width: 300px;
+            height: 300px;
+            top: -70px;
+            left: -40px;
+            background: rgba(0, 212, 255, 0.32);
+        }
+
+        .cover-hero::after {
+            width: 260px;
+            height: 260px;
+            right: -20px;
+            top: 25%;
+            background: rgba(74, 158, 255, 0.28);
+            animation-delay: -4.5s;
+        }
+
+        .cover-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background-image:
+                linear-gradient(120deg, rgba(6, 182, 212, 0.2) 0%, rgba(6, 182, 212, 0) 42%),
+                linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 56px 56px, 56px 56px;
+            mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent 78%);
+        }
+
+        .cover-beam {
+            position: absolute;
+            top: -22%;
+            left: -30%;
+            width: 64%;
+            height: 140%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(112deg, rgba(0, 212, 255, 0) 0%, rgba(0, 212, 255, 0.32) 50%, rgba(0, 212, 255, 0) 100%);
+            transform: rotate(8deg);
+            filter: blur(7px);
+            animation: heroSweep 8.8s ease-in-out infinite;
+        }
+
+        .cover-beam::after {
+            content: '';
+            position: absolute;
+            inset: 16% 8%;
+            background: linear-gradient(112deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.16) 48%, rgba(255, 255, 255, 0) 100%);
+            filter: blur(9px);
         }
 
         .cover-overlay {
@@ -89,13 +157,16 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 4rem 5%;
-            background: linear-gradient(to top, rgba(10, 14, 20, 1) 0%, rgba(10, 14, 20, 0.8) 50%, transparent 100%);
+            z-index: 3;
+            padding: 4.25rem 5%;
+            background: linear-gradient(to top, rgba(8, 12, 18, 0.98) 0%, rgba(8, 12, 18, 0.8) 48%, transparent 100%);
             text-align: center;
         }
 
         .cover-content {
             max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
         }
 
         .cover-tag {
@@ -122,9 +193,39 @@
         .cover-subtitle {
             font-size: 1.3rem;
             color: var(--text-secondary);
+            max-width: 760px;
+            margin: 0 auto;
         }
 
-        /* 项目头部信息 */
+        .cover-positioning {
+            margin-top: 1rem;
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem;
+            color: rgba(232, 238, 245, 0.92);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .cover-positioning span {
+            padding: 0.35rem 0.7rem;
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            border-radius: 999px;
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(16px, -14px, 0); }
+        }
+
+        @keyframes heroSweep {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(8deg); opacity: 0.4; }
+            50% { transform: translate3d(12%, -6%, 0) rotate(10deg); opacity: 0.78; }
+        }
+
         .project-header {
             padding: 4rem 5% 2rem;
         }
@@ -320,24 +421,116 @@
         }
 
         /* 响应式 */
-        @media (max-width: 768px) {
+                @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 4%;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
             .cover-hero {
-                height: 50vh;
-                min-height: 400px;
+                height: 67svh;
+                min-height: 490px;
+            }
+
+            .cover-overlay {
+                padding: 2.7rem 6% 2.3rem;
+            }
+
+            .cover-title {
+                font-size: clamp(2rem, 9vw, 2.9rem);
+                line-height: 1.08;
+            }
+
+            .cover-subtitle {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+
+            .cover-positioning {
+                gap: 0.35rem;
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+            }
+
+            .cover-positioning span {
+                padding: 0.38rem 0.7rem;
+            }
+
+            .cover-grid {
+                background-size: 100% 100%, 42px 42px, 42px 42px;
+            }
+
+            .cover-beam {
+                width: 96%;
+                left: -46%;
+                opacity: 0.9;
+                animation-duration: 6.8s;
+            }
+
+            .project-header {
+                padding: 2.25rem 5% 1.25rem;
             }
 
             .project-meta-info {
                 flex-direction: column;
-                gap: 1.5rem;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .meta-value {
+                font-size: 1rem;
+            }
+
+            .video-section {
+                padding: 2.4rem 5%;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 1.8rem;
             }
 
             .video-info {
-                padding: 2rem;
+                padding: 1.4rem;
+            }
+
+            .video-description {
+                font-size: 0.95rem;
+                line-height: 1.7;
             }
 
             .video-details {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1rem;
+            }
+
+            .back-to-top {
+                right: 1rem;
+                bottom: 1rem;
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cover-hero {
+                min-height: 458px;
+            }
+
+            .cover-overlay {
+                padding: 2.35rem 6% 1.9rem;
+            }
+
+            .cover-title {
+                font-size: clamp(1.9rem, 10vw, 2.5rem);
+            }
+
+            .cover-subtitle {
+                font-size: 0.92rem;
             }
         }
 
@@ -377,11 +570,18 @@
 
     <!-- 封面Hero -->
     <section class="cover-hero">
+        <div class="cover-grid" aria-hidden="true"></div>
+        <div class="cover-beam" aria-hidden="true"></div>
         <div class="cover-overlay">
             <div class="cover-content">
                 <div class="cover-tag">VIDEO SHOWCASE</div>
                 <h1 class="cover-title">AIGC F1宣传片</h1>
                 <p class="cover-subtitle">探索AI在体育营销中的创意应用</p>
+                <div class="cover-positioning">
+                    <span>Role - AIGC Video Creative Director</span>
+                    <span>Focus - Brand Narrative & Motion</span>
+                    <span>Output - High-Conversion Promo Video</span>
+                </div>
             </div>
         </div>
     </section>
@@ -506,3 +706,4 @@
     </script>
 </body>
 </html>
+
