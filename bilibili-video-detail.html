@@ -4,9 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIGC F1宣传片 - AI创意视频</title>
+    <meta name="description" content="AIGC F1 宣传片项目详情：速度与科技主题品牌视频，从创意生成到成片交付的完整展示。">
+    <meta name="keywords" content="AIGC, F1 宣传片, AI 视频, Brand Video, 哔哩哔哩, 营销内容">
+    <meta name="author" content="AIGC Visual Studio">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#091322">
+    <link rel="canonical" href="https://ajan03.xyz/bilibili-video-detail.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="AIGC Visual Studio">
+    <meta property="og:title" content="AIGC F1宣传片 - AI创意视频">
+    <meta property="og:description" content="AIGC 运动营销视频案例：12 小时完成品牌宣传片，兼顾视觉冲击与传播效率。">
+    <meta property="og:url" content="https://ajan03.xyz/bilibili-video-detail.html">
+    <meta property="og:image" content="https://ajan03.xyz/images/bilibili-showcase.jpg">
+    <meta property="og:image:alt" content="AIGC F1 promo video showcase">
+    <meta property="og:locale" content="zh_CN">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AIGC F1宣传片 - AI创意视频">
+    <meta name="twitter:description" content="AIGC 运动营销视频案例：12 小时完成品牌宣传片，兼顾视觉冲击与传播效率。">
+    <meta name="twitter:image" content="https://ajan03.xyz/images/bilibili-showcase.jpg">
+
+    <script src="./src/analytics-config.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-bg: #0a0e14;
@@ -387,6 +409,38 @@
             transform: translateY(-2px);
         }
 
+        .footer-nav,
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .footer-nav a,
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 2.4rem;
+            padding: 0.45rem 0.95rem;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: all 0.25s ease;
+        }
+
+        .footer-nav a:hover,
+        .footer-social a:hover {
+            color: var(--text-primary);
+            border-color: rgba(74, 158, 255, 0.55);
+            background: rgba(74, 158, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
         footer p {
             color: var(--text-muted);
             font-size: 0.9rem;
@@ -553,6 +607,523 @@
                 transform: translateY(0);
             }
         }
+
+        /* Cinematic immersion layer */
+        :root {
+            --cinema-gold: #ffaf5f;
+            --cinema-cyan: #7ee4ff;
+            --cinema-glass: linear-gradient(145deg, rgba(13, 19, 31, 0.88), rgba(7, 11, 20, 0.7));
+            --cinema-border: rgba(126, 228, 255, 0.22);
+            --cinema-shadow: 0 28px 60px rgba(0, 0, 0, 0.48);
+        }
+
+        body {
+            font-family: 'Sora', 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(126, 228, 255, 0.08), transparent 32%),
+                radial-gradient(circle at 85% 18%, rgba(255, 175, 95, 0.1), transparent 34%),
+                linear-gradient(160deg, #05070d 0%, #0a1019 52%, #070b12 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.018) 0px,
+                    rgba(255, 255, 255, 0.018) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            mix-blend-mode: soft-light;
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                560px circle at var(--mx, 52%) var(--my, 24%),
+                rgba(126, 228, 255, 0.16),
+                transparent 62%
+            );
+            opacity: 0.72;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .navbar {
+            width: min(1360px, calc(100% - 3rem));
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0.9rem;
+            border: 1px solid rgba(126, 228, 255, 0.24);
+            border-radius: 14px;
+            box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
+            background: rgba(6, 10, 18, 0.74);
+        }
+
+        .logo,
+        .cover-title,
+        .project-title,
+        .section-title,
+        .video-info-title,
+        .footer-title {
+            font-family: 'Space Grotesk', 'DM Serif Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .cover-tag,
+        .project-category,
+        .meta-label,
+        .detail-label {
+            letter-spacing: 0.16em;
+        }
+
+        .project-meta-info,
+        .video-wrapper,
+        .video-info,
+        .project-snapshot,
+        .technical-stack,
+        .gallery-item,
+        .snapshot-item {
+            background: var(--cinema-glass);
+            border: 1px solid var(--cinema-border);
+            box-shadow: var(--cinema-shadow);
+            backdrop-filter: blur(18px);
+            border-radius: 16px;
+        }
+
+        .video-wrapper,
+        .gallery-item {
+            overflow: hidden;
+        }
+
+        .video-wrapper::after,
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(130deg, rgba(126, 228, 255, 0.11), transparent 45%, rgba(255, 175, 95, 0.1));
+            opacity: 0.72;
+        }
+
+        .project-meta-info:hover,
+        .video-info:hover,
+        .technical-stack:hover,
+        .project-snapshot:hover {
+            border-color: rgba(126, 228, 255, 0.45);
+        }
+
+        .footer-link,
+        .back-to-top {
+            border-color: rgba(126, 228, 255, 0.45);
+            box-shadow: 0 12px 28px rgba(6, 14, 24, 0.42);
+        }
+
+        .footer-link:hover,
+        .back-to-top:hover {
+            background: linear-gradient(135deg, rgba(126, 228, 255, 0.86), rgba(74, 158, 255, 0.88));
+            color: #06111d;
+        }
+
+        body.cinema-enhanced .gallery-item,
+        body.cinema-enhanced .video-wrapper,
+        body.cinema-enhanced .video-info {
+            animation: none !important;
+            opacity: 1 !important;
+        }
+
+        .cinema-reveal {
+            opacity: 0;
+            transform: translateY(26px) scale(0.99);
+            filter: blur(8px);
+            transition: opacity 0.75s cubic-bezier(0.2, 0.68, 0.15, 0.98), transform 0.75s cubic-bezier(0.2, 0.68, 0.15, 0.98), filter 0.75s ease;
+            transition-delay: var(--reveal-delay, 0ms);
+        }
+
+        .cinema-reveal.is-inview {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .cinema-tilt {
+            transform-style: preserve-3d;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            will-change: transform;
+        }
+
+        .cinema-tilt.tilt-active {
+            transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-4px);
+        }
+
+        .cinema-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            z-index: 2200;
+            pointer-events: none;
+        }
+
+        .cinema-progress-fill {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(0);
+            transform-origin: left center;
+            background: linear-gradient(90deg, var(--cinema-cyan), var(--cinema-gold));
+            box-shadow: 0 0 20px rgba(255, 122, 92, 0.45);
+        }
+
+        .scene-dock {
+            position: fixed;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1800;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            padding: 0.55rem;
+            border-radius: 14px;
+            border: 1px solid var(--cinema-border);
+            background: rgba(6, 10, 18, 0.66);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.35);
+        }
+
+        .scene-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 0.35rem 0.5rem;
+            border-radius: 999px;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .scene-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 122, 92, 0.14);
+            transform: translateX(-2px);
+        }
+
+        .scene-link.active {
+            color: var(--cinema-cyan);
+            background: rgba(255, 122, 92, 0.18);
+        }
+
+        .scene-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 122, 92, 0.5);
+            box-shadow: 0 0 10px rgba(255, 122, 92, 0.35);
+            flex: 0 0 7px;
+        }
+
+        .scene-link.active .scene-dot {
+            background: var(--cinema-gold);
+            box-shadow: 0 0 14px rgba(255, 212, 122, 0.45);
+        }
+
+        .meta-item,
+        .detail-item,
+        .snapshot-item,
+        .stack-item {
+            position: relative;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 122, 92, 0.17);
+            background: rgba(255, 255, 255, 0.02);
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .meta-item:hover,
+        .detail-item:hover,
+        .snapshot-item:hover,
+        .stack-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 122, 92, 0.4);
+            background: rgba(255, 122, 92, 0.08);
+        }
+
+        .cover-hero {
+            --hero-shift: 0px;
+        }
+
+        .cover-overlay {
+            transform: translateY(calc(var(--hero-shift) * -0.26));
+            transition: transform 0.2s linear;
+        }
+
+        body.page-speed {
+            --cinema-cyan: #ff7a5c;
+            --cinema-gold: #ffd47a;
+            --cinema-border: rgba(255, 122, 92, 0.3);
+        }
+
+        body.page-speed .cover-hero {
+            background:
+                radial-gradient(circle at 18% 14%, rgba(255, 122, 92, 0.22), transparent 36%),
+                radial-gradient(circle at 82% 17%, rgba(255, 212, 122, 0.2), transparent 40%),
+                linear-gradient(152deg, #10070a 0%, #181018 52%, #0d1118 100%);
+        }
+
+        body.page-speed .cover-grid {
+            background-image:
+                linear-gradient(120deg, rgba(255, 122, 92, 0.24) 0%, rgba(255, 122, 92, 0) 43%),
+                linear-gradient(rgba(255, 190, 160, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 190, 160, 0.1) 1px, transparent 1px);
+        }
+
+        body.page-speed .cover-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                112deg,
+                rgba(255, 255, 255, 0.06) 0px,
+                rgba(255, 255, 255, 0.06) 2px,
+                transparent 2px,
+                transparent 16px
+            );
+            opacity: 0.35;
+            mix-blend-mode: screen;
+        }
+
+        body.page-speed .video-wrapper::after {
+            background: linear-gradient(118deg, rgba(255, 122, 92, 0.24), transparent 46%, rgba(255, 212, 122, 0.2));
+        }
+
+        /* Editorial layout system */
+        .project-meta-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.95rem;
+            border-top: 1px solid color-mix(in srgb, var(--cinema-cyan) 30%, transparent);
+            border-bottom: 1px solid color-mix(in srgb, var(--cinema-cyan) 22%, transparent);
+            padding: 0.95rem 0;
+        }
+
+        .project-meta-strip .meta-item {
+            display: grid;
+            gap: 0.4rem;
+            border-left: 2px solid color-mix(in srgb, var(--cinema-cyan) 52%, transparent);
+            padding: 0.2rem 0 0.2rem 0.9rem;
+            min-height: auto;
+            background: transparent;
+        }
+
+        .meta-label,
+        .detail-label,
+        .value-title {
+            font-weight: 600;
+        }
+
+        .meta-value,
+        .detail-value {
+            font-size: clamp(1rem, 1.2vw, 1.08rem);
+            line-height: 1.3;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .content-composition {
+            display: grid;
+            gap: 1.6rem;
+        }
+
+        .editorial-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+            gap: 2.1rem;
+            align-items: start;
+        }
+
+        .value-heading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.86rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--cinema-cyan);
+            margin: 0.15rem 0 0.25rem;
+        }
+
+        .value-heading::before {
+            content: '';
+            width: 22px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.8;
+        }
+
+        .lede {
+            font-size: 1.04rem;
+            line-height: 1.9;
+            color: color-mix(in srgb, var(--text-primary) 92%, var(--cinema-cyan) 8%);
+            text-wrap: pretty;
+        }
+
+        .value-rail {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border-top: 1px solid color-mix(in srgb, var(--cinema-cyan) 24%, transparent);
+        }
+
+        .value-item {
+            display: grid;
+            gap: 0.5rem;
+            padding: 0.95rem 0 1rem 1rem;
+            border-bottom: 1px solid color-mix(in srgb, var(--cinema-cyan) 18%, transparent);
+            border-left: 2px solid color-mix(in srgb, var(--cinema-cyan) 44%, transparent);
+        }
+
+        .value-title {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--cinema-cyan);
+        }
+
+        .value-text {
+            margin: 0;
+            font-size: 0.93rem;
+            line-height: 1.72;
+            color: var(--text-secondary);
+            text-wrap: pretty;
+        }
+
+        .aside-notes {
+            display: grid;
+            gap: 0.9rem;
+            border-top: 1px solid color-mix(in srgb, var(--cinema-gold) 26%, transparent);
+            padding-top: 0.9rem;
+        }
+
+        .aside-note {
+            margin: 0;
+            padding-left: 0.95rem;
+            border-left: 2px solid color-mix(in srgb, var(--cinema-gold) 48%, transparent);
+            font-size: 0.9rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+        }
+
+        .metrics-heading {
+            margin: 0.25rem 0 0.1rem;
+            font-size: 0.86rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--cinema-gold);
+            font-weight: 600;
+        }
+
+        .video-details.metric-strip {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.8rem 1rem;
+            border-top: 1px solid color-mix(in srgb, var(--cinema-gold) 22%, transparent);
+            padding-top: 0.85rem;
+        }
+
+        .video-details.metric-strip .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            padding-bottom: 0.55rem;
+            border-bottom: 1px solid color-mix(in srgb, var(--cinema-gold) 18%, transparent);
+            min-height: auto;
+            background: transparent;
+        }
+
+        .video-details.metric-strip .detail-label {
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+        }
+
+        .video-details.metric-strip .detail-value {
+            text-align: right;
+            font-family: 'Space Grotesk', 'Sora', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 900px) {
+            .navbar {
+                width: calc(100% - 1.5rem);
+                top: 0.5rem;
+                border-radius: 12px;
+            }
+
+            .scene-dock {
+                top: auto;
+                bottom: 0.9rem;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                flex-direction: row;
+                max-width: calc(100% - 1rem);
+                overflow-x: auto;
+                padding: 0.45rem;
+            }
+
+            .scene-label {
+                display: none;
+            }
+
+            .scene-link {
+                padding: 0.45rem;
+            }
+
+            .project-meta-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .editorial-shell {
+                grid-template-columns: 1fr;
+                gap: 1.3rem;
+            }
+
+            .video-details.metric-strip {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cinema-reveal,
+            .cinema-tilt {
+                transition: none !important;
+                transform: none !important;
+                filter: none !important;
+                opacity: 1 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -588,7 +1159,7 @@
 
     <!-- 项目信息 -->
     <section class="project-header">
-        <div class="project-meta-info">
+        <div class="project-meta-info project-meta-strip">
             <div class="meta-item">
                 <div class="meta-label">项目类型</div>
                 <div class="meta-value">视频宣传片</div>
@@ -625,29 +1196,44 @@
                 </iframe>
             </div>
             
-            <div class="video-info">
+            <div class="video-info content-composition">
                 <h2 class="video-info-title">项目介绍</h2>
-                <p class="video-description">
-                    《AIGC F1宣传片》是一部创意视频作品，展现人工智能技术在体育营销领域的应用。
-                    通过Google Gemini的智能生成、Veo3的视频生成和Nano Banana Pro的渲染处理，
-                    创造出融合高科技与体育激情的视觉大片。项目完整展现了AIGC工作流程在商业创意制作中的强大潜力，
-                    将传统体育宣传与AI创新完美融合，为新时代的内容创作提供了新的思路。
-                </p>
+                <div class="editorial-shell">
+                    <div class="editorial-main">
+                        <p class="video-description lede">
+                            《AIGC F1 宣传片》围绕“速度与科技”双主轴构建视觉叙事，通过 Google Gemini 与 Veo3 生成能力结合后期渲染流程，
+                            在短周期内完成具备商业发布标准的运动营销内容，验证了 AIGC 在高节奏品牌传播中的执行效率与创意上限。
+                        </p>
 
-                <h3 style="font-size: 1.3rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-blue);">💼 商业价值与应用</h3>
-                <p class="video-description">
-                    <strong>♦ 营销成本优化：</strong> 传统体育宣传片制作周期6-8周，本项目12h完成专业级成片，制作成本降低60%，同时保证出稿质量。<br><br>
-                    <strong>♦ 品牌创新形象：</strong> 融合体育激情与高科技视觉的宣传方式，能够显著提升品牌的现代感和创新认知，吸引年轻受众。<br><br>
-                    <strong>♦ 传播效能提升：</strong> 创新的视觉表现形式在B站、抖音等平台具有更高的转发率和互动度，平均传播广度提升40%+。<br><br>
-                    <strong>♦ 可复用性优势：</strong> 建立的AIGC工作流可快速迭代衍生版本，支持多渠道、多版本的快速投放，大幅提升运营效率。<br><br>
-                    <strong>♦ 行业示范价值：</strong> 项目展示了AI技术在商业视频领域的成熟应用，为体育产业、品牌营销提供了可实践的解决方案。
-                    <br><br>
-                    <em style="color: var(--text-muted); font-size: 0.9rem;">
-                    💡 提示：视频托管在哔哩哔哩，建议全屏观看以获得最佳体验
-                    </em>
-                </p>
-                
-                <div class="video-details">
+                        <h3 class="value-heading">商业价值与应用</h3>
+                        <ul class="value-rail">
+                            <li class="value-item">
+                                <span class="value-title">营销成本优化</span>
+                                <p class="value-text">相较传统 6-8 周制作流程，12h 即可交付成片，显著降低制作成本并缩短市场响应时间。</p>
+                            </li>
+                            <li class="value-item">
+                                <span class="value-title">品牌形象升级</span>
+                                <p class="value-text">高科技视觉与运动叙事强化品牌创新感，对年轻受众与核心兴趣圈层更具吸引力。</p>
+                            </li>
+                            <li class="value-item">
+                                <span class="value-title">传播效能提升</span>
+                                <p class="value-text">短时高刺激的影像风格更适配 B 站与短视频平台分发机制，互动与二次传播潜力更高。</p>
+                            </li>
+                            <li class="value-item">
+                                <span class="value-title">流程复用价值</span>
+                                <p class="value-text">已沉淀的 AIGC 工作流支持多版本快速迭代，适配多渠道投放与活动节点营销。</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <aside class="aside-notes">
+                        <p class="aside-note">视频托管于哔哩哔哩，建议全屏并开启声音，获得更完整的速度氛围体验。</p>
+                        <p class="aside-note">本片适合作为体育营销提案中的“高强度节奏样片”，用于品牌预热与跨平台分发测试。</p>
+                    </aside>
+                </div>
+
+                <h3 class="metrics-heading">制作参数</h3>
+                <div class="video-details metric-strip">
                     <div class="detail-item">
                         <span class="detail-label">制作周期</span>
                         <span class="detail-value">12h</span>
@@ -688,9 +1274,20 @@
             <h2 class="footer-title">查看更多项目</h2>
             <a href="index.html" class="footer-link">返回作品集主页</a>
         </div>
+        <div class="footer-nav">
+            <a href="index.html#projects">全部项目</a>
+            <a href="architecture-detail.html">建筑可视化</a>
+            <a href="animation-detail-updated.html">动画短片</a>
+        </div>
+        <div class="footer-social">
+            <a href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">Bilibili</a>
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="mailto:1248567324@qq.com">Email</a>
+        </div>
         <p>&copy; 2026 AIGC Visual Studio</p>
     </footer>
 
+    <script src="./src/analytics.js" defer></script>
     <script>
         // 返回顶部按钮
         const backToTop = document.querySelector('.back-to-top');
@@ -703,6 +1300,202 @@
                 }
             });
         }
+    </script>
+    <script>
+        (() => {
+            const fileName = (window.location.pathname.split('/').pop() || '').toLowerCase();
+            let pageType = 'default';
+            if (fileName.includes('animation')) pageType = 'animation';
+            if (fileName.includes('bilibili')) pageType = 'speed';
+            if (fileName.includes('architecture')) pageType = 'architecture';
+
+            document.body.classList.add('cinema-enhanced', `page-${pageType}`);
+
+            const detailImages = document.querySelectorAll('img');
+            detailImages.forEach((img) => {
+                if (img.classList.contains('cover-image')) {
+                    img.setAttribute('loading', 'eager');
+                    if (!img.hasAttribute('fetchpriority')) {
+                        img.setAttribute('fetchpriority', 'high');
+                    }
+                } else if (!img.hasAttribute('loading')) {
+                    img.setAttribute('loading', 'lazy');
+                }
+
+                if (!img.hasAttribute('decoding')) {
+                    img.setAttribute('decoding', 'async');
+                }
+            });
+
+            const revealTargets = document.querySelectorAll([
+                '.cover-hero',
+                '.project-header',
+                '.project-meta-info',
+                '.video-wrapper',
+                '.video-info',
+                '.project-snapshot',
+                '.technical-stack',
+                '.gallery-item',
+                '.gallery-section',
+                'footer'
+            ].join(','));
+
+            revealTargets.forEach((el, index) => {
+                el.classList.add('cinema-reveal');
+                el.style.setProperty('--reveal-delay', `${Math.min(index * 70, 420)}ms`);
+            });
+
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-inview');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+                revealTargets.forEach((el) => observer.observe(el));
+            } else {
+                revealTargets.forEach((el) => el.classList.add('is-inview'));
+            }
+
+            const tiltTargets = document.querySelectorAll('.project-meta-info, .video-wrapper, .video-info, .project-snapshot, .technical-stack, .gallery-item');
+
+            tiltTargets.forEach((card) => {
+                card.classList.add('cinema-tilt');
+
+                card.addEventListener('pointermove', (event) => {
+                    if (window.innerWidth < 900) return;
+                    const rect = card.getBoundingClientRect();
+                    const px = (event.clientX - rect.left) / rect.width;
+                    const py = (event.clientY - rect.top) / rect.height;
+                    const rx = ((0.5 - py) * 6).toFixed(2);
+                    const ry = ((px - 0.5) * 8).toFixed(2);
+
+                    card.style.setProperty('--rx', `${rx}deg`);
+                    card.style.setProperty('--ry', `${ry}deg`);
+                    card.classList.add('tilt-active');
+                });
+
+                const resetTilt = () => {
+                    card.classList.remove('tilt-active');
+                    card.style.removeProperty('--rx');
+                    card.style.removeProperty('--ry');
+                };
+
+                card.addEventListener('pointerleave', resetTilt);
+                card.addEventListener('pointercancel', resetTilt);
+            });
+
+            const progressBar = document.createElement('div');
+            progressBar.className = 'cinema-progress';
+            progressBar.innerHTML = '<span class="cinema-progress-fill" aria-hidden="true"></span>';
+            document.body.appendChild(progressBar);
+
+            const progressFill = progressBar.querySelector('.cinema-progress-fill');
+            const updateProgress = () => {
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const ratio = maxScroll > 0 ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1) : 0;
+                progressFill.style.transform = `scaleX(${ratio})`;
+            };
+
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+
+            const hero = document.querySelector('.cover-hero');
+            if (hero) {
+                const updateHeroShift = () => {
+                    const shift = Math.min(window.scrollY * 0.16, 46);
+                    hero.style.setProperty('--hero-shift', `${shift}px`);
+                };
+                window.addEventListener('scroll', updateHeroShift, { passive: true });
+                updateHeroShift();
+            }
+
+            const sceneMap = {
+                animation: [
+                    { selector: '.cover-hero', label: '封面' },
+                    { selector: '.project-header', label: '信息' },
+                    { selector: '.video-section', label: '正片' },
+                    { selector: 'footer', label: '返回' }
+                ],
+                speed: [
+                    { selector: '.cover-hero', label: '赛道' },
+                    { selector: '.project-header', label: '参数' },
+                    { selector: '.video-section', label: '视频' },
+                    { selector: 'footer', label: '返回' }
+                ],
+                architecture: [
+                    { selector: '#project-header', label: '概览' },
+                    { selector: '#business-value', label: '价值' },
+                    { selector: '#technical-stack', label: '流程' },
+                    { selector: '#gallery-section', label: '画廊' },
+                    { selector: 'footer', label: '返回' }
+                ]
+            };
+
+            const sceneItems = (sceneMap[pageType] || sceneMap.animation)
+                .map((scene, idx) => {
+                    const target = document.querySelector(scene.selector);
+                    if (!target) return null;
+                    if (!target.id) target.id = `scene-${pageType}-${idx + 1}`;
+                    return { id: target.id, label: scene.label, el: target };
+                })
+                .filter(Boolean);
+
+            if (sceneItems.length > 1) {
+                const dock = document.createElement('nav');
+                dock.className = 'scene-dock';
+                dock.setAttribute('aria-label', 'Section navigation');
+                dock.innerHTML = sceneItems.map((item) => `
+                    <a class="scene-link" href="#${item.id}" data-scene-id="${item.id}">
+                        <span class="scene-dot" aria-hidden="true"></span>
+                        <span class="scene-label">${item.label}</span>
+                    </a>
+                `).join('');
+                document.body.appendChild(dock);
+
+                const sceneLinks = Array.from(dock.querySelectorAll('.scene-link'));
+                const setActive = (activeId) => {
+                    sceneLinks.forEach((link) => {
+                        link.classList.toggle('active', link.dataset.sceneId === activeId);
+                    });
+                };
+
+                dock.addEventListener('click', (event) => {
+                    const link = event.target.closest('.scene-link');
+                    if (!link) return;
+                    event.preventDefault();
+                    const target = document.getElementById(link.dataset.sceneId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+
+                if ('IntersectionObserver' in window) {
+                    const sceneObserver = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                setActive(entry.target.id);
+                            }
+                        });
+                    }, { threshold: 0.42, rootMargin: '-18% 0px -45% 0px' });
+
+                    sceneItems.forEach((item) => sceneObserver.observe(item.el));
+                }
+
+                setActive(sceneItems[0].id);
+            }
+
+            document.addEventListener('pointermove', (event) => {
+                const x = `${(event.clientX / window.innerWidth) * 100}%`;
+                const y = `${(event.clientY / window.innerHeight) * 100}%`;
+                document.body.style.setProperty('--mx', x);
+                document.body.style.setProperty('--my', y);
+            }, { passive: true });
+        })();
     </script>
 </body>
 </html>
