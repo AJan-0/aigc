@@ -1,5 +1,5 @@
-import { Accordion05 } from "@/components/ui/accordion-05";
+import FeaturedSectionStats from "@/components/ui/featured-section-stats";
 
 export default function DemoOne() {
-  return <Accordion05 />;
+  return <FeaturedSectionStats />;
 }
