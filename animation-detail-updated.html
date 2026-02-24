@@ -1638,7 +1638,33 @@
                     sceneItems.forEach((item) => sceneObserver.observe(item.el));
                 }
 
-                setActive(sceneItems[0].id);
+                const syncActiveByScroll = () => {
+                    const anchor = window.innerHeight * 0.33;
+                    let current = sceneItems[0];
+                    for (const item of sceneItems) {
+                        const rect = item.el.getBoundingClientRect();
+                        if (rect.top - anchor <= 0) {
+                            current = item;
+                        } else {
+                            break;
+                        }
+                    }
+                    setActive(current.id);
+                };
+
+                let isTicking = false;
+                const onScroll = () => {
+                    if (isTicking) return;
+                    isTicking = true;
+                    window.requestAnimationFrame(() => {
+                        syncActiveByScroll();
+                        isTicking = false;
+                    });
+                };
+
+                window.addEventListener('scroll', onScroll, { passive: true });
+                window.addEventListener('resize', onScroll);
+                syncActiveByScroll();
             }
 
             document.addEventListener('pointermove', (event) => {
