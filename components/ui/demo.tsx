@@ -1,5 +1,5 @@
-import BasicAccordion from "@/components/ui/accordion-1";
+import { Accordion05 } from "@/components/ui/accordion-05";
 
 export default function DemoOne() {
-  return <BasicAccordion />;
+  return <Accordion05 />;
 }

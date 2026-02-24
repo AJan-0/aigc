@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@ark-ui/react": "^5.32.0",
-    "lucide-react": "^0.575.0"
+    "@radix-ui/react-accordion": "^1.2.12",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.575.0",
+    "tailwind-merge": "^3.5.0"
   }
 }
