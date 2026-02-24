@@ -9,5 +9,9 @@
   },
   "devDependencies": {
     "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@ark-ui/react": "^5.32.0",
+    "lucide-react": "^0.575.0"
   }
 }
