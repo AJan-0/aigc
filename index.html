@@ -2068,16 +2068,32 @@
         function ProjectCard({ project, index, reverse }) {
             const ref = useRef(null);
             const cardRef = useRef(null);
+            const videoRef = useRef(null);
             const isInView = useInView(ref, { once: true, margin: "-15%" });
             
             const [tilt, setTilt] = useState({ x: 0, y: 0 });
             const [isMobile, setIsMobile] = useState(false);
+            const [isTouchDevice, setIsTouchDevice] = useState(false);
+            const [showVideo, setShowVideo] = useState(false);
+            const hoverTimeoutRef = useRef(null);
             
             useEffect(() => {
                 const checkMobile = () => setIsMobile(window.innerWidth < 768);
+                const checkTouchDevice = () => setIsTouchDevice(() => {
+                    return (('ontouchstart' in window) ||
+                            (navigator.maxTouchPoints > 0) ||
+                            (navigator.msMaxTouchPoints > 0));
+                });
+                
                 checkMobile();
+                checkTouchDevice();
                 window.addEventListener('resize', checkMobile);
-                return () => window.removeEventListener('resize', checkMobile);
+                return () => {
+                    window.removeEventListener('resize', checkMobile);
+                    if (hoverTimeoutRef.current) {
+                        clearTimeout(hoverTimeoutRef.current);
+                    }
+                };
             }, []);
             
             const { scrollYProgress } = useScroll({
@@ -2104,7 +2120,35 @@
                 setTilt({ x: tiltX, y: tiltY });
             }, []);
             
+            const handleMouseEnter = useCallback(() => {
+                if (isMobile || isTouchDevice || !project.isVideo) return;
+                
+                // 清除之前的延迟
+                if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                }
+                
+                // 300ms 后显示视频
+                hoverTimeoutRef.current = setTimeout(() => {
+                    setShowVideo(true);
+                    if (videoRef.current) {
+                        videoRef.current.play().catch(err => console.log('Video play error:', err));
+                    }
+                }, 300);
+            }, [isMobile, isTouchDevice, project.isVideo]);
+            
             const handleMouseLeave = useCallback(() => {
+                // 清除延迟
+                if (hoverTimeoutRef.current) {
+                    clearTimeout(hoverTimeoutRef.current);
+                }
+                
+                // 暂停并隐藏视频
+                setShowVideo(false);
+                if (videoRef.current) {
+                    videoRef.current.pause();
+                    videoRef.current.currentTime = 0;
+                }
                 setTilt({ x: 0, y: 0 });
             }, []);
             
@@ -2120,6 +2164,7 @@
                         ref={cardRef}
                         onMouseMove={!isMobile ? handleMouseMove : undefined}
                         onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+                        onMouseEnter={handleMouseEnter}
                         animate={isMobile ? {} : {
                             rotateX: tilt.x,
                             rotateY: tilt.y
@@ -2150,24 +2195,64 @@
                                 className="w-full h-full object-cover project-image"
                             />
                             
+                            {/* 视频预览层 */}
+                            {project.isVideo && !isMobile && !isTouchDevice && (
+                                <motion.video
+                                    ref={videoRef}
+                                    src={`images/preview-${project.id}.mp4`}
+                                    autoPlay={false}
+                                    muted
+                                    loop
+                                    playsInline
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                    style={{ 
+                                        pointerEvents: 'none',
+                                        opacity: showVideo ? 1 : 0
+                                    }}
+                                    animate={{
+                                        opacity: showVideo ? 1 : 0
+                                    }}
+                                    transition={{ duration: 0.4 }}
+                                />
+                            )}
+                            
+                            {/* "▶ 预览" 徽章 */}
+                            {project.isVideo && !isMobile && !isTouchDevice && (
+                                <motion.div
+                                    initial={{ opacity: 1 }}
+                                    animate={{ opacity: showVideo ? 0 : 1 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 z-20 pointer-events-none"
+                                >
+                                    <div className="flex items-center gap-1.5">
+                                        <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                        <span className="text-xs font-semibold text-white">预览</span>
+                                    </div>
+                                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                                </motion.div>
+                            )}
+                            
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 whileHover={{ opacity: 1 }}
                                 transition={{ duration: 0.4 }}
-                                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none"
                             />
                             
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 whileHover={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.3 }}
-                                className="absolute inset-0 flex items-center justify-center"
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none"
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.15, rotate: 180 }}
                                     whileTap={{ scale: 0.9 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                     className="w-24 h-24 rounded-full glass-strong flex items-center justify-center neon-glow cursor-pointer"
+                                    style={{ pointerEvents: 'auto' }}
                                 >
                                     {project.isVideo ? (
                                         <motion.svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" animate={{ y: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
