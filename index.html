@@ -3065,10 +3065,10 @@
                                 </motion.div>
                             )}
                             
-                            {/* 移动端：自动播放静音视频 + 精致音量图标 */}
+                            {/* 移动端：自动播放静音视频预览 */}
                             {project.isVideo && isMobile && (
                                 <>
-                                    {shouldLoadVideo && !videoError && (
+                                    {!videoError && (
                                         <video
                                             src={project.videoUrl}
                                             autoPlay
@@ -3076,14 +3076,14 @@
                                             loop
                                             playsInline
                                             preload="metadata"
-                                            className="absolute inset-0 w-full h-full object-cover"
+                                            className="absolute inset-0 w-full h-auto object-cover"
                                             style={{ pointerEvents: 'none' }}
                                             onError={(e) => { e.target.style.display = 'none'; }}
                                         />
                                     )}
-                                    {/* 静音图标 - 左下角半透明 */}
+                                    {/* 静音图标 */}
                                     <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="opacity-50">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="opacity-40">
                                             <path d="M11 5L6 9H2v6h4l5 4V5z" fill="white"/>
                                             <path d="M23 9l-6 6M17 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                                         </svg>
@@ -3430,16 +3430,20 @@
             React.useEffect(() => {
                 if (videoRef.current) {
                     const v = videoRef.current;
-                    // On mobile, don't autoplay — wait for user tap (direct gesture = sound allowed)
-                    if (window.innerWidth < 768) {
-                        setIsPlaying(false);
-                        return;
-                    }
-                    // Desktop: try autoplay with sound
+                    // Try to play with sound (works if opened via user tap)
+                    v.muted = false;
                     v.play().then(() => {
                         setIsPlaying(true);
+                        setIsMuted(false);
                     }).catch(() => {
-                        setIsPlaying(false);
+                        // Fallback: muted autoplay
+                        v.muted = true;
+                        v.play().then(() => {
+                            setIsPlaying(true);
+                            setIsMuted(true);
+                        }).catch(() => {
+                            setIsPlaying(false);
+                        });
                     });
                 }
             }, []);
