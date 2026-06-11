@@ -2066,19 +2066,26 @@
                         .order('sort_order', { ascending: true });
                     
                     if (!error && data && data.length > 0) {
-                        PROJECTS_DATA = data.map(p => ({
-                            id: p.id.toString(),
-                            title: p.title_zh,
-                            category: getCategoryLabel(p.category),
-                            description: p.description || '',
-                            image: p.cover_url || null,
-                            videoUrl: p.video_url || null,
-                            videoType: p.video_type || 'mp4',
-                            isVideo: !!p.video_url,
-                            tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? JSON.parse(p.tags) : []),
-                            link: '/project.html?id=' + p.id,
-                            duration: p.duration
-                        }));
+                        // 合并 Supabase 数据和回退数据（回退数据提供视频/封面）
+                        const fallbackMap = {};
+                        FALLBACK_PROJECTS.forEach(fp => { fallbackMap[fp.id] = fp; });
+                        
+                        PROJECTS_DATA = data.map(p => {
+                            const fb = fallbackMap[p.id.toString()];
+                            return {
+                                id: p.id.toString(),
+                                title: p.title_zh,
+                                category: getCategoryLabel(p.category),
+                                description: p.description || '',
+                                image: p.cover_url || (fb ? fb.image : null),
+                                videoUrl: p.video_url || (fb ? fb.videoUrl : null),
+                                videoType: p.video_type || 'mp4',
+                                isVideo: !!(p.video_url || (fb && fb.videoUrl)),
+                                tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? JSON.parse(p.tags) : []),
+                                link: '/project.html?id=' + p.id,
+                                duration: p.duration
+                            };
+                        });
                         projectsLoaded = true;
                         console.log('[Portfolio] Loaded', PROJECTS_DATA.length, 'projects from Supabase');
                         return PROJECTS_DATA;
