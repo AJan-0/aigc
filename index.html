@@ -772,6 +772,7 @@
             }
             .tilt-card-inner {
                 max-height: 70vh;
+                aspect-ratio: auto;
             }
             .project-image {
                 width: 100%;
@@ -1988,6 +1989,8 @@
         
         .tilt-card-inner {
             transform: translateZ(20px);
+            aspect-ratio: 9/16;
+            overflow: hidden;
         }
         
         /* ============================================
@@ -2968,7 +2971,7 @@
                             rotateY: tilt.y
                         }}
                         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                        className={`relative group hoverable overflow-hidden rounded-2xl tilt-card w-full max-h-[70vh] ${reverse ? 'lg:col-start-2' : ''}`}
+                        className={`relative group hoverable overflow-hidden rounded-2xl tilt-card w-full ${reverse ? 'lg:col-start-2' : ''}`}
                         style={{ transformStyle: isMobile ? 'flat' : 'preserve-3d' }}
                     >
                         {/* Decorative Border Light */}
