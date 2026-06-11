@@ -3430,20 +3430,13 @@
             React.useEffect(() => {
                 if (videoRef.current) {
                     const v = videoRef.current;
-                    // Try to play with sound (works if opened via user tap)
                     v.muted = false;
                     v.play().then(() => {
                         setIsPlaying(true);
                         setIsMuted(false);
                     }).catch(() => {
-                        // Fallback: muted autoplay
-                        v.muted = true;
-                        v.play().then(() => {
-                            setIsPlaying(true);
-                            setIsMuted(true);
-                        }).catch(() => {
-                            setIsPlaying(false);
-                        });
+                        // Autoplay blocked — show play button, user tap will play with sound
+                        setIsPlaying(false);
                     });
                 }
             }, []);
