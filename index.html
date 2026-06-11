@@ -2825,7 +2825,6 @@
             const [showVideo, setShowVideo] = useState(false);
             const [videoLoading, setVideoLoading] = useState(false);
             const [videoError, setVideoError] = useState(false);
-            const [mobilePreview, setMobilePreview] = useState(false);
             const hoverTimeoutRef = useRef(null);
             const canPlayRef = useRef(false);
             
@@ -3068,39 +3067,30 @@
                                 </motion.div>
                             )}
                             
-                            {/* 移动端内联预览 */}
-                            {project.isVideo && isMobile && mobilePreview && (
+                            {/* 移动端：自动播放静音视频 + 精致音量图标 */}
+                            {project.isVideo && isMobile && (
                                 <>
-                                    <video
-                                        src={project.videoUrl}
-                                        autoPlay
-                                        muted
-                                        loop
-                                        playsInline
-                                        preload="metadata"
-                                        className="absolute inset-0 w-full h-full object-cover"
-                                        style={{ pointerEvents: 'none' }}
-                                    />
-                                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-20">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); if (onVideoClick) onVideoClick(project); }}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 text-black text-sm font-semibold shadow-lg"
-                                        >
-                                            🔊 点击播放声音
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                            
-                            {/* 移动端播放按钮 */}
-                            {project.isVideo && isMobile && !mobilePreview && (
-                                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z" />
+                                    {shouldLoadVideo && !videoError && (
+                                        <video
+                                            src={project.videoUrl}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            preload="metadata"
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            style={{ pointerEvents: 'none' }}
+                                            onError={(e) => { e.target.style.display = 'none'; }}
+                                        />
+                                    )}
+                                    {/* 静音图标 - 左下角半透明 */}
+                                    <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="opacity-50">
+                                            <path d="M11 5L6 9H2v6h4l5 4V5z" fill="white"/>
+                                            <path d="M23 9l-6 6M17 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                                         </svg>
                                     </div>
-                                </div>
+                                </>
                             )}
                             
                             {/* "▶ 预览" 徽章 */}
@@ -3163,17 +3153,8 @@
                         
                         <a onClick={(e) => {
                             e.preventDefault();
-                            if (project.isVideo && onVideoClick) {
-                                if (isMobile && !mobilePreview) {
-                                    // First tap on mobile: play muted inline
-                                    setMobilePreview(true);
-                                } else {
-                                    // Second tap or desktop: open modal
-                                    onVideoClick(project);
-                                }
-                            } else if (project.link) {
-                                window.location.href = project.link;
-                            }
+                            if (project.isVideo && onVideoClick) { onVideoClick(project); }
+                            else if (project.link) { window.location.href = project.link; }
                         }} className="absolute inset-0 z-10 cursor-pointer" aria-label={`View ${project.title}`} />
                     </motion.div>
                     
@@ -3450,9 +3431,22 @@
 
             React.useEffect(() => {
                 if (videoRef.current) {
-                    videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {
-                        // Autoplay blocked on mobile — show play button prominently
-                        setIsPlaying(false);
+                    // On mobile, try muted autoplay first, then unmute
+                    const v = videoRef.current;
+                    v.muted = true;
+                    v.play().then(() => {
+                        v.muted = false;
+                        setIsPlaying(true);
+                        setIsMuted(false);
+                    }).catch(() => {
+                        // Autoplay blocked — try muted
+                        v.muted = true;
+                        v.play().then(() => {
+                            setIsPlaying(true);
+                            setIsMuted(true);
+                        }).catch(() => {
+                            setIsPlaying(false);
+                        });
                     });
                 }
             }, []);
