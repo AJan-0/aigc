@@ -1989,7 +1989,7 @@
         
         .tilt-card-inner {
             transform: translateZ(20px);
-            aspect-ratio: 9/16;
+            aspect-ratio: 3/5;
             overflow: hidden;
         }
         
@@ -3398,11 +3398,16 @@
                 if (!videoRef.current) return;
                 const v = videoRef.current;
                 if (v.paused) {
-                    v.muted = false;
+                    // Mobile trick: start muted to ensure playback, then unmute
+                    v.muted = true;
                     v.defaultMuted = false;
                     v.play().then(() => {
+                        // Unmute after playback starts
+                        setTimeout(() => {
+                            v.muted = false;
+                            setIsMuted(false);
+                        }, 100);
                         setIsPlaying(true);
-                        setIsMuted(false);
                     }).catch(() => {
                         setIsPlaying(false);
                     });
