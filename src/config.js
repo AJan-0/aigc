@@ -4,8 +4,8 @@
 // ============================================
 
 // 从 Supabase Dashboard → Settings → API 获取
-window.SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-window.SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+window.SUPABASE_URL = 'https://ihbhxeguznmxhlqmausk.supabase.co';
+window.SUPABASE_ANON_KEY = 'sb_publishable_095YrN8guN6L6YoeX7pMSg_GEXz28B9';
 
 // 初始化 Supabase 客户端
 window.supabaseClient = null;
