@@ -1,1 +1,11 @@
 node_modules/
+dist/
+.env
+server/.env
+server/data/
+server/uploads/
+*.db
+.DS_Store
+_projects_data_backup.txt
+_features_data_backup.txt
+_replace_projects.py

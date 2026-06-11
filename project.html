@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目详情 | AIGC Visual Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body: ['Manrope', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0F172A',
+                        secondary: '#1E293B',
+                        'accent-blue': '#3B82F6',
+                        'accent-purple': '#8B5CF6',
+                        'accent-cyan': '#06B6D4',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(180deg, #040915 0%, #0A1327 34%, #0F172A 72%, #0F172A 100%);
+            color: #CBD5E1;
+            min-height: 100vh;
+        }
+
+        /* Video Player */
+        .video-player-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-player-wrapper video {
+            width: 100%;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Custom Controls */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-player-wrapper:hover .video-controls {
+            opacity: 1;
+        }
+
+        .video-controls button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.25rem;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        .video-controls button:hover { opacity: 1; }
+
+        .progress-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-container:hover {
+            height: 6px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06B6D4, #8B5CF6);
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #06B6D4;
+            cursor: pointer;
+        }
+
+        /* Play overlay */
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .play-overlay:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .play-btn-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(6, 182, 212, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .play-overlay:hover .play-btn-circle {
+            transform: scale(1.1);
+        }
+
+        /* Loading */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(6, 182, 212, 0.2);
+            border-top-color: #06B6D4;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #06B6D4;
+            background: rgba(6, 182, 212, 0.08);
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #06B6D4; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .video-controls { opacity: 1; }
+            .play-btn-circle { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading State -->
+        <div id="loadingState" class="min-h-screen flex items-center justify-center">
+            <div class="text-center">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-slate-400">加载中...</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="min-h-screen flex items-center justify-center" style="display: none;">
+            <div class="text-center">
+                <p class="text-5xl mb-4">😕</p>
+                <h2 class="text-xl font-bold text-slate-200 mb-2">项目未找到</h2>
+                <p class="text-slate-400 mb-6">该项目可能已被删除或不存在</p>
+                <a href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan/20 transition">
+                    ← 返回首页
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Detail -->
+        <div id="projectDetail" style="display: none;">
+            <!-- Nav -->
+            <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4" style="background: rgba(4, 9, 21, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(51, 65, 85, 0.3);">
+                <div class="max-w-7xl mx-auto flex items-center justify-between">
+                    <a href="/" class="font-display text-xl font-bold" style="background: linear-gradient(135deg, #8B5CF6, #06B6D4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        AIGC VISUAL
+                    </a>
+                    <a href="/" class="back-link">
+                        ← 返回作品集
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <main class="pt-24 pb-20 px-6">
+                <div class="max-w-5xl mx-auto">
+                    <!-- Header -->
+                    <div class="mb-8">
+                        <div class="text-sm font-bold text-accent-cyan mb-3 tracking-[0.2em] uppercase" id="pCategory"></div>
+                        <h1 class="font-display text-3xl md:text-5xl font-bold text-white mb-4" id="pTitle"></h1>
+                        <p class="text-lg text-slate-400 leading-relaxed max-w-3xl" id="pDescription"></p>
+                    </div>
+
+                    <!-- Video Player -->
+                    <div id="videoSection" class="mb-12" style="display: none;">
+                        <div class="video-player-wrapper" id="videoWrapper">
+                            <video id="mainVideo" preload="metadata">
+                                Your browser does not support the video tag.
+                            </video>
+
+                            <!-- Play Overlay -->
+                            <div class="play-overlay" id="playOverlay">
+                                <div class="play-btn-circle">
+                                    <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="video-controls" id="videoControls">
+                                <button id="playPauseBtn" title="播放/暂停">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </button>
+
+                                <div class="progress-container" id="progressContainer">
+                                    <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                                </div>
+
+                                <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+
+                                <div class="volume-control">
+                                    <button id="muteBtn" title="静音">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                    </button>
+                                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1">
+                                </div>
+
+                                <button id="fullscreenBtn" title="全屏">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image (when no video) -->
+                    <div id="coverSection" class="mb-12" style="display: none;">
+                        <div class="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
+                            <img id="coverImage" class="w-full" alt="Project Cover">
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div id="tagsSection" class="mb-8" style="display: none;">
+                        <div class="flex flex-wrap gap-2" id="tagsContainer"></div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="grid md:grid-cols-2 gap-6 mb-12">
+                        <div class="rounded-xl p-6" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.5);">
+                            <h3 class="text-sm font-bold text-accent-cyan mb-3 uppercase tracking-wider">项目信息</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">分类</span>
+                                    <span id="metaCategory" class="text-slate-300"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">时长</span>
+                                    <span id="metaDuration" class="text-slate-300"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">状态</span>
+                                    <span id="metaStatus" class="text-slate-300"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-xl p-6" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.5);">
+                            <h3 class="text-sm font-bold text-accent-cyan mb-3 uppercase tracking-wider">工具 & 技术</h3>
+                            <div id="metaTags" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // ─── API ───
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? '/api' : (window.API_URL || '/api');
+
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('id');
+
+        if (!projectId) {
+            showError();
+        } else {
+            loadProject(projectId);
+        }
+
+        async function loadProject(id) {
+            try {
+                const res = await fetch(`${API_BASE}/projects/${id}`);
+                if (!res.ok) throw new Error('Not found');
+                const p = await res.json();
+                renderProject(p);
+            } catch (err) {
+                console.error('Failed to load project:', err);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'flex';
+        }
+
+        function renderProject(p) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('projectDetail').style.display = 'block';
+
+            document.title = `${p.title_zh} | AIGC Visual Studio`;
+
+            // Category label
+            const catLabels = {
+                architecture: '建筑可视化',
+                animation: '动画短片',
+                video: '品牌视频'
+            };
+            document.getElementById('pCategory').textContent = catLabels[p.category] || p.category;
+            document.getElementById('pTitle').textContent = p.title_zh;
+            document.getElementById('pDescription').textContent = p.description || '';
+
+            // Video or cover
+            if (p.video_path) {
+                document.getElementById('videoSection').style.display = 'block';
+                const video = document.getElementById('mainVideo');
+                video.src = '/' + p.video_path;
+                video.type = p.video_type === 'webm' ? 'video/webm' : 'video/mp4';
+                initVideoPlayer();
+            } else if (p.cover_path) {
+                document.getElementById('coverSection').style.display = 'block';
+                document.getElementById('coverImage').src = '/' + p.cover_path;
+            }
+
+            // Tags
+            const tags = JSON.parse(p.tags || '[]');
+            if (tags.length > 0) {
+                document.getElementById('tagsSection').style.display = 'block';
+                document.getElementById('tagsContainer').innerHTML = tags.map(t =>
+                    `<span class="tag">${escapeHtml(t)}</span>`
+                ).join('');
+            }
+
+            // Meta
+            document.getElementById('metaCategory').textContent = catLabels[p.category] || p.category;
+            document.getElementById('metaDuration').textContent = p.duration || '未设置';
+            document.getElementById('metaStatus').textContent = p.is_published ? '已发布' : '草稿';
+            document.getElementById('metaTags').innerHTML = tags.length > 0
+                ? tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')
+                : '<span class="text-slate-500 text-sm">暂无标签</span>';
+        }
+
+        // ─── Video Player ───
+        function initVideoPlayer() {
+            const video = document.getElementById('mainVideo');
+            const wrapper = document.getElementById('videoWrapper');
+            const overlay = document.getElementById('playOverlay');
+            const controls = document.getElementById('videoControls');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const progressBar = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressBarFill');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const muteBtn = document.getElementById('muteBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            let isPlaying = false;
+
+            overlay.addEventListener('click', () => {
+                video.play();
+                overlay.style.display = 'none';
+                isPlaying = true;
+                updatePlayBtn();
+            });
+
+            video.addEventListener('click', () => {
+                if (isPlaying) { video.pause(); isPlaying = false; }
+                else { video.play(); isPlaying = true; }
+                updatePlayBtn();
+            });
+
+            playPauseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isPlaying) { video.pause(); isPlaying = false; }
+                else { video.play(); isPlaying = true; }
+                updatePlayBtn();
+            });
+
+            video.addEventListener('ended', () => {
+                isPlaying = false;
+                overlay.style.display = 'flex';
+                updatePlayBtn();
+            });
+
+            function updatePlayBtn() {
+                playPauseBtn.innerHTML = isPlaying
+                    ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
+                    : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            }
+
+            // Progress
+            video.addEventListener('timeupdate', () => {
+                const pct = (video.currentTime / video.duration) * 100;
+                progressFill.style.width = `${pct}%`;
+                timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+            });
+
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const pct = (e.clientX - rect.left) / rect.width;
+                video.currentTime = pct * video.duration;
+            });
+
+            // Volume
+            volumeSlider.addEventListener('input', (e) => {
+                video.volume = e.target.value;
+                video.muted = false;
+                updateMuteBtn();
+            });
+
+            muteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                video.muted = !video.muted;
+                updateMuteBtn();
+            });
+
+            function updateMuteBtn() {
+                if (video.muted || video.volume === 0) {
+                    muteBtn.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
+                } else {
+                    muteBtn.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+                }
+            }
+
+            // Fullscreen
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    wrapper.requestFullscreen();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                switch (e.key) {
+                    case ' ':
+                        e.preventDefault();
+                        if (isPlaying) { video.pause(); isPlaying = false; }
+                        else { video.play(); isPlaying = true; }
+                        updatePlayBtn();
+                        break;
+                    case 'ArrowLeft':
+                        video.currentTime = Math.max(0, video.currentTime - 5);
+                        break;
+                    case 'ArrowRight':
+                        video.currentTime = Math.min(video.duration, video.currentTime + 5);
+                        break;
+                    case 'f':
+                        if (document.fullscreenElement) document.exitFullscreen();
+                        else wrapper.requestFullscreen();
+                        break;
+                    case 'm':
+                        video.muted = !video.muted;
+                        updateMuteBtn();
+                        break;
+                }
+            });
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>
