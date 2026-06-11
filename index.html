@@ -577,6 +577,140 @@
             }
         }
         
+        /* Video Modal */
+        .video-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .video-modal-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .video-modal-video {
+            width: 100%;
+            max-height: 90vh;
+            display: block;
+            cursor: pointer;
+            object-fit: contain;
+        }
+        .video-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .video-modal-close:hover { background: rgba(255,255,255,0.2); }
+        .video-modal-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .video-modal-controls.visible { opacity: 1; }
+        .video-modal-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            min-width: 32px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-modal-controls button:hover { opacity: 1; }
+        .video-modal-progress {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        .video-modal-progress:hover { height: 6px; }
+        .video-modal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06B6D4, #8B5CF6);
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+        .video-modal-time {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        
+        /* Mobile: fullscreen modal */
+        @media (max-width: 768px) {
+            .video-modal-overlay {
+                padding: 0;
+                align-items: flex-end;
+            }
+            .video-modal-container {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 16px 16px 0 0;
+            }
+            .video-modal-controls {
+                opacity: 1;
+                padding: 0.5rem 0.75rem;
+                gap: 0.5rem;
+            }
+            .video-modal-close {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 36px;
+                height: 36px;
+            }
+        }
+        
         /* ============================================
            LOADING SCREEN
            ============================================ */
@@ -2576,7 +2710,7 @@
         };
         
         // Enhanced Project Card with 3D Tilt
-        function ProjectCard({ project, index, reverse }) {
+        function ProjectCard({ project, index, reverse, onVideoClick }) {
             const ref = useRef(null);
             const cardRef = useRef(null);
             const videoRef = useRef(null);
@@ -2756,6 +2890,15 @@
                                     alt={project.title}
                                     className="w-full h-full object-cover project-image"
                                 />
+                            ) : project.isVideo ? (
+                                <video
+                                    src={project.videoUrl}
+                                    preload="metadata"
+                                    muted
+                                    playsInline
+                                    className="w-full h-full object-cover"
+                                    style={{ pointerEvents: 'none' }}
+                                />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
                                     <span className="text-6xl opacity-30">🎬</span>
@@ -2859,6 +3002,7 @@
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                     className="w-24 h-24 rounded-full glass-strong flex items-center justify-center neon-glow cursor-pointer"
                                     style={{ pointerEvents: 'auto' }}
+                                    onClick={(e) => { e.stopPropagation(); if (project.isVideo && onVideoClick) { onVideoClick(project); } }}
                                 >
                                     {project.isVideo ? (
                                         <motion.svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" animate={{ y: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
@@ -2877,7 +3021,7 @@
                             </motion.div>
                         </motion.div>
                         
-                        <a href={project.link} className="absolute inset-0 z-10" aria-label={`View ${project.title}`} />
+                        <a onClick={(e) => { e.preventDefault(); if (project.isVideo && onVideoClick) { onVideoClick(project); } else if (project.link) { window.location.href = project.link; } }} className="absolute inset-0 z-10 cursor-pointer" aria-label={`View ${project.title}`} />
                     </motion.div>
                     
                     <div className={reverse ? 'lg:col-start-1 lg:row-start-1' : ''}>
@@ -3112,10 +3256,117 @@
         }
         
         // Main App
+        function VideoModal({ project, onClose }) {
+            const videoRef = React.useRef(null);
+            const [isPlaying, setIsPlaying] = React.useState(false);
+            const [progress, setProgress] = React.useState(0);
+            const [currentTime, setCurrentTime] = React.useState('0:00');
+            const [duration, setDuration] = React.useState('0:00');
+            const [isMuted, setIsMuted] = React.useState(false);
+            const [showControls, setShowControls] = React.useState(true);
+            const controlsTimeout = React.useRef(null);
+
+            React.useEffect(() => {
+                const handleKey = (e) => {
+                    if (e.key === 'Escape') onClose();
+                    if (!videoRef.current) return;
+                    if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+                    if (e.key === 'ArrowLeft') videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 5);
+                    if (e.key === 'ArrowRight') videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 5);
+                    if (e.key === 'm' || e.key === 'M') toggleMute();
+                    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+                };
+                document.addEventListener('keydown', handleKey);
+                document.body.style.overflow = 'hidden';
+                return () => {
+                    document.removeEventListener('keydown', handleKey);
+                    document.body.style.overflow = '';
+                };
+            }, []);
+
+            React.useEffect(() => {
+                if (videoRef.current) videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+            }, []);
+
+            const togglePlay = () => {
+                if (!videoRef.current) return;
+                if (videoRef.current.paused) { videoRef.current.play(); setIsPlaying(true); }
+                else { videoRef.current.pause(); setIsPlaying(false); }
+            };
+            const toggleMute = () => {
+                if (!videoRef.current) return;
+                videoRef.current.muted = !videoRef.current.muted;
+                setIsMuted(videoRef.current.muted);
+            };
+            const toggleFullscreen = () => {
+                const el = document.getElementById('videoModalWrapper');
+                if (!el) return;
+                if (document.fullscreenElement) document.exitFullscreen();
+                else el.requestFullscreen();
+            };
+            const formatTime = (s) => {
+                if (isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return m + ':' + String(sec).padStart(2, '0');
+            };
+            const handleMouseMove = () => {
+                setShowControls(true);
+                if (controlsTimeout.current) clearTimeout(controlsTimeout.current);
+                controlsTimeout.current = setTimeout(() => setShowControls(false), 3000);
+            };
+
+            return (
+                <div
+                    className="video-modal-overlay"
+                    onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+                    onMouseMove={handleMouseMove}
+                >
+                    <div className="video-modal-container" id="videoModalWrapper">
+                        <video
+                            ref={videoRef}
+                            src={project.videoUrl}
+                            className="video-modal-video"
+                            playsInline
+                            onClick={togglePlay}
+                            onTimeUpdate={() => {
+                                if (!videoRef.current) return;
+                                const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+                                setProgress(pct);
+                                setCurrentTime(formatTime(videoRef.current.currentTime));
+                            }}
+                            onLoadedMetadata={() => {
+                                if (videoRef.current) setDuration(formatTime(videoRef.current.duration));
+                            }}
+                            onEnded={() => setIsPlaying(false)}
+                        />
+                        <button className="video-modal-close" onClick={onClose} title="关闭 (Esc)">✕</button>
+                        <div className={`video-modal-controls ${showControls ? 'visible' : ''}`}>
+                            <button onClick={togglePlay} title="播放/暂停 (Space)">
+                                {isPlaying ? '⏸' : '▶'}
+                            </button>
+                            <div className="video-modal-progress" onClick={(e) => {
+                                if (!videoRef.current) return;
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const pct = (e.clientX - rect.left) / rect.width;
+                                videoRef.current.currentTime = pct * videoRef.current.duration;
+                            }}>
+                                <div className="video-modal-progress-fill" style={{ width: progress + '%' }}></div>
+                            </div>
+                            <span className="video-modal-time">{currentTime} / {duration}</span>
+                            <button onClick={toggleMute} title="静音 (M)">{isMuted ? '🔇' : '🔊'}</button>
+                            <button onClick={toggleFullscreen} title="全屏 (F)">⛶</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
         function App() {
             const pageLoading = usePageLoading();
             const [projects, setProjects] = React.useState(PROJECTS_DATA);
             const [projectsLoading, setProjectsLoading] = React.useState(true);
+            const [selectedVideo, setSelectedVideo] = React.useState(null);
             useScrollProgress();
             useCustomCursor();
             useFloatingParticles();
@@ -3201,6 +3452,7 @@
                                         project={project}
                                         index={index}
                                         reverse={index % 2 !== 0}
+                                        onVideoClick={setSelectedVideo}
                                     />
                                 </motion.div>
                             ))}
@@ -3398,6 +3650,14 @@
                             />
                         </div>
                     </footer>
+                    
+                    {/* 视频放大播放弹窗 */}
+                    {selectedVideo && (
+                        <VideoModal
+                            project={selectedVideo}
+                            onClose={() => setSelectedVideo(null)}
+                        />
+                    )}
                 </>
             );
         }
