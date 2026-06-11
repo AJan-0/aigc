@@ -770,6 +770,14 @@
             .video-modal-time {
                 font-size: 0.75rem;
             }
+            /* Portrait video card on mobile */
+            .tilt-card-inner {
+                aspect-ratio: 9/16 !important;
+                max-height: 70vh;
+            }
+            .project-image {
+                object-position: center top;
+            }
         }
         
         /* Touch devices: always show video first frame */
@@ -2097,11 +2105,11 @@
         // 静态回退数据 — Supabase 未配置时使用
         const FALLBACK_PROJECTS = [
             {
-                id: '1', title: '黄洞水库全龄友好游客空间',
-                category: '建筑可视化',
-                description: 'AIGC 赋能滨水景观设计，3 天完成从概念到 8K 级可视化交付，支持全龄段游客动线规划与空间体验预演',
+                id: '1', title: '《Bound by Blood》AI 真人短剧',
+                category: 'AI 真人短剧',
+                description: '北美市场定制 | 女性视角叙事 | AI 驱动全流程制作',
                 image: 'images/v1_cover.jpg', videoUrl: 'images/v1.mp4', videoType: 'mp4', isVideo: true,
-                tags: ['SketchUp', 'V-Ray', '3ds Max', 'AI 增强'], link: '/project.html?id=1', duration: null
+                tags: ['AI 制作', '北美发行', '真人短剧'], link: '/project.html?id=1', duration: null
             }
         ];
 
@@ -2817,6 +2825,7 @@
             const [showVideo, setShowVideo] = useState(false);
             const [videoLoading, setVideoLoading] = useState(false);
             const [videoError, setVideoError] = useState(false);
+            const [mobilePreview, setMobilePreview] = useState(false);
             const hoverTimeoutRef = useRef(null);
             const canPlayRef = useRef(false);
             
@@ -2976,7 +2985,8 @@
                         
                         <motion.div
                             style={{ y: imageY }}
-                            className="relative aspect-[16/10] overflow-hidden tilt-card-inner"
+                            className="relative overflow-hidden tilt-card-inner"
+                            style={{ aspectRatio: isMobile ? '9/16' : '3/4' }}
                         >
                             {project.image ? (
                                 <motion.img
@@ -3058,6 +3068,41 @@
                                 </motion.div>
                             )}
                             
+                            {/* 移动端内联预览 */}
+                            {project.isVideo && isMobile && mobilePreview && (
+                                <>
+                                    <video
+                                        src={project.videoUrl}
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        preload="metadata"
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                        style={{ pointerEvents: 'none' }}
+                                    />
+                                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-20">
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); if (onVideoClick) onVideoClick(project); }}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 text-black text-sm font-semibold shadow-lg"
+                                        >
+                                            🔊 点击播放声音
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                            
+                            {/* 移动端播放按钮 */}
+                            {project.isVideo && isMobile && !mobilePreview && (
+                                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            )}
+                            
                             {/* "▶ 预览" 徽章 */}
                             {project.isVideo && !isMobile && !isTouchDevice && !videoError && shouldLoadVideo && (
                                 <motion.div
@@ -3116,7 +3161,20 @@
                             </motion.div>
                         </motion.div>
                         
-                        <a onClick={(e) => { e.preventDefault(); if (project.isVideo && onVideoClick) { onVideoClick(project); } else if (project.link) { window.location.href = project.link; } }} className="absolute inset-0 z-10 cursor-pointer" aria-label={`View ${project.title}`} />
+                        <a onClick={(e) => {
+                            e.preventDefault();
+                            if (project.isVideo && onVideoClick) {
+                                if (isMobile && !mobilePreview) {
+                                    // First tap on mobile: play muted inline
+                                    setMobilePreview(true);
+                                } else {
+                                    // Second tap or desktop: open modal
+                                    onVideoClick(project);
+                                }
+                            } else if (project.link) {
+                                window.location.href = project.link;
+                            }
+                        }} className="absolute inset-0 z-10 cursor-pointer" aria-label={`View ${project.title}`} />
                     </motion.div>
                     
                     <div className={reverse ? 'lg:col-start-1 lg:row-start-1' : ''}>
