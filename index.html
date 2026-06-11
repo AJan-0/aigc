@@ -3396,16 +3396,12 @@
                 const v = videoRef.current;
                 if (v.paused) {
                     v.muted = false;
+                    v.defaultMuted = false;
                     v.play().then(() => {
                         setIsPlaying(true);
                         setIsMuted(false);
                     }).catch(() => {
-                        // If unmuted play fails, try muted
-                        v.muted = true;
-                        v.play().then(() => {
-                            setIsPlaying(true);
-                            setIsMuted(true);
-                        }).catch(() => {});
+                        setIsPlaying(false);
                     });
                 } else {
                     v.pause();
@@ -3472,6 +3468,7 @@
                             webkit-playsinline="true"
                             x5-video-player-type="h5"
                             x5-video-player-fullscreen="true"
+                            x5-video-player-audio-type="normal"
                             onClick={togglePlay}
                             onWaiting={() => setIsLoading(true)}
                             onPlaying={() => { setIsLoading(false); setIsPlaying(true); }}
