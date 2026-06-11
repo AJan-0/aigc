@@ -266,7 +266,7 @@
                     <!-- Video Player -->
                     <div id="videoSection" class="mb-12" style="display: none;">
                         <div class="video-player-wrapper" id="videoWrapper">
-                            <video id="mainVideo" preload="metadata">
+                            <video id="mainVideo" preload="metadata" playsInline webkit-playsinline="true" x5-video-player-type="h5" x5-video-player-fullscreen="true">
                                 Your browser does not support the video tag.
                             </video>
 
@@ -420,6 +420,7 @@
                 const video = document.getElementById('mainVideo');
                 video.src = p.video_url;
                 video.type = p.video_type === 'webm' ? 'video/webm' : 'video/mp4';
+                if (p.cover_url) video.poster = p.cover_url;
                 initVideoPlayer();
             } else if (p.cover_url) {
                 document.getElementById('coverSection').style.display = 'block';
