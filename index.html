@@ -2062,7 +2062,7 @@
         async function loadProjectsFromAPI() {
             try {
                 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? '/api' : (window.API_URL || '/api');
+                    ? '/api' : '/api';  // Same origin — frontend and API on same server
                 const res = await fetch(API_BASE + '/projects');
                 if (!res.ok) throw new Error('API error: ' + res.status);
                 const data = await res.json();

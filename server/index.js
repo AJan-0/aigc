@@ -10,6 +10,7 @@ import uploadRoutes from './routes/upload.js';
 import { authMiddleware } from './middleware/auth.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');  // repo root
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -26,13 +27,20 @@ app.use('/uploads', express.static(join(__dirname, 'uploads'), {
   maxAge: '30d',
   immutable: true,
   setHeaders: (res, path) => {
-    // Enable range requests for video streaming
     if (path.endsWith('.mp4') || path.endsWith('.webm')) {
       res.setHeader('Accept-Ranges', 'bytes');
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
   }
 }));
+
+// ─── Serve frontend static files ───
+app.use('/images', express.static(join(ROOT, 'images'), { maxAge: '30d' }));
+app.use('/admin', express.static(join(ROOT, 'admin')));
+app.use('/src', express.static(join(ROOT, 'src')));
+app.use('/components', express.static(join(ROOT, 'components')));
+app.use('/hooks', express.static(join(ROOT, 'hooks')));
+app.use('/lib', express.static(join(ROOT, 'lib')));
 
 // ─── API Routes ───
 app.use('/api/auth', authRoutes);
@@ -51,6 +59,14 @@ app.use((err, req, res, next) => {
     return res.status(413).json({ error: '文件大小超过限制' });
   }
   res.status(500).json({ error: '服务器内部错误' });
+});
+
+// ─── SPA frontend pages (must be after API routes) ───
+app.get('/project.html', (req, res) => res.sendFile(join(ROOT, 'project.html')));
+app.get('/', (req, res) => res.sendFile(join(ROOT, 'index.html')));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next();
+  res.sendFile(join(ROOT, 'index.html'), (err) => { if (err) next(); });
 });
 
 // ─── Start server ───

@@ -347,7 +347,7 @@
     <script>
         // ─── API ───
         const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? '/api' : (window.API_URL || '/api');
+            ? '/api' : '/api';  // Same origin
 
         const params = new URLSearchParams(window.location.search);
         const projectId = params.get('id');
