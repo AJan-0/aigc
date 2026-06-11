@@ -19,6 +19,8 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="src/config.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -2026,7 +2028,7 @@
         // ============================================
         
         // Projects data loaded from CMS API
-        // 静态回退数据 — API 不可用时使用
+        // 静态回退数据 — Supabase 未配置时使用
         const FALLBACK_PROJECTS = [
             {
                 id: '1', title: '惠州黄洞水库全龄友好游客空间设计',
@@ -2054,36 +2056,37 @@
         let PROJECTS_DATA = [];
         let projectsLoaded = false;
 
-        function normalizePath(p) {
-            if (!p) return null;
-            return p.startsWith('/') ? p : '/' + p;
-        }
-
         async function loadProjectsFromAPI() {
             try {
-                const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? '/api' : '/api';  // Same origin — frontend and API on same server
-                const res = await fetch(API_BASE + '/projects');
-                if (!res.ok) throw new Error('API error: ' + res.status);
-                const data = await res.json();
-                if (!Array.isArray(data) || data.length === 0) throw new Error('Empty data');
-                PROJECTS_DATA = data.map(p => ({
-                    id: p.id.toString(),
-                    title: p.title_zh,
-                    category: getCategoryLabel(p.category),
-                    description: p.description || '',
-                    image: normalizePath(p.cover_path),
-                    videoUrl: normalizePath(p.video_path),
-                    videoType: p.video_type || 'mp4',
-                    isVideo: !!p.video_path,
-                    tags: p.tags || [],
-                    link: '/project.html?id=' + p.id,
-                    duration: p.duration
-                }));
-                projectsLoaded = true;
-                return PROJECTS_DATA;
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('projects')
+                        .select('*')
+                        .eq('is_published', true)
+                        .order('sort_order', { ascending: true });
+                    
+                    if (!error && data && data.length > 0) {
+                        PROJECTS_DATA = data.map(p => ({
+                            id: p.id.toString(),
+                            title: p.title_zh,
+                            category: getCategoryLabel(p.category),
+                            description: p.description || '',
+                            image: p.cover_url || null,
+                            videoUrl: p.video_url || null,
+                            videoType: p.video_type || 'mp4',
+                            isVideo: !!p.video_url,
+                            tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? JSON.parse(p.tags) : []),
+                            link: '/project.html?id=' + p.id,
+                            duration: p.duration
+                        }));
+                        projectsLoaded = true;
+                        console.log('[Portfolio] Loaded', PROJECTS_DATA.length, 'projects from Supabase');
+                        return PROJECTS_DATA;
+                    }
+                }
+                throw new Error('Supabase not configured or no data');
             } catch (err) {
-                console.warn('[Portfolio] API unavailable, using fallback data:', err.message);
+                console.warn('[Portfolio] Using fallback data:', err.message);
                 PROJECTS_DATA = FALLBACK_PROJECTS;
                 projectsLoaded = true;
                 return PROJECTS_DATA;

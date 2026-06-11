@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="src/config.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -360,10 +362,17 @@
 
         async function loadProject(id) {
             try {
-                const res = await fetch(`${API_BASE}/projects/${id}`);
-                if (!res.ok) throw new Error('Not found');
-                const p = await res.json();
-                renderProject(p);
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('projects')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    if (error) throw error;
+                    renderProject(data);
+                    return;
+                }
+                throw new Error('Supabase not configured');
             } catch (err) {
                 console.error('Failed to load project:', err);
                 showError();
@@ -392,15 +401,15 @@
             document.getElementById('pDescription').textContent = p.description || '';
 
             // Video or cover
-            if (p.video_path) {
+            if (p.video_url) {
                 document.getElementById('videoSection').style.display = 'block';
                 const video = document.getElementById('mainVideo');
-                video.src = '/' + p.video_path;
+                video.src = p.video_url;
                 video.type = p.video_type === 'webm' ? 'video/webm' : 'video/mp4';
                 initVideoPlayer();
-            } else if (p.cover_path) {
+            } else if (p.cover_url) {
                 document.getElementById('coverSection').style.display = 'block';
-                document.getElementById('coverImage').src = '/' + p.cover_path;
+                document.getElementById('coverImage').src = p.cover_url;
             }
 
             // Tags
