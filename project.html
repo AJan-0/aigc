@@ -373,11 +373,15 @@
                         .eq('id', id)
                         .single();
                     if (!error && data) {
-                        // 合并回退数据（提供视频/封面）
+                        // 优先使用回退数据的文案
                         const fb = FALLBACK_PROJECTS[id];
                         if (fb) {
-                            if (!data.video_url && fb.video_url) data.video_url = fb.video_url;
-                            if (!data.cover_url && fb.cover_url) data.cover_url = fb.cover_url;
+                            if (fb.title_zh) data.title_zh = fb.title_zh;
+                            if (fb.category) data.category = fb.category;
+                            if (fb.description) data.description = fb.description;
+                            if (fb.tags) data.tags = fb.tags;
+                            if (fb.video_url) data.video_url = fb.video_url;
+                            if (fb.cover_url) data.cover_url = fb.cover_url;
                         }
                         renderProject(data);
                         return;

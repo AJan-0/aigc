@@ -2135,14 +2135,14 @@
                                 const fb = fallbackMap[p.id.toString()];
                                 return {
                                     id: p.id.toString(),
-                                    title: p.title_zh,
-                                    category: getCategoryLabel(p.category),
-                                    description: p.description || '',
-                                    image: p.cover_url || (fb ? fb.image : null),
-                                    videoUrl: p.video_url || (fb ? fb.videoUrl : null),
+                                    title: (fb && fb.title) || p.title_zh,
+                                    category: (fb && fb.category) || getCategoryLabel(p.category),
+                                    description: (fb && fb.description) || p.description || '',
+                                    image: (fb && fb.image) || p.cover_url,
+                                    videoUrl: (fb && fb.videoUrl) || p.video_url,
                                     videoType: p.video_type || 'mp4',
-                                    isVideo: !!(p.video_url || (fb && fb.videoUrl)),
-                                    tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? JSON.parse(p.tags) : []),
+                                    isVideo: !!((fb && fb.videoUrl) || p.video_url),
+                                    tags: (fb && fb.tags) || (Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? JSON.parse(p.tags) : [])),
                                     link: '/project.html?id=' + p.id,
                                     duration: p.duration
                                 };
