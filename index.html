@@ -2026,23 +2026,54 @@
         // ============================================
         
         // Projects data loaded from CMS API
+        // 静态回退数据 — API 不可用时使用
+        const FALLBACK_PROJECTS = [
+            {
+                id: '1', title: '惠州黄洞水库全龄友好游客空间设计',
+                category: 'ARCHITECTURE VISUALIZATION',
+                description: '3天交付 | 8K 输出 | 一稿通过率 92% | 效率提升 43% | 支持投融资决策与高端品牌呈现',
+                image: 'images/architecture-showcase.jpg', videoUrl: null, videoType: 'mp4', isVideo: false,
+                tags: ['SketchUp', 'V-Ray', '3ds Max', 'AI 增强'], link: '/project.html?id=1', duration: null
+            },
+            {
+                id: '2', title: 'PUAN 动画短片',
+                category: 'ANIMATION',
+                description: 'AIGC + 动画流程融合 | 10 小时完成实验性叙事短片 | 风格化视觉表达',
+                image: 'images/animation-showcase.jpg', videoUrl: null, videoType: 'mp4', isVideo: false,
+                tags: ['Stable Diffusion', 'After Effects', 'Runway'], link: '/project.html?id=2', duration: null
+            },
+            {
+                id: '3', title: 'AIGC F1 宣传片',
+                category: 'VIDEO SHOWCASE',
+                description: '12h 制作成本降低 70% | 传播广度提升 40%+ | 体育营销创新方案与品牌形象升级的完整展示',
+                image: 'images/bilibili-showcase.jpg', videoUrl: null, videoType: 'mp4', isVideo: false,
+                tags: ['Google Gemini', 'Nano Banana Pro', 'Veo3'], link: '/project.html?id=3', duration: null
+            }
+        ];
+
         let PROJECTS_DATA = [];
         let projectsLoaded = false;
+
+        function normalizePath(p) {
+            if (!p) return null;
+            return p.startsWith('/') ? p : '/' + p;
+        }
 
         async function loadProjectsFromAPI() {
             try {
                 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? '/api' : (window.API_URL || '/api');
                 const res = await fetch(API_BASE + '/projects');
-                if (!res.ok) throw new Error('API error');
+                if (!res.ok) throw new Error('API error: ' + res.status);
                 const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) throw new Error('Empty data');
                 PROJECTS_DATA = data.map(p => ({
                     id: p.id.toString(),
                     title: p.title_zh,
                     category: getCategoryLabel(p.category),
                     description: p.description || '',
-                    image: p.cover_path ? '/' + p.cover_path : null,
-                    videoUrl: p.video_path ? '/' + p.video_path : null,
+                    image: normalizePath(p.cover_path),
+                    videoUrl: normalizePath(p.video_path),
                     videoType: p.video_type || 'mp4',
                     isVideo: !!p.video_path,
                     tags: p.tags || [],
@@ -2052,8 +2083,8 @@
                 projectsLoaded = true;
                 return PROJECTS_DATA;
             } catch (err) {
-                console.error('[Portfolio] Failed to load projects:', err);
-                PROJECTS_DATA = [];
+                console.warn('[Portfolio] API unavailable, using fallback data:', err.message);
+                PROJECTS_DATA = FALLBACK_PROJECTS;
                 projectsLoaded = true;
                 return PROJECTS_DATA;
             }
