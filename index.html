@@ -771,7 +771,7 @@
                 font-size: 0.75rem;
             }
             .tilt-card-inner {
-                /* Let image determine height on mobile */
+                max-height: 70vh;
             }
             .project-image {
                 width: 100%;
@@ -2956,7 +2956,7 @@
                     initial={{ opacity: 0, y: 100 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 1, delay: index * 0.2, ease: [0.6, 0.05, 0.01, 0.9] }}
-                    className={`grid md:grid-cols-5 lg:grid-cols-5 gap-8 md:gap-12 lg:gap-16 items-center mb-24 md:mb-32 lg:mb-40 ${reverse ? 'lg:grid-flow-dense' : ''}`}
+                    className={`grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center mb-16 md:mb-24 lg:mb-32 ${reverse ? 'lg:grid-flow-dense' : ''}`}
                 >
                     <motion.div
                         ref={cardRef}
@@ -2968,7 +2968,7 @@
                             rotateY: tilt.y
                         }}
                         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                        className={`relative group hoverable overflow-hidden rounded-3xl tilt-card w-full ${reverse ? 'lg:col-start-2 md:col-span-3 lg:col-span-3' : 'md:col-span-3 lg:col-span-3'}`}
+                        className={`relative group hoverable overflow-hidden rounded-2xl tilt-card w-full max-h-[70vh] ${reverse ? 'lg:col-start-2' : ''}`}
                         style={{ transformStyle: isMobile ? 'flat' : 'preserve-3d' }}
                     >
                         {/* Decorative Border Light */}
@@ -2990,7 +2990,7 @@
                                     style={{ scale: imageScale }}
                                     src={project.image}
                                     alt={project.title}
-                                    className="w-full h-auto object-cover project-image"
+                                    className="w-full h-full object-cover project-image"
                                 />
                             ) : project.isVideo ? (
                                 <video
@@ -3106,7 +3106,7 @@
                         }} className="absolute inset-0 z-10 cursor-pointer" aria-label={`View ${project.title}`} />
                     </motion.div>
                     
-                    <div className={reverse ? 'lg:col-start-1 lg:row-start-1 md:col-span-2 lg:col-span-2' : 'md:col-span-2 lg:col-span-2'}>
+                    <div className={reverse ? 'lg:col-start-1 lg:row-start-1' : ''}>
                         <motion.div
                             initial={{ opacity: 0, x: reverse ? 100 : -100 }}
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
