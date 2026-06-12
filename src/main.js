@@ -1,103 +1,14 @@
-﻿const I18N = {
-  zh: {
-    navProjects: "项目",
-    navAbout: "关于",
-    navContact: "联系",
-    heroEyebrow: "AI CREATIVE PORTFOLIO",
-    heroTitle: "电影级视觉表达，服务商业叙事",
-    heroSub: "聚焦建筑可视化、动画短片与品牌视频，用 AIGC 提升速度、质感与转化效率。",
-    heroCtaPrimary: "查看项目",
-    heroCtaSecondary: "联系合作",
-    projectsTitle: "精选项目",
-    projectsSub: "Bento Grid + 分类筛选，快速查看不同类型产出。",
-    filterAll: "全部",
-    filterArchitecture: "建筑可视化",
-    filterAnimation: "动画短片",
-    filterVideo: "品牌视频",
-    aboutTitle: "方法论",
-    aboutItem1Title: "叙事优先",
-    aboutItem1Text: "先定义商业目标与受众情绪，再构建镜头语言与视觉层次。",
-    aboutItem2Title: "流程复用",
-    aboutItem2Text: "将 AI 生成、合成、调色流程模块化，提升跨项目交付速度。",
-    aboutItem3Title: "结果导向",
-    aboutItem3Text: "以传播效果和业务转化为标准，持续优化内容表现力。",
-    contactTitle: "联系我",
-    contactSub: "可直接接入 Formspree / EmailJS，无需后端。",
-    formName: "姓名",
-    formEmail: "邮箱",
-    formMessage: "需求内容",
-    formNamePh: "你的名字",
-    formEmailPh: "your@email.com",
-    formMessagePh: "项目背景、预算和周期",
-    formSubmit: "发送消息",
-    footerTagline: "AI 驱动视觉叙事，直接服务商业结果。",
-    preview: "预览",
-    detail: "查看详情",
-    formNeedConfig: "请先配置 Formspree action 或 EmailJS 参数。",
-    formSending: "发送中...",
-    formSent: "发送成功，我会尽快回复你。",
-    formError: "发送失败，请稍后重试或直接邮件联系。"
-  },
-  en: {
-    navProjects: "Projects",
-    navAbout: "About",
-    navContact: "Contact",
-    heroEyebrow: "AI CREATIVE PORTFOLIO",
-    heroTitle: "Cinematic visuals for business storytelling",
-    heroSub: "Focused on architecture visualization, animation shorts, and brand videos powered by AIGC workflows.",
-    heroCtaPrimary: "View Projects",
-    heroCtaSecondary: "Get in Touch",
-    projectsTitle: "Featured Projects",
-    projectsSub: "Bento Grid with animated filters for fast content discovery.",
-    filterAll: "All",
-    filterArchitecture: "Architecture",
-    filterAnimation: "Animation",
-    filterVideo: "Brand Video",
-    aboutTitle: "Methodology",
-    aboutItem1Title: "Narrative First",
-    aboutItem1Text: "Define business goal and audience emotion before visual execution.",
-    aboutItem2Title: "Reusable Pipeline",
-    aboutItem2Text: "Modularize generation, compositing and grading for faster delivery.",
-    aboutItem3Title: "Outcome Driven",
-    aboutItem3Text: "Optimize for communication impact and business conversion.",
-    contactTitle: "Contact",
-    contactSub: "Use Formspree or EmailJS with no backend service.",
-    formName: "Name",
-    formEmail: "Email",
-    formMessage: "Project Brief",
-    formNamePh: "Your name",
-    formEmailPh: "your@email.com",
-    formMessagePh: "Background, budget and timeline",
-    formSubmit: "Send",
-    footerTagline: "AI-powered visual storytelling for real business outcomes.",
-    preview: "Preview",
-    detail: "Open Detail",
-    formNeedConfig: "Please configure Formspree action or EmailJS settings.",
-    formSending: "Sending...",
-    formSent: "Message sent. I will reply soon.",
-    formError: "Failed to send. Please retry or email directly."
-  }
-};
+﻿/**
+ * ============================================
+ * 主应用程序入口
+ * ============================================
+ * 从 src/config/ 导入配置，替代硬编码的配置
+ */
 
-const PROJECTS = [
-  {
-    id: "architecture",
-    category: "architecture",
-    span: "wide tall",
-    href: "architecture-detail.html",
-    webp: "./images/architecture-showcase.webp",
-    jpg: "./images/architecture-showcase.jpg",
-    title: {
-      zh: "黄洞水库全龄友好游客空间设计",
-      en: "Huangdong Reservoir Visitor Space"
-    },
-    kicker: {
-      zh: "建筑可视化",
-      en: "Architecture Visualization"
-    },
-    desc: {
-      zh: "3 天内完成高保真建筑可视化交付，支持投融资沟通与品牌呈现。",
-      en: "High-fidelity architectural visualization delivered in 3 days for investor and brand communication."
+// 导入配置
+import { I18N } from './config/i18n.js';
+import { PROJECTS, EMAILJS_CDN } from './config/constants.js';
+import { emailjsConfig } from './config/env.js';
     }
   },
   {
@@ -223,6 +134,12 @@ function stepLightbox(offset) {
 }
 
 function hasEmailJsConfig() {
+  // 优先从环境变量读取配置
+  if (emailjsConfig.isConfigured()) {
+    return true;
+  }
+  
+  // 降级到 HTML data-attributes（向后兼容）
   return Boolean(
     form &&
     form.dataset.emailjsService &&
@@ -232,6 +149,16 @@ function hasEmailJsConfig() {
 }
 
 function getEmailJsConfig() {
+  // 优先从环境变量读取配置
+  if (emailjsConfig.isConfigured()) {
+    return {
+      serviceId: emailjsConfig.serviceId,
+      templateId: emailjsConfig.templateId,
+      publicKey: emailjsConfig.publicKey
+    };
+  }
+  
+  // 降级到 HTML data-attributes（向后兼容）
   return {
     serviceId: form.dataset.emailjsService,
     templateId: form.dataset.emailjsTemplate,
