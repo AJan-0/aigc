@@ -4,7 +4,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    assetsInlineLimit: 0,
   },
+  publicDir: 'public',
   server: {
     port: 3000,
     proxy: {
