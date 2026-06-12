@@ -9,7 +9,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#06B6D4">
     
     <!-- React Ecosystem -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -2142,11 +2149,60 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+
+/* Skeleton Loading */
+.skeleton { background: linear-gradient(90deg, rgba(30,41,59,0.5) 25%, rgba(51,65,85,0.5) 50%, rgba(30,41,59,0.5) 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite; border-radius: 8px; }
+@keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton-card { height: 400px; border-radius: 16px; border: 1px solid rgba(148,163,184,0.1); overflow: hidden; }
+.skeleton-card .skeleton-image { height: 240px; }
+.skeleton-card .skeleton-content { padding: 1.5rem; display: grid; gap: 0.75rem; }
+.skeleton-card .skeleton-line { height: 14px; border-radius: 4px; }
+.skeleton-card .skeleton-line.short { width: 40%; }
+.skeleton-card .skeleton-line.medium { width: 70%; }
+
+/* Scroll Reveal */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* Toast Notifications */
+.toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 99999; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+.toast { pointer-events: auto; padding: 0.875rem 1.25rem; border-radius: 12px; backdrop-filter: blur(12px); border: 1px solid rgba(148,163,184,0.2); font-size: 0.875rem; font-weight: 500; color: white; animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 360px; }
+.toast.success { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.4); }
+.toast.error { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
+.toast.info { background: rgba(6,182,212,0.2); border-color: rgba(6,182,212,0.4); }
+.toast.exit { animation: toast-out 0.3s ease forwards; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(-10px) scale(0.95); } }
+@media (max-width: 768px) { .toast-container { left: 1rem; right: 1rem; bottom: 1rem; } .toast { max-width: 100%; } }
+
+/* Playback Speed Button */
+.speed-btn { font-size: 0.75rem !important; font-weight: 600; padding: 0.2rem 0.5rem !important; border-radius: 4px !important; min-width: 40px !important; font-family: 'Manrope', monospace; letter-spacing: -0.02em; }
+.speed-btn:hover { background: rgba(255,255,255,0.15) !important; }
+
+/* Theme Toggle */
+[data-theme="light"] { --text-primary: #0F172A; --text-secondary: #1E293B; --text-tertiary: #334155; --text-quaternary: #64748B; --text-quinary: #94A3B8; }
+[data-theme="light"] body { background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); color: #334155; }
+[data-theme="light"] .glass, [data-theme="light"] .glass-strong { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.1); }
+[data-theme="light"] .noise-overlay { opacity: 0.02; }
+.theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(148,163,184,0.3); background: transparent; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+.theme-toggle:hover { border-color: var(--accent-primary); background: rgba(6,182,212,0.1); }
+
+/* Skip Link */
+.skip-link { position: absolute; top: -100%; left: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; border-radius: 0 0 8px 8px; z-index: 100000; font-weight: 600; transition: top 0.3s; }
+.skip-link:focus { top: 0; }
+
     </style>
 </head>
 <body>
+    <a href="#projects" class="skip-link">Skip to content</a>
     <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
+    <div class="loading-screen" id="loadingScreen" role="status" aria-live="polite">
         <div class="loading-particles" id="loadingParticles"></div>
         <div class="loading-spinner"></div>
         <div class="loading-text">加载中...</div>
@@ -2507,6 +2563,12 @@
             const [scrolled, setScrolled] = useState(false);
             const [visible, setVisible] = useState(true);
             const [lastScrollY, setLastScrollY] = useState(0);
+            const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+            
+            useEffect(() => {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }, [theme]);
             
             useEffect(() => {
                 const checkScreenSize = () => {
@@ -2561,6 +2623,7 @@
             
             return (
                 <motion.nav
+                    role="navigation" aria-label="Main navigation"
                     initial={{ y: -100 }}
                     animate={{ y: visible ? 0 : -100 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -2615,6 +2678,22 @@
                                         />
                                     </motion.a>
                                 ))}
+                                <button 
+                                    onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+                                    className="theme-toggle"
+                                    aria-label={theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
+                                    title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                                >
+                                    {theme === 'dark' ? (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                        </svg>
+                                    ) : (
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                        </svg>
+                                    )}
+                                </button>
                             </div>
                         )}
                     </div>
@@ -3400,6 +3479,7 @@
             const [buffered, setBuffered] = React.useState(0);
             const [isMobile, setIsMobile] = React.useState(false);
             const [isFullscreen, setIsFullscreen] = React.useState(false);
+            const [playbackRate, setPlaybackRate] = React.useState(1);
             const controlsTimeout = React.useRef(null);
             const touchStartY = React.useRef(0);
             const touchStartX = React.useRef(0);
@@ -3499,6 +3579,21 @@
                 else el.requestFullscreen().catch(() => {});
             };
 
+            const cycleSpeed = () => {
+                const speeds = [0.5, 1, 1.5, 2];
+                const nextIdx = (speeds.indexOf(playbackRate) + 1) % speeds.length;
+                const next = speeds[nextIdx];
+                setPlaybackRate(next);
+                if (videoRef.current) videoRef.current.playbackRate = next;
+            };
+            const togglePiP = async () => {
+                if (!videoRef.current) return;
+                try {
+                    if (document.pictureInPictureElement) await document.exitPictureInPicture();
+                    else await videoRef.current.requestPictureInPicture();
+                } catch (e) { console.warn('PiP not supported:', e); }
+            };
+
             const seekTo = (e) => {
                 if (!videoRef.current) return;
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -3544,6 +3639,7 @@
             return (
                 <div
                     className="video-modal-overlay"
+                    role="dialog" aria-modal="true" aria-label="Video Player"
                     onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
                     onMouseMove={handleMouseMove}
                     onTouchStart={handleTouchStart}
@@ -3688,6 +3784,16 @@
                                 )}
                             </button>
 
+                            <button onClick={cycleSpeed} className="speed-btn" title="播放速度">
+                                {playbackRate}x
+                            </button>
+                            <button onClick={togglePiP} title="画中画">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                    <rect x="12" y="9" width="8" height="6" rx="1" fill="white" opacity="0.5"/>
+                                </svg>
+                            </button>
+
                             <button onClick={toggleFullscreen} title={isFullscreen ? '退出全屏' : '全屏'}>
                                 {isFullscreen ? (
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
@@ -3710,6 +3816,26 @@
                 </div>
             );
         }
+
+        // Toast notification system
+        function showToast(message, type = 'info', duration = 3000) {
+            let container = document.getElementById('toastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toastContainer';
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('exit');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+        window.showToast = showToast;
 
         function App() {
             const pageLoading = usePageLoading();
@@ -3751,7 +3877,7 @@
                     
                     
                     {/* Projects Section - Moved to Front as Main Focus */}
-                    <section id="projects" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-900">
+                    <section id="projects" aria-label="Featured Projects" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-900">
                         {/* Background Decorations */}
                         <div className="absolute top-20 right-10 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(60px)'}} />
                         <div className="absolute bottom-32 -left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(60px)'}} />
@@ -3799,9 +3925,17 @@
                             </motion.div>
                             
                             {projectsLoading ? (
-                                <div className="text-center py-20">
-                                    <div className="inline-block w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="mt-4 text-slate-400">加载作品中...</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="status" aria-live="polite">
+                                    {[1,2,3].map(i => (
+                                        <div key={i} className="skeleton-card">
+                                            <div className="skeleton skeleton-image"></div>
+                                            <div className="skeleton-content">
+                                                <div className="skeleton skeleton-line"></div>
+                                                <div className="skeleton skeleton-line medium"></div>
+                                                <div className="skeleton skeleton-line short"></div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : projects.length === 0 ? (
                                 <div className="text-center py-20">
@@ -4062,6 +4196,13 @@
             } else {
                 root.render(<App />);
             }
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
         }
     </script>
 </body>
