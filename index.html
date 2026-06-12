@@ -3383,14 +3383,11 @@
             React.useEffect(() => {
                 if (videoRef.current) {
                     const v = videoRef.current;
-                    v.muted = false;
-                    v.play().then(() => {
-                        setIsPlaying(true);
-                        setIsMuted(false);
-                    }).catch(() => {
-                        // Autoplay blocked — show play button, user tap will play with sound
-                        setIsPlaying(false);
-                    });
+                    // Always start paused — show play button
+                    // User tap on play button = user gesture = sound guaranteed
+                    v.pause();
+                    v.currentTime = 0;
+                    setIsPlaying(false);
                 }
             }, []);
 
@@ -3398,16 +3395,11 @@
                 if (!videoRef.current) return;
                 const v = videoRef.current;
                 if (v.paused) {
-                    // Mobile trick: start muted to ensure playback, then unmute
-                    v.muted = true;
-                    v.defaultMuted = false;
+                    // CRITICAL: set muted=false BEFORE play(), synchronously within user gesture
+                    v.muted = false;
                     v.play().then(() => {
-                        // Unmute after playback starts
-                        setTimeout(() => {
-                            v.muted = false;
-                            setIsMuted(false);
-                        }, 100);
                         setIsPlaying(true);
+                        setIsMuted(false);
                     }).catch(() => {
                         setIsPlaying(false);
                     });
