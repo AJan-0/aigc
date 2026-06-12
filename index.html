@@ -2175,16 +2175,16 @@
         // 静态回退数据 — Supabase 未配置时使用
         const FALLBACK_PROJECTS = [
             {
-                id: '1', title: '《Bound by Blood》AI 真人短剧',
-                category: 'AI 真人短剧',
-                description: '北美市场定制 | 女性视角叙事 | AI 驱动全流程制作',
+                id: '1', title: 'Dreams Lead to My Alpha',
+                category: '',
+                description: 'AI 全流程制作 | 北美市场定制',
                 image: 'v1_cover.jpg', videoUrl: 'v1_mobile.mp4', videoType: 'mp4', isVideo: true,
-                tags: ['AI 制作', '北美发行', '真人短剧'], link: '/project.html?id=1', duration: null
+                tags: [], link: '/project.html?id=1', duration: null
             },
             {
-                id: '2', title: '《429》AI 短剧片段',
-                category: 'AI 真人短剧',
-                description: 'AI 驱动制作 | 沉浸式叙事',
+                id: '2', title: 'Betrayed by the Wolf, Claimed by the Alpha',
+                category: '',
+                description: 'AI 全流程制作 | 沉浸式叙事',
                 image: '429_cover.jpg', videoUrl: '429.mp4', videoType: 'mp4', isVideo: true,
                 tags: [], link: '/project.html?id=2', duration: '2:24'
             },
@@ -2208,7 +2208,6 @@
                 description: 'AI 全流程制作 | 多场景叙事',
                 image: 'picking_cover.jpg', videoUrl: 'picking.mp4', videoType: 'mp4', isVideo: true,
                 tags: [], link: '/project.html?id=5', duration: '1:46'
-            }
             }
         ];
 
@@ -2274,8 +2273,8 @@
             { 
                 icon: 'FLOW', 
                 title: 'Workflow 工作流优化', 
-                description: '从脚本到成片，构建端到端 AI 影视制作流水线，将传统数月的制作周期压缩至数周。',
-                highlights: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联', '效率提升 200%+']
+                description: '从脚本到成片，构建端到端 AI 影视制作流水线，将传统数周的制作周期压缩至数天。',
+                highlights: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联', '效率提升 300%+']
             },
             { 
                 icon: 'SD', 
@@ -3211,19 +3210,10 @@
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
                             transition={{ duration: 0.8, delay: 0.3 }}
                         >
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={isInView ? { opacity: 1 } : {}}
-                                transition={{ delay: 0.5 }}
-                                className="text-sm font-bold text-accent-cyan mb-4 tracking-[0.2em] uppercase"
-                            >
-                                {project.category}
-                            </motion.div>
-                            
                             <motion.h3
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: 0.6 }}
+                                transition={{ delay: 0.5 }}
                                 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 gradient-text leading-tight"
                             >
                                 {project.title}
@@ -3232,56 +3222,11 @@
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: 0.7 }}
+                                transition={{ delay: 0.6 }}
                                 className="font-body text-lg md:text-xl text-slate-400 leading-relaxed mb-8"
                             >
                                 {project.description}
                             </motion.p>
-                            
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: 0.8 }}
-                                className="flex gap-2.5 md:gap-3 flex-wrap items-center tag-container mb-6"
-                            >
-                                <div className="inline-flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-full glass border border-slate-700/50 hover:border-slate-600/70 transition-colors">
-                                    <span className="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider leading-tight">技术栈</span>
-                                </div>
-                                {project.tags.map((tag, i) => (
-                                    <motion.span
-                                        key={tag}
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                        transition={{ delay: 0.9 + i * 0.1 }}
-                                        whileHover={{ scale: 1.08, y: -2 }}
-                                        className="px-4 md:px-5 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold text-accent-cyan border border-accent-cyan/40 hover:border-accent-cyan/70 glass-strong cursor-pointer transition-all hoverable backdrop-blur-sm leading-tight tracking-0.5"
-                                        style={{
-                                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.06))',
-                                            boxShadow: 'inset 0 1px 2px rgba(6, 182, 212, 0.1)'
-                                        }}
-                                    >
-                                        {tag}
-                                    </motion.span>
-                                ))}
-                            </motion.div>
-                            
-                            <motion.a
-                                href={project.link}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                                transition={{ delay: 1.0 }}
-                                whileHover={{ x: 8, color: '#06B6D4' }}
-                                className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-accent-cyan transition-colors group"
-                            >
-                                查看详细项目介绍与商业价值
-                                <motion.span
-                                    className="inline-block"
-                                    animate={{ x: [0, 4, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    →
-                                </motion.span>
-                            </motion.a>
                         </motion.div>
                     </div>
                 </motion.div>
