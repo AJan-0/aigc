@@ -701,10 +701,12 @@
             position: absolute;
             inset: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: rgba(0,0,0,0.7);
             z-index: 5;
+            pointer-events: none;
         }
         .video-modal-spinner {
             width: 40px; height: 40px;
@@ -3400,6 +3402,9 @@
                     v.pause();
                     v.currentTime = 0;
                     setIsPlaying(false);
+                    // Fallback: hide loading after 3s even if events don't fire
+                    const loadingTimeout = setTimeout(() => setIsLoading(false), 3000);
+                    return () => clearTimeout(loadingTimeout);
                 }
             }, []);
 
@@ -3498,6 +3503,8 @@
                             onPlaying={() => { setIsLoading(false); setIsPlaying(true); }}
                             onCanPlay={() => setIsLoading(false)}
                             onCanPlayThrough={() => setIsLoading(false)}
+                            onLoadedData={() => setIsLoading(false)}
+                            onLoadedMetadata={() => setIsLoading(false)}
                             onError={(e) => { 
                                 const err = e.target.error;
                                 console.error('Video error:', err ? err.code : 'unknown', err ? err.message : '');
@@ -3545,8 +3552,8 @@
                             onEnded={() => { setIsPlaying(false); setShowControls(true); }}
                         />
                         {/* Big play button (visible when paused) */}
-                        {!isPlaying && !isLoading && !hasError && (
-                            <div className="video-modal-bigplay" onClick={togglePlay}>
+                        {!isPlaying && !hasError && (
+                            <div className="video-modal-bigplay" onClick={togglePlay} style={{zIndex: 10}}>
                                 <div className="video-modal-bigplay-btn">▶</div>
                             </div>
                         )}
