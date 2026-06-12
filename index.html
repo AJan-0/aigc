@@ -827,7 +827,8 @@
             .video-modal-controls {
                 opacity: 1 !important;
                 padding: 2.5rem 0.6rem 0.6rem;
-                gap: 0.4rem;
+                gap: 0.3rem;
+                flex-wrap: wrap;
                 background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 70%, transparent 100%);
                 padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
             }
@@ -846,18 +847,35 @@
                 width: 72px;
                 height: 72px;
             }
+            /* 进度条独立一行，更大更易操作 */
             .video-modal-progress {
-                height: 10px;
-                flex: 1;
-                min-width: 0;
-                padding: 10px 0;
+                order: 10;
+                flex-basis: 100%;
+                height: 14px;
+                padding: 12px 0;
+                margin-top: 4px;
+                border-radius: 8px;
+                /* 扩大触摸热区 */
+                position: relative;
+            }
+            .video-modal-progress::before {
+                content: '';
+                position: absolute;
+                left: 0; right: 0;
+                top: -8px; bottom: -8px;
             }
             .video-modal-time {
-                font-size: 0.65rem;
+                font-size: 0.7rem;
                 white-space: nowrap;
             }
             .video-top-progress {
-                height: 3px;
+                height: 4px;
+            }
+            /* 倍速按钮移动端适配 */
+            .speed-btn {
+                font-size: 0.65rem !important;
+                min-width: 36px !important;
+                padding: 0.15rem 0.3rem !important;
             }
         }
         
