@@ -676,6 +676,15 @@
             position: relative;
         }
         .video-modal-progress:hover { height: 6px; }
+        .video-modal-progress-buffer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
         .video-modal-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #06B6D4, #8B5CF6);
@@ -3351,9 +3360,12 @@
             const [showControls, setShowControls] = React.useState(true);
             const [isLoading, setIsLoading] = React.useState(true);
             const [hasError, setHasError] = React.useState(false);
+            const [buffered, setBuffered] = React.useState(0);
             const [isMobile, setIsMobile] = React.useState(false);
             const controlsTimeout = React.useRef(null);
             const touchStartY = React.useRef(0);
+            const retryCountRef = React.useRef(0);
+            const stalledHandledRef = React.useRef(false);
 
             React.useEffect(() => {
                 const mobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
@@ -3395,33 +3407,22 @@
                 if (!videoRef.current) return;
                 const v = videoRef.current;
                 if (v.paused) {
-                    // Mobile: start muted to allow autoplay, then unmute
-                    if (isMobile) {
+                    // User-initiated play — browsers allow sound on user gesture
+                    v.muted = false;
+                    v.play().then(() => {
+                        setIsPlaying(true);
+                        setIsMuted(false);
+                    }).catch((err) => {
+                        console.error('Play failed:', err);
+                        // Fallback: try muted
                         v.muted = true;
                         v.play().then(() => {
                             setIsPlaying(true);
                             setIsMuted(true);
-                            // Try to unmute after play starts
-                            setTimeout(() => {
-                                v.muted = false;
-                                setIsMuted(false);
-                            }, 100);
-                        }).catch((err) => {
-                            console.error('Play failed:', err);
-                            setIsPlaying(false);
-                            // Fallback: reload and try again
-                            v.load();
-                        });
-                    } else {
-                        // Desktop: play with sound
-                        v.muted = false;
-                        v.play().then(() => {
-                            setIsPlaying(true);
-                            setIsMuted(false);
                         }).catch(() => {
                             setIsPlaying(false);
                         });
-                    }
+                    });
                 } else {
                     v.pause();
                     setIsPlaying(false);
@@ -3469,12 +3470,17 @@
                         {isLoading && (
                             <div className="video-modal-loading">
                                 <div className="video-modal-spinner"></div>
+                                <p style={{color: '#94a3b8', textAlign: 'center', marginTop: '12px', fontSize: '14px'}}>加载中...</p>
                             </div>
                         )}
                         {/* Error state */}
                         {hasError && (
                             <div className="video-modal-loading">
                                 <p style={{color: '#94a3b8', textAlign: 'center'}}>视频加载失败<br/><small>请检查网络连接</small></p>
+                                <button 
+                                    onClick={() => { setHasError(false); setIsLoading(true); retryCountRef.current = 0; if (videoRef.current) videoRef.current.load(); }}
+                                    style={{marginTop: '12px', padding: '8px 24px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px'}}
+                                >重试</button>
                             </div>
                         )}
                         <video
@@ -3483,12 +3489,9 @@
                             poster={project.image}
                             className="video-modal-video"
                             playsInline
-                            preload="metadata"
-                            webkit-playsinline="true"
-                            x5-playsinline="true"
-                            x5-video-player-type="h5"
-                            x5-video-player-fullscreen="false"
-                            muted={isMobile}
+                            preload="auto"
+                            autoPlay={false}
+                            muted={false}
                             onClick={togglePlay}
                             onLoadStart={() => setIsLoading(true)}
                             onWaiting={() => setIsLoading(true)}
@@ -3496,13 +3499,39 @@
                             onCanPlay={() => setIsLoading(false)}
                             onCanPlayThrough={() => setIsLoading(false)}
                             onError={(e) => { 
-                                console.error('Video error:', e.target.error);
-                                setIsLoading(false); 
-                                setHasError(true); 
+                                const err = e.target.error;
+                                console.error('Video error:', err ? err.code : 'unknown', err ? err.message : '');
+                                // Auto-retry on network errors (code 2) or decode errors (code 3)
+                                if (err && (err.code === 2 || err.code === 3) && retryCountRef.current < 3) {
+                                    retryCountRef.current++;
+                                    console.warn(`Retrying video load (attempt ${retryCountRef.current}/3)...`);
+                                    setTimeout(() => { if (videoRef.current) videoRef.current.load(); }, 1000 * retryCountRef.current);
+                                } else {
+                                    setIsLoading(false); 
+                                    setHasError(true); 
+                                }
                             }}
                             onStalled={() => {
-                                console.warn('Video stalled, reloading...');
-                                if (videoRef.current) videoRef.current.load();
+                                // Only reload once, not in a loop
+                                if (!stalledHandledRef.current) {
+                                    stalledHandledRef.current = true;
+                                    console.warn('Video stalled, reloading...');
+                                    if (videoRef.current) videoRef.current.load();
+                                    setTimeout(() => { stalledHandledRef.current = false; }, 5000);
+                                }
+                            }}
+                            onSuspend={() => {
+                                // Video loading suspended - may be intentional
+                                console.log('Video loading suspended');
+                            }}
+                            onProgress={() => {
+                                if (videoRef.current && videoRef.current.buffered.length > 0) {
+                                    const bufferedEnd = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
+                                    const duration = videoRef.current.duration;
+                                    if (duration > 0) {
+                                        setBuffered(Math.round((bufferedEnd / duration) * 100));
+                                    }
+                                }
                             }}
                             onTimeUpdate={() => {
                                 if (!videoRef.current) return;
@@ -3533,6 +3562,7 @@
                                 videoRef.current.currentTime = pct * videoRef.current.duration;
                             }}>
                                 <div className="video-modal-progress-fill" style={{ width: progress + '%' }}></div>
+                                <div className="video-modal-progress-buffer" style={{ width: buffered + '%' }}></div>
                             </div>
                             <span className="video-modal-time">{currentTime} / {duration}</span>
                             <button onClick={toggleMute} title="静音">{isMuted ? '🔇' : '🔊'}</button>
