@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AIGC Visual Studio - Ì½Ë÷ AI Çı¶¯µÄ´´ÒâÉè¼ÆÓë¿ÉÊÓ»¯×÷Æ·¼¯">
+    <meta name="description" content="AIGC Visual Studio - æ¢ç´¢ AI é©±åŠ¨çš„åˆ›æ„è®¾è®¡ä¸å¯è§†åŒ–ä½œå“é›†">
     <title>AIGC Visual Studio | AI-Powered Creativity</title>
     
     <!-- Fonts -->
@@ -40,7 +40,7 @@
                 }
             },
             corePlugins: {
-                // ÔÚÒÆ¶¯¶Ë½ûÓÃ·Ç±ØÒªĞ§¹ûÒÔÌáÉıĞÔÄÜ
+                // åœ¨ç§»åŠ¨ç«¯ç¦ç”¨éå¿…è¦æ•ˆæœä»¥æå‡æ€§èƒ½
                 accessibility: true,
                 animation: true,
             }
@@ -59,22 +59,22 @@
         }
         
         /* ============================================
-           ¸ß¼¶ÅÅ°æ¼Ü¹¹ - CSS ±äÁ¿ÏµÍ³
+           é«˜çº§æ’ç‰ˆæ¶æ„ - CSS å˜é‡ç³»ç»Ÿ
            ============================================ */
         :root {
-            /* ÎÄ×ÖÑÕÉ«Ìİ¶ÈÏµÍ³ - 5 ¼¶¶Ô±È */
-            --text-primary:      #F8FAFC;      /* h1 ±êÌâ¸ß¶Ô±È */
-            --text-secondary:    #E2E8F0;      /* h2-h3 ±êÌâ */
-            --text-tertiary:     #CBD5E1;      /* ÕıÎÄ */
-            --text-quaternary:   #94A3B8;      /* ¸¨ÖúÎÄ±¾¡¢±êÇ© */
-            --text-quinary:      #64748B;      /* Í¼×¢¡¢½ûÓÃ×´Ì¬ */
+            /* æ–‡å­—é¢œè‰²æ¢¯åº¦ç³»ç»Ÿ - 5 çº§å¯¹æ¯” */
+            --text-primary:      #F8FAFC;      /* h1 æ ‡é¢˜é«˜å¯¹æ¯” */
+            --text-secondary:    #E2E8F0;      /* h2-h3 æ ‡é¢˜ */
+            --text-tertiary:     #CBD5E1;      /* æ­£æ–‡ */
+            --text-quaternary:   #94A3B8;      /* è¾…åŠ©æ–‡æœ¬ã€æ ‡ç­¾ */
+            --text-quinary:      #64748B;      /* å›¾æ³¨ã€ç¦ç”¨çŠ¶æ€ */
             
-            /* Ç¿µ÷É«Ïµ */
-            --accent-primary:    #06B6D4;      /* ÇàÉ« - Ö÷½»»¥ */
-            --accent-secondary:  #8B5CF6;      /* ×ÏÉ« - ´ÎÇ¿µ÷ */
-            --accent-tertiary:   #3B82F6;      /* À¶É« - ²¹³ä */
+            /* å¼ºè°ƒè‰²ç³» */
+            --accent-primary:    #06B6D4;      /* é’è‰² - ä¸»äº¤äº’ */
+            --accent-secondary:  #8B5CF6;      /* ç´«è‰² - æ¬¡å¼ºè°ƒ */
+            --accent-tertiary:   #3B82F6;      /* è“è‰² - è¡¥å…… */
             
-            /* ´¹Ö±ÔÏÂÉÏµÍ³£¨Vertical Rhythm£©- »ù´¡µ¥Î»£º8px */
+            /* å‚ç›´éŸµå¾‹ç³»ç»Ÿï¼ˆVertical Rhythmï¼‰- åŸºç¡€å•ä½ï¼š8px */
             --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
             --space-sm: clamp(0.5rem, 1vw, 0.75rem);
             --space-md: clamp(0.75rem, 1.5vw, 1rem);
@@ -85,7 +85,7 @@
             --space-4xl: clamp(3rem, 6vw, 4rem);
             --space-5xl: clamp(4rem, 8vw, 5rem);
             
-            /* ĞĞ¸ß±ÈÀı */
+            /* è¡Œé«˜æ¯”ä¾‹ */
             --lh-tight: 1;
             --lh-snug: 1.1;
             --lh-normal: 1.5;
@@ -99,10 +99,10 @@
             color: var(--text-tertiary);
             overflow-x: hidden;
             cursor: none;
-            /* ĞÔÄÜÓÅ»¯£ºÆôÓÃ GPU ¼ÓËÙ */
+            /* æ€§èƒ½ä¼˜åŒ–ï¼šå¯ç”¨ GPU åŠ é€Ÿ */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* ×ÖÌå´óĞ¡ºÍĞĞ¸ß */
+            /* å­—ä½“å¤§å°å’Œè¡Œé«˜ */
             font-size: clamp(0.95rem, 1vw, 1.125rem);
             font-weight: 400;
             line-height: var(--lh-relaxed);
@@ -110,13 +110,13 @@
             word-spacing: 0.1em;
         }
         
-        /* ĞÔÄÜÓÅ»¯£º¼õÉÙÖØ»æ */
+        /* æ€§èƒ½ä¼˜åŒ–ï¼šå‡å°‘é‡ç»˜ */
         .will-change-gpu {
             will-change: transform;
             transform: translateZ(0);
         }
         
-        /* ĞÔÄÜÓÅ»¯£ºÄÚÈİ¿É¼ûĞÔ£¬·Ç¹Ø¼üÄÚÈİÑÓ³ÙäÖÈ¾ */
+        /* æ€§èƒ½ä¼˜åŒ–ï¼šå†…å®¹å¯è§æ€§ï¼Œéå…³é”®å†…å®¹å»¶è¿Ÿæ¸²æŸ“ */
         @supports (content-visibility: auto) {
             .project-card-mobile,
             .feature-card-mobile {
@@ -125,23 +125,23 @@
             }
         }
         
-        /* ĞÔÄÜÓÅ»¯£ºÊ×ÆÁ Hero ÇøÓò GPU ¼ÓËÙ */
+        /* æ€§èƒ½ä¼˜åŒ–ï¼šé¦–å± Hero åŒºåŸŸ GPU åŠ é€Ÿ */
         section:first-of-type {
             contain: layout style paint;
             will-change: transform;
         }
         
-        /* ĞÔÄÜÓÅ»¯£ºFramer Motion ÔªËØ GPU ¼ÓËÙ */
+        /* æ€§èƒ½ä¼˜åŒ–ï¼šFramer Motion å…ƒç´  GPU åŠ é€Ÿ */
         [role="heading"],
         h1, h2, h3, h4, h5, h6 {
             will-change: transform;
         }
         
         /* ============================================
-           8 ¼¶¸ß¼¶×ÖÌåÏµÍ³
+           8 çº§é«˜çº§å­—ä½“ç³»ç»Ÿ
            ============================================ */
         
-        /* Hero Massive Title - Ò³ÃæÖ÷±êÌâ */
+        /* Hero Massive Title - é¡µé¢ä¸»æ ‡é¢˜ */
         .typography-hero-mega,
         .hero-title-mega {
             font-size: clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem);
@@ -156,7 +156,7 @@
             filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.2));
         }
         
-        /* Display Heading - ÖØÒªÕÂ½Ú */
+        /* Display Heading - é‡è¦ç« èŠ‚ */
         h1, .text-7xl, .font-display,
         .typography-display,
         .section-heading-primary {
@@ -167,7 +167,7 @@
             color: var(--text-primary);
         }
         
-        /* Heading Secondary - ÖĞµÈ±êÌâ */
+        /* Heading Secondary - ä¸­ç­‰æ ‡é¢˜ */
         h2, .text-6xl,
         .typography-heading,
         .section-heading-secondary {
@@ -178,7 +178,7 @@
             color: var(--text-secondary);
         }
         
-        /* Heading Tertiary - ´Î¼¶±êÌâ */
+        /* Heading Tertiary - æ¬¡çº§æ ‡é¢˜ */
         h3, .text-5xl,
         .typography-subheading,
         .section-heading-tertiary {
@@ -217,7 +217,7 @@
             letter-spacing: 0.01em;
         }
         
-        /* Subtitle - heading ÏÂµÄÃèÊö */
+        /* Subtitle - heading ä¸‹çš„æè¿° */
         .typography-subtitle,
         .subtitle,
         .section-subtitle {
@@ -229,7 +229,7 @@
             opacity: 0.95;
         }
         
-        /* Body Lead - Õª³öµÄ¿ª³¡¶ÎÂä */
+        /* Body Lead - æ‘˜å‡ºçš„å¼€åœºæ®µè½ */
         .typography-lead,
         .lead {
             font-size: clamp(1rem, 1.2vw, 1.25rem);
@@ -239,7 +239,7 @@
             color: var(--text-secondary);
         }
         
-        /* Regular Body - ÕıÎÄ */
+        /* Regular Body - æ­£æ–‡ */
         p,
         .typography-body,
         .body-text {
@@ -254,7 +254,7 @@
             text-justify: inter-word;
         }
         
-        /* Accent Body - Ç¿µ÷ÄÚÈİ */
+        /* Accent Body - å¼ºè°ƒå†…å®¹ */
         .typography-body-accent,
         .body-accent {
             font-size: clamp(0.95rem, 1vw, 1.125rem);
@@ -267,7 +267,7 @@
             text-decoration-skip-ink: auto;
         }
         
-        /* Label / Tag - ±êÇ©ÎÄ±¾ */
+        /* Label / Tag - æ ‡ç­¾æ–‡æœ¬ */
         label, .label-text,
         .typography-label,
         .tag-label {
@@ -279,7 +279,7 @@
             color: var(--text-quaternary);
         }
         
-        /* Caption - Í¼×¢ */
+        /* Caption - å›¾æ³¨ */
         small, .text-sm,
         .typography-caption,
         .caption {
@@ -290,7 +290,7 @@
             color: var(--text-quinary);
         }
         
-        /* ´úÂëÎÄ±¾ */
+        /* ä»£ç æ–‡æœ¬ */
         code {
             font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
             font-size: 0.95em;
@@ -317,10 +317,10 @@
         }
         
         /* ============================================
-           ¶¯Ì¬ÅÅ°æ×°ÊÎ
+           åŠ¨æ€æ’ç‰ˆè£…é¥°
            ============================================ */
         
-        /* ±êÌâÏÂ»®Ïß¶¯»­ */
+        /* æ ‡é¢˜ä¸‹åˆ’çº¿åŠ¨ç”» */
         .section-title {
             position: relative;
             display: inline-block;
@@ -349,7 +349,7 @@
             }
         }
         
-        /* ¶ÎÂäĞĞ¸ßºôÎü¶¯»­ */
+        /* æ®µè½è¡Œé«˜å‘¼å¸åŠ¨ç”» */
         .text-breathable {
             transition: line-height 0.3s ease;
         }
@@ -358,7 +358,7 @@
             line-height: var(--lh-loose);
         }
         
-        /* Êı¾İÇ¿µ÷ - ¹Ø¼üÊı×Ö·Å´ó */
+        /* æ•°æ®å¼ºè°ƒ - å…³é”®æ•°å­—æ”¾å¤§ */
         .number-highlight {
             font-size: 1.2em;
             font-weight: 700;
@@ -366,7 +366,7 @@
             font-variant-numeric: tabular-nums;
         }
         
-        /* ´ÖÌå´Ê»ãÇ¿µ÷ */
+        /* ç²—ä½“è¯æ±‡å¼ºè°ƒ */
         strong {
             font-weight: 700;
             color: var(--accent-secondary);
@@ -381,14 +381,14 @@
             transform: scale(1.02);
         }
         
-        /* Ğ±ÌåÇ¿µ÷ */
+        /* æ–œä½“å¼ºè°ƒ */
         em {
             font-style: italic;
             color: var(--text-secondary);
             font-weight: 500;
         }
         
-        /* ±êÌâÇ°µÄ×°ÊÎ·û */
+        /* æ ‡é¢˜å‰çš„è£…é¥°ç¬¦ */
         .subtitle-accent {
             position: relative;
             color: var(--text-primary);
@@ -406,7 +406,7 @@
             border-radius: 2px;
         }
         
-        /* ¿ÉÊÓ»¯ÒıÓÃ (Visual Quote) */
+        /* å¯è§†åŒ–å¼•ç”¨ (Visual Quote) */
         .blockquote-accent {
             position: relative;
             padding-left: 1.5em;
@@ -437,7 +437,7 @@
         }
         
         /* ============================================
-           ´¹Ö±ÔÏÂÉÏµÍ³£¨Vertical Rhythm£©
+           å‚ç›´éŸµå¾‹ç³»ç»Ÿï¼ˆVertical Rhythmï¼‰
            ============================================ */
         
         ul, ol {
@@ -482,10 +482,10 @@
         }
         
         /* ============================================
-           ¸ß¼¶ÅÅ°æ·ç¸ñÔ¤Éè - 3 ÖÖ·ç¸ñÏµÍ³
+           é«˜çº§æ’ç‰ˆé£æ ¼é¢„è®¾ - 3 ç§é£æ ¼ç³»ç»Ÿ
            ============================================ */
         
-        /* ·ç¸ñ A£º¼«¼ò×¨Òµ·ç¸ñ£¨minimal-pro£© */
+        /* é£æ ¼ Aï¼šæç®€ä¸“ä¸šé£æ ¼ï¼ˆminimal-proï¼‰ */
         .style-minimal-pro {
             --text-color: var(--text-secondary);
             --accent-color: var(--accent-primary);
@@ -496,11 +496,11 @@
             letter-spacing: 0.01em;
             color: var(--text-color);
             
-            /* Ê××ÖÄ¸´óĞ´ + Ğ¡ºÅ´óĞ´ */
+            /* é¦–å­—æ¯å¤§å†™ + å°å·å¤§å†™ */
             font-variant-caps: small-caps;
         }
         
-        /* ·ç¸ñ B£ºÆø³¡Ç¿ÊÆ·ç¸ñ£¨powerful-hero£© */
+        /* é£æ ¼ Bï¼šæ°”åœºå¼ºåŠ¿é£æ ¼ï¼ˆpowerful-heroï¼‰ */
         .style-powerful-hero {
             font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 800;
@@ -516,11 +516,11 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             
-            /* Ìí¼ÓÉî¶È¸Ğ */
+            /* æ·»åŠ æ·±åº¦æ„Ÿ */
             filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.2));
         }
         
-        /* ·ç¸ñ C£ºÓÅÑÅĞğÊÂ·ç¸ñ£¨narrative-elegant£© */
+        /* é£æ ¼ Cï¼šä¼˜é›…å™äº‹é£æ ¼ï¼ˆnarrative-elegantï¼‰ */
         .style-narrative-elegant {
             font-size: clamp(0.95rem, 1.1vw, 1.2rem);
             font-weight: 400;
@@ -531,16 +531,16 @@
             color: var(--text-tertiary);
             word-spacing: 0.15em;
             
-            /* ¶ÎÂä¼ä¾à³ä×ã */
+            /* æ®µè½é—´è·å……è¶³ */
             margin-bottom: var(--space-lg);
             
-            /* ÔÚ Mac/iOS ÉÏÆôÓÃÁ¬×Ö·û */
+            /* åœ¨ Mac/iOS ä¸Šå¯ç”¨è¿å­—ç¬¦ */
             -webkit-hyphens: auto;
             hyphens: auto;
         }
         
         /* ============================================
-           ¸ß¶Ô±È¶ÈÓÅ»¯ºÍÎŞÕÏ°­
+           é«˜å¯¹æ¯”åº¦ä¼˜åŒ–å’Œæ— éšœç¢
            ============================================ */
         @media (prefers-contrast: more) {
             body {
@@ -551,7 +551,7 @@
             }
         }
         
-        /* ¼õÉÙÔË¶¯Ä£Ê½£¨prefers-reduced-motion£© */
+        /* å‡å°‘è¿åŠ¨æ¨¡å¼ï¼ˆprefers-reduced-motionï¼‰ */
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
@@ -565,14 +565,14 @@
             }
         }
         
-        /* ÒÆ¶¯¶Ë¼ò»¯ */
+        /* ç§»åŠ¨ç«¯ç®€åŒ– */
         @media (max-width: 768px) {
-            /* ½ûÓÃÒÆ¶¯¶Ë¸´ÔÓ±³¾°ÂË¾µ */
+            /* ç¦ç”¨ç§»åŠ¨ç«¯å¤æ‚èƒŒæ™¯æ»¤é•œ */
             .deco-blob {
                 display: none !important;
             }
             
-            /* ¼ò»¯²£Á§ÄâÌ¬Ğ§¹û */
+            /* ç®€åŒ–ç»ç’ƒæ‹Ÿæ€æ•ˆæœ */
             .glass, .glass-strong {
                 backdrop-filter: none;
                 background: rgba(30, 41, 59, 0.5) !important;
@@ -851,7 +851,7 @@
             animation: spin 2s linear infinite;
             position: relative;
             z-index: 10;
-            /* ĞÔÄÜÓÅ»¯£ºÒÆ³ı°º¹óµÄ box-shadow */
+            /* æ€§èƒ½ä¼˜åŒ–ï¼šç§»é™¤æ˜‚è´µçš„ box-shadow */
             will-change: transform;
         }
 
@@ -2077,7 +2077,7 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-particles" id="loadingParticles"></div>
         <div class="loading-spinner"></div>
-        <div class="loading-text">¼ÓÔØÖĞ...</div>
+        <div class="loading-text">åŠ è½½ä¸­...</div>
     </div>
     
     <!-- Scroll Progress -->
@@ -2105,14 +2105,14 @@
         // ============================================
         
         // Projects data loaded from CMS API
-        // ¾²Ì¬»ØÍËÊı¾İ ¡ª Supabase Î´ÅäÖÃÊ±Ê¹ÓÃ
+        // é™æ€å›é€€æ•°æ® â€” Supabase æœªé…ç½®æ—¶ä½¿ç”¨
         const FALLBACK_PROJECTS = [
             {
-                id: '1', title: '¡¶Bound by Blood¡·AI ÕæÈË¶Ì¾ç',
-                category: 'AI ÕæÈË¶Ì¾ç',
-                description: '±±ÃÀÊĞ³¡¶¨ÖÆ | Å®ĞÔÊÓ½ÇĞğÊÂ | AI Çı¶¯È«Á÷³ÌÖÆ×÷',
-                image: '/v1_cover.jpg', videoUrl: '/v1_mobile.mp4', videoType: 'mp4', isVideo: true,
-                tags: ['AI ÖÆ×÷', '±±ÃÀ·¢ĞĞ', 'ÕæÈË¶Ì¾ç'], link: '/project.html?id=1', duration: null
+                id: '1', title: 'ã€ŠBound by Bloodã€‹AI çœŸäººçŸ­å‰§',
+                category: 'AI çœŸäººçŸ­å‰§',
+                description: 'åŒ—ç¾å¸‚åœºå®šåˆ¶ | å¥³æ€§è§†è§’å™äº‹ | AI é©±åŠ¨å…¨æµç¨‹åˆ¶ä½œ',
+                image: 'v1_cover.jpg', videoUrl: 'v1_mobile.mp4', videoType: 'mp4', isVideo: true,
+                tags: ['AI åˆ¶ä½œ', 'åŒ—ç¾å‘è¡Œ', 'çœŸäººçŸ­å‰§'], link: '/project.html?id=1', duration: null
             }
         ];
 
@@ -2129,7 +2129,7 @@
                         .order('sort_order', { ascending: true });
                     
                     if (!error && data && data.length > 0) {
-                        // ºÏ²¢ Supabase Êı¾İºÍ»ØÍËÊı¾İ£¨»ØÍËÊı¾İÌá¹©ÊÓÆµ/·âÃæ£©
+                        // åˆå¹¶ Supabase æ•°æ®å’Œå›é€€æ•°æ®ï¼ˆå›é€€æ•°æ®æä¾›è§†é¢‘/å°é¢ï¼‰
                         const fallbackMap = {};
                         FALLBACK_PROJECTS.forEach(fp => { fallbackMap[fp.id] = fp; });
                         
@@ -2177,27 +2177,27 @@
         const FEATURES_DATA = [
             { 
                 icon: 'AI', 
-                title: 'AI Çı¶¯Éè¼Æ', 
-                description: 'ÔËÓÃ Midjourney¡¢Stable Diffusion¡¢ComfyUI Óë Google ÏµÁĞ¹¤¾ß£¬Í»ÆÆ´«Í³Éè¼Æ±ß½ç¡£',
-                highlights: ['Midjourney v6', 'Stable Diffusion', 'Google Gemini', 'ÊµÊ±äÖÈ¾']
+                title: 'AI é©±åŠ¨è®¾è®¡', 
+                description: 'è¿ç”¨ Midjourneyã€Stable Diffusionã€ComfyUI ä¸ Google ç³»åˆ—å·¥å…·ï¼Œçªç ´ä¼ ç»Ÿè®¾è®¡è¾¹ç•Œã€‚',
+                highlights: ['Midjourney v6', 'Stable Diffusion', 'Google Gemini', 'å®æ—¶æ¸²æŸ“']
             },
             { 
                 icon: 'FAST', 
-                title: '¸ßĞ§ÖÆ×÷', 
-                description: 'ÖÇÄÜ»¯¹¤×÷Á÷½«ÏîÄ¿ÖÜÆÚËõ¶ÌÔ¼ 50%£¬²¢±£³Ö¸ßÖÊÁ¿±ê×¼¡£',
-                highlights: ['×Ô¶¯»¯Á÷³Ì', 'ÖÇÄÜÓÅ»¯', 'ÖÊÁ¿±£ÕÏ', '¿ìËÙ½»¸¶']
+                title: 'é«˜æ•ˆåˆ¶ä½œ', 
+                description: 'æ™ºèƒ½åŒ–å·¥ä½œæµå°†é¡¹ç›®å‘¨æœŸç¼©çŸ­çº¦ 50%ï¼Œå¹¶ä¿æŒé«˜è´¨é‡æ ‡å‡†ã€‚',
+                highlights: ['è‡ªåŠ¨åŒ–æµç¨‹', 'æ™ºèƒ½ä¼˜åŒ–', 'è´¨é‡ä¿éšœ', 'å¿«é€Ÿäº¤ä»˜']
             },
             { 
                 icon: 'IDEA', 
-                title: '´´ÒâÎŞÏŞ', 
-                description: 'ÈÚºÏ´«Í³¹¤ÒÕÓë AI ¼¼Êõ£¬Ì½Ë÷Éè¼ÆµÄÈ«ĞÂÎ¬¶È¡£',
-                highlights: ['´«Í³¹¤ÒÕ', 'AI ´´Òâ', '·ç¸ñÈÚºÏ', '¶ÀÌØ±í´ï']
+                title: 'åˆ›æ„æ— é™', 
+                description: 'èåˆä¼ ç»Ÿå·¥è‰ºä¸ AI æŠ€æœ¯ï¼Œæ¢ç´¢è®¾è®¡çš„å…¨æ–°ç»´åº¦ã€‚',
+                highlights: ['ä¼ ç»Ÿå·¥è‰º', 'AI åˆ›æ„', 'é£æ ¼èåˆ', 'ç‹¬ç‰¹è¡¨è¾¾']
             },
             { 
                 icon: '3D', 
-                title: '¶àÎ¬³ÊÏÖ', 
-                description: '´Ó¾²Ì¬µ½¶¯Ì¬£¬´Ó 2D µ½ 3D£¬Ìá¹©È«·½Î»ÊÓ¾õ½â¾ö·½°¸¡£',
-                highlights: ['¾²Ì¬Éè¼Æ', '¶¯Ì¬Ğ§¹û', '3D Ä£ĞÍ', '½»»¥ÌåÑé']
+                title: 'å¤šç»´å‘ˆç°', 
+                description: 'ä»é™æ€åˆ°åŠ¨æ€ï¼Œä» 2D åˆ° 3Dï¼Œæä¾›å…¨æ–¹ä½è§†è§‰è§£å†³æ–¹æ¡ˆã€‚',
+                highlights: ['é™æ€è®¾è®¡', 'åŠ¨æ€æ•ˆæœ', '3D æ¨¡å‹', 'äº¤äº’ä½“éªŒ']
             }
         ];
         
@@ -2205,15 +2205,15 @@
         // CUSTOM HOOKS
         // ============================================
         
-        // Loading Hook with Particles - ÓÅ»¯°æ
+        // Loading Hook with Particles - ä¼˜åŒ–ç‰ˆ
         function usePageLoading() {
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                // Generate particles for loading screen - ¼õÉÙÊıÁ¿ÌáÉıĞÔÄÜ
+                // Generate particles for loading screen - å‡å°‘æ•°é‡æå‡æ€§èƒ½
                 const particlesContainer = document.getElementById('loadingParticles');
                 if (particlesContainer) {
-                    // ¼ì²âÉè±¸ĞÔÄÜ£¬ÒÆ¶¯¶Ë¼õÉÙÁ£×ÓÊıÁ¿
+                    // æ£€æµ‹è®¾å¤‡æ€§èƒ½ï¼Œç§»åŠ¨ç«¯å‡å°‘ç²’å­æ•°é‡
                     const isMobile = window.innerWidth < 768;
                     const particleCount = isMobile ? 6 : 12;
 
@@ -2244,7 +2244,7 @@
                 const timer = setTimeout(() => {
                     setLoading(false);
                     document.getElementById('loadingScreen')?.classList.add('hidden');
-                }, 800); // ´Ó 1200ms ½µµ½ 800ms£¬ÌáÉıÊ×ÆÁ·´À¡ËÙ¶È
+                }, 800); // ä» 1200ms é™åˆ° 800msï¼Œæå‡é¦–å±åé¦ˆé€Ÿåº¦
 
                 return () => clearTimeout(timer);
             }, []);
@@ -2277,13 +2277,13 @@
             }, []);
         }
 
-        // Floating Background Particles Hook - ÓÅ»¯°æ
+        // Floating Background Particles Hook - ä¼˜åŒ–ç‰ˆ
         function useFloatingParticles() {
             useEffect(() => {
                 const container = document.getElementById('floatingParticlesBg');
                 if (!container || window.innerWidth < 768) return;
 
-                // ¼õÉÙÁ£×ÓÊıÁ¿£¬²ÉÓÃ¸üºÏÀíµÄ¼ÆËã·½Ê½
+                // å‡å°‘ç²’å­æ•°é‡ï¼Œé‡‡ç”¨æ›´åˆç†çš„è®¡ç®—æ–¹å¼
                 const particleCount = Math.min(12, Math.floor(window.innerWidth / 150));
 
                 for (let i = 0; i < particleCount; i++) {
@@ -2306,7 +2306,7 @@
                     container.appendChild(particle);
                 }
 
-                // Animation keyframe for floating - ¼ò»¯¶¯»­¼ÆËã
+                // Animation keyframe for floating - ç®€åŒ–åŠ¨ç”»è®¡ç®—
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes float {
@@ -2779,17 +2779,17 @@
                 </LampContainer>
             );
         }
-        // ÍøÂçÁ¬½Ó¼ì²âºÍĞÔÄÜÓÅ»¯
+        // ç½‘ç»œè¿æ¥æ£€æµ‹å’Œæ€§èƒ½ä¼˜åŒ–
         const useNetworkStatus = () => {
             const [effectiveType, setEffectiveType] = useState('4g');
             const [isOnline, setIsOnline] = useState(true);
             
             useEffect(() => {
                 const updateNetworkStatus = () => {
-                    // ¼ì²éÍøÂçÁ¬½Ó
+                    // æ£€æŸ¥ç½‘ç»œè¿æ¥
                     setIsOnline(navigator.onLine);
                     
-                    // ¼ì²éÍøÂçÀàĞÍ£¨Èç¹ûÖ§³Ö Network Information API£©
+                    // æ£€æŸ¥ç½‘ç»œç±»å‹ï¼ˆå¦‚æœæ”¯æŒ Network Information APIï¼‰
                     if (navigator.connection) {
                         setEffectiveType(navigator.connection.effectiveType || '4g');
                     }
@@ -2831,18 +2831,18 @@
             const hoverTimeoutRef = useRef(null);
             const canPlayRef = useRef(false);
             
-            // »ñÈ¡ÍøÂç×´Ì¬
+            // è·å–ç½‘ç»œçŠ¶æ€
             const { effectiveType, isOnline } = useNetworkStatus();
             
-            // ÊÇ·ñÓ¦¸Ã¼ÓÔØÊÓÆµ£¨»ùÓÚÍøÂç×´¿ö£©
+            // æ˜¯å¦åº”è¯¥åŠ è½½è§†é¢‘ï¼ˆåŸºäºç½‘ç»œçŠ¶å†µï¼‰
             const shouldLoadVideo = useMemo(() => {
                 if (!isOnline) return false;
-                // ÔÚÂıËÙÍøÂç£¨2g/3g£©ÏÂÌø¹ı³õ´Î¼ÓÔØ
+                // åœ¨æ…¢é€Ÿç½‘ç»œï¼ˆ2g/3gï¼‰ä¸‹è·³è¿‡åˆæ¬¡åŠ è½½
                 if (effectiveType === '2g' || effectiveType === '3g') return false;
                 return true;
             }, [effectiveType, isOnline]);
             
-            // ¼ì²âÉè±¸ÀàĞÍºÍÊÓ¿Ú´óĞ¡
+            // æ£€æµ‹è®¾å¤‡ç±»å‹å’Œè§†å£å¤§å°
             useEffect(() => {
                 const checkMobile = () => setIsMobile(window.innerWidth < 768);
                 const checkTouchDevice = () => setIsTouchDevice(() => {
@@ -2886,11 +2886,11 @@
                 setTilt({ x: tiltX, y: tiltY });
             }, []);
             
-            // ÊÓÆµ¼ÓÔØÍê³É´¦Àí
+            // è§†é¢‘åŠ è½½å®Œæˆå¤„ç†
             const handleVideoCanPlay = useCallback(() => {
                 setVideoLoading(false);
                 canPlayRef.current = true;
-                // ¸üĞÂ showVideo ÒÔ´¥·¢ÊÓÆµ²¥·Å
+                // æ›´æ–° showVideo ä»¥è§¦å‘è§†é¢‘æ’­æ”¾
                 if (videoRef.current && showVideo) {
                     videoRef.current.play().catch(err => {
                         console.warn('Video autoplay failed:', err);
@@ -2899,7 +2899,7 @@
                 }
             }, [showVideo]);
             
-            // ÊÓÆµ´íÎó´¦Àí
+            // è§†é¢‘é”™è¯¯å¤„ç†
             const handleVideoError = useCallback(() => {
                 console.warn(`Video failed to load: preview-${project.id}.mp4`);
                 setVideoLoading(false);
@@ -2910,20 +2910,20 @@
             const handleMouseEnter = useCallback(() => {
                 if (isMobile || isTouchDevice || !project.isVideo || !shouldLoadVideo) return;
                 
-                // Çå³ıÖ®Ç°µÄÑÓ³Ù
+                // æ¸…é™¤ä¹‹å‰çš„å»¶è¿Ÿ
                 if (hoverTimeoutRef.current) {
                     clearTimeout(hoverTimeoutRef.current);
                 }
                 
-                // 300ms ºóÏÔÊ¾ÊÓÆµ
+                // 300ms åæ˜¾ç¤ºè§†é¢‘
                 hoverTimeoutRef.current = setTimeout(() => {
-                    // ·ÀÖ¹´íÎóµÄÊÓÆµÔÙ´Î¼ÓÔØ
+                    // é˜²æ­¢é”™è¯¯çš„è§†é¢‘å†æ¬¡åŠ è½½
                     if (videoError) return;
                     
                     setShowVideo(true);
                     
                     if (videoRef.current) {
-                        // Èç¹ûÊÓÆµÒÑ¼ÓÔØ£¬Ö±½Ó²¥·Å
+                        // å¦‚æœè§†é¢‘å·²åŠ è½½ï¼Œç›´æ¥æ’­æ”¾
                         if (canPlayRef.current) {
                             videoRef.current.play().catch(err => {
                                 console.warn('Video play failed:', err);
@@ -2931,7 +2931,7 @@
                                 setShowVideo(false);
                             });
                         } else {
-                            // ·ñÔòÉèÖÃ¼ÓÔØ×´Ì¬
+                            // å¦åˆ™è®¾ç½®åŠ è½½çŠ¶æ€
                             setVideoLoading(true);
                         }
                     }
@@ -2939,12 +2939,12 @@
             }, [isMobile, isTouchDevice, project.isVideo, videoError, shouldLoadVideo]);
             
             const handleMouseLeave = useCallback(() => {
-                // Çå³ıÑÓ³Ù
+                // æ¸…é™¤å»¶è¿Ÿ
                 if (hoverTimeoutRef.current) {
                     clearTimeout(hoverTimeoutRef.current);
                 }
                 
-                // ÔİÍ£²¢Òş²ØÊÓÆµ
+                // æš‚åœå¹¶éšè—è§†é¢‘
                 setShowVideo(false);
                 if (videoRef.current) {
                     videoRef.current.pause();
@@ -3006,11 +3006,11 @@
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                                    <span className="text-6xl opacity-30">??</span>
+                                    <span className="text-6xl opacity-30">ğŸ¬</span>
                                 </div>
                             )}
                             
-                            {/* ÊÓÆµÔ¤ÀÀ²ã - ×ÀÃæ¶Ë×Ô¶¯²¥·Å */}
+                            {/* è§†é¢‘é¢„è§ˆå±‚ - æ¡Œé¢ç«¯è‡ªåŠ¨æ’­æ”¾ */}
                             {project.isVideo && !isMobile && !videoError && (
                                 <>
                                     <video
@@ -3024,7 +3024,7 @@
                                         style={{ pointerEvents: 'none' }}
                                         onError={(e) => { e.target.style.display = 'none'; }}
                                     />
-                                    {/* ¾²ÒôÍ¼±ê */}
+                                    {/* é™éŸ³å›¾æ ‡ */}
                                     <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="opacity-40">
                                             <path d="M11 5L6 9H2v6h4l5 4V5z" fill="white"/>
@@ -3036,7 +3036,7 @@
                             
                             
                             
-                            {/* ÒÆ¶¯¶Ë£º×Ô¶¯²¥·Å¾²ÒôÊÓÆµÔ¤ÀÀ */}
+                            {/* ç§»åŠ¨ç«¯ï¼šè‡ªåŠ¨æ’­æ”¾é™éŸ³è§†é¢‘é¢„è§ˆ */}
                             {project.isVideo && isMobile && (
                                 <>
                                     {!videoError && (
@@ -3052,7 +3052,7 @@
                                             onError={(e) => { e.target.style.display = 'none'; }}
                                         />
                                     )}
-                                    {/* ¾²ÒôÍ¼±ê */}
+                                    {/* é™éŸ³å›¾æ ‡ */}
                                     <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="opacity-40">
                                             <path d="M11 5L6 9H2v6h4l5 4V5z" fill="white"/>
@@ -3149,7 +3149,7 @@
                                 className="flex gap-2.5 md:gap-3 flex-wrap items-center tag-container mb-6"
                             >
                                 <div className="inline-flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-full glass border border-slate-700/50 hover:border-slate-600/70 transition-colors">
-                                    <span className="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider leading-tight">¼¼ÊõÕ»</span>
+                                    <span className="text-xs md:text-sm font-bold text-slate-300 uppercase tracking-wider leading-tight">æŠ€æœ¯æ ˆ</span>
                                 </div>
                                 {project.tags.map((tag, i) => (
                                     <motion.span
@@ -3177,13 +3177,13 @@
                                 whileHover={{ x: 8, color: '#06B6D4' }}
                                 className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-accent-cyan transition-colors group"
                             >
-                                ²é¿´ÏêÏ¸ÏîÄ¿½éÉÜÓëÉÌÒµ¼ÛÖµ
+                                æŸ¥çœ‹è¯¦ç»†é¡¹ç›®ä»‹ç»ä¸å•†ä¸šä»·å€¼
                                 <motion.span
                                     className="inline-block"
                                     animate={{ x: [0, 4, 0] }}
                                     transition={{ duration: 2, repeat: Infinity }}
                                 >
-                                    ¡ú
+                                    â†’
                                 </motion.span>
                             </motion.a>
                         </motion.div>
@@ -3300,7 +3300,7 @@
                                 >
                                     <div>
                                         <h4 className="font-display text-lg font-bold gradient-text mb-4">
-                                            ºËĞÄÄÜÁ¦
+                                            æ ¸å¿ƒèƒ½åŠ›
                                         </h4>
                                         <div className="flex flex-wrap gap-2">
                                             {feature.highlights && feature.highlights.map((highlight, i) => (
@@ -3321,7 +3321,7 @@
                                         transition={{ duration: 0.3 }}
                                         className="flex items-center justify-center gap-2 text-accent-cyan hover:text-accent-blue transition-colors cursor-pointer mt-4 pt-4 border-t border-slate-700/50"
                                     >
-                                        <span className="text-sm font-medium">ÉîÈëÌ½Ë÷</span>
+                                        <span className="text-sm font-medium">æ·±å…¥æ¢ç´¢</span>
                                         <motion.svg 
                                             animate={{ x: flipped ? 4 : 0 }}
                                             className="w-4 h-4" 
@@ -3383,7 +3383,7 @@
             React.useEffect(() => {
                 if (videoRef.current) {
                     const v = videoRef.current;
-                    // Always start paused ¡ª show play button
+                    // Always start paused â€” show play button
                     // User tap on play button = user gesture = sound guaranteed
                     v.pause();
                     v.currentTime = 0;
@@ -3474,7 +3474,7 @@
                         {/* Error state */}
                         {hasError && (
                             <div className="video-modal-loading">
-                                <p style={{color: '#94a3b8', textAlign: 'center'}}>ÊÓÆµ¼ÓÔØÊ§°Ü<br/><small>Çë¼ì²éÍøÂçÁ¬½Ó</small></p>
+                                <p style={{color: '#94a3b8', textAlign: 'center'}}>è§†é¢‘åŠ è½½å¤±è´¥<br/><small>è¯·æ£€æŸ¥ç½‘ç»œè¿æ¥</small></p>
                             </div>
                         )}
                         <video
@@ -3518,13 +3518,13 @@
                         {/* Big play button (visible when paused) */}
                         {!isPlaying && !isLoading && !hasError && (
                             <div className="video-modal-bigplay" onClick={togglePlay}>
-                                <div className="video-modal-bigplay-btn">?</div>
+                                <div className="video-modal-bigplay-btn">â–¶</div>
                             </div>
                         )}
-                        <button className="video-modal-close" onClick={onClose} title="¹Ø±Õ">?</button>
+                        <button className="video-modal-close" onClick={onClose} title="å…³é—­">âœ•</button>
                         <div className={`video-modal-controls ${showControls || !isPlaying ? 'visible' : ''}`}>
-                            <button onClick={togglePlay} title="²¥·Å/ÔİÍ£">
-                                {isPlaying ? '?' : '?'}
+                            <button onClick={togglePlay} title="æ’­æ”¾/æš‚åœ">
+                                {isPlaying ? 'â¸' : 'â–¶'}
                             </button>
                             <div className="video-modal-progress" onClick={(e) => {
                                 if (!videoRef.current) return;
@@ -3535,8 +3535,8 @@
                                 <div className="video-modal-progress-fill" style={{ width: progress + '%' }}></div>
                             </div>
                             <span className="video-modal-time">{currentTime} / {duration}</span>
-                            <button onClick={toggleMute} title="¾²Òô">{isMuted ? '??' : '??'}</button>
-                            <button onClick={toggleFullscreen} title="È«ÆÁ">?</button>
+                            <button onClick={toggleMute} title="é™éŸ³">{isMuted ? 'ğŸ”‡' : 'ğŸ”Š'}</button>
+                            <button onClick={toggleFullscreen} title="å…¨å±">â›¶</button>
                         </div>
                     </div>
                 </div>
@@ -3605,26 +3605,26 @@
                                         transition={{ duration: 0.8, delay: 0.1 }}
                                         className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-cyan"
                                     >
-                                        ¾«Ñ¡ÏîÄ¿
+                                        ç²¾é€‰é¡¹ç›®
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    AI Çı¶¯µÄÕæÈË¶Ì¾çÖÆ×÷£¬Ì½Ë÷ AIGC ÔÚÓ°ÊÓÄÚÈİÁìÓòµÄÇ°ÑØÓ¦ÓÃ¡£
+                                    AI é©±åŠ¨çš„çœŸäººçŸ­å‰§åˆ¶ä½œï¼Œæ¢ç´¢ AIGC åœ¨å½±è§†å†…å®¹é¢†åŸŸçš„å‰æ²¿åº”ç”¨ã€‚
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    µã»÷ÏîÄ¿²é¿´ÍêÕûÆ¬¶Î¡£
+                                    ç‚¹å‡»é¡¹ç›®æŸ¥çœ‹å®Œæ•´ç‰‡æ®µã€‚
                                 </p>
                             </motion.div>
                             
                             {projectsLoading ? (
                                 <div className="text-center py-20">
                                     <div className="inline-block w-8 h-8 border-2 border-accent-cyan border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="mt-4 text-slate-400">¼ÓÔØ×÷Æ·ÖĞ...</p>
+                                    <p className="mt-4 text-slate-400">åŠ è½½ä½œå“ä¸­...</p>
                                 </div>
                             ) : projects.length === 0 ? (
                                 <div className="text-center py-20">
-                                    <p className="text-slate-400 text-lg">ÔİÎŞ×÷Æ·</p>
-                                    <p className="text-slate-500 text-sm mt-2">ÇëÍ¨¹ı¹ÜÀíºóÌ¨Ìí¼Ó×÷Æ·¼¯ÄÚÈİ</p>
+                                    <p className="text-slate-400 text-lg">æš‚æ— ä½œå“</p>
+                                    <p className="text-slate-500 text-sm mt-2">è¯·é€šè¿‡ç®¡ç†åå°æ·»åŠ ä½œå“é›†å†…å®¹</p>
                                 </div>
                             ) : projects.map((project, index) => (
                                 <motion.div key={project.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -3664,7 +3664,7 @@
                                         About
                                     </h2>
                                     <p className="font-body text-base text-slate-300 leading-relaxed">
-                                        ÎÒ×¨×¢ÓÚ AI Çı¶¯µÄÊÓ¾õ´´ÒâÓë½»»¥Éè¼Æ£¬ÎªÆ·ÅÆ´òÔì¸ßÊ¶±ğ¶ÈµÄÊÓ¾õÌåÑé¡£
+                                        æˆ‘ä¸“æ³¨äº AI é©±åŠ¨çš„è§†è§‰åˆ›æ„ä¸äº¤äº’è®¾è®¡ï¼Œä¸ºå“ç‰Œæ‰“é€ é«˜è¯†åˆ«åº¦çš„è§†è§‰ä½“éªŒã€‚
                                     </p>
                                 </motion.div>
 
@@ -3677,13 +3677,13 @@
                                     className="md:col-span-2"
                                 >
                                     <h3 className="font-display text-2xl font-bold mb-4 gradient-text">
-                                        ¼¼ÄÜÁìÓò
+                                        æŠ€èƒ½é¢†åŸŸ
                                     </h3>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         {[
-                                            { category: '3D ½¨Öş', skills: ['SketchUp', 'V-Ray', '3ds Max'] },
-                                            { category: 'AI ¹¤¾ß', skills: ['Midjourney', 'Google Gemini', 'Stable Diffusion'] },
-                                            { category: 'ÊÓÆµ´´Òâ', skills: ['After Effects', 'Runway', 'Veo3'] }
+                                            { category: '3D å»ºç­‘', skills: ['SketchUp', 'V-Ray', '3ds Max'] },
+                                            { category: 'AI å·¥å…·', skills: ['Midjourney', 'Google Gemini', 'Stable Diffusion'] },
+                                            { category: 'è§†é¢‘åˆ›æ„', skills: ['After Effects', 'Runway', 'Veo3'] }
                                         ].map((group, i) => (
                                             <motion.div 
                                                 key={i}
@@ -3740,14 +3740,14 @@
                                         transition={{ duration: 0.8, delay: 0.1 }}
                                         className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-purple"
                                     >
-                                        ÎªÊ²Ã´Ñ¡ÔñÎÒ
+                                        ä¸ºä»€ä¹ˆé€‰æ‹©æˆ‘
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    ÓÃ AI ÌáÉıĞ§ÂÊÓë±í´ï£¬½»¸¶¸ü¾ß´«²¥Á¦µÄ×÷Æ·¡£
+                                    ç”¨ AI æå‡æ•ˆç‡ä¸è¡¨è¾¾ï¼Œäº¤ä»˜æ›´å…·ä¼ æ’­åŠ›çš„ä½œå“ã€‚
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    ¸ßĞ§½»¸¶ | ´´ĞÂË¼Î¬ | ÉÌÒµ¼ÛÖµ
+                                    é«˜æ•ˆäº¤ä»˜ | åˆ›æ–°æ€ç»´ | å•†ä¸šä»·å€¼
                                 </p>
                             </motion.div>
                             
@@ -3809,7 +3809,7 @@
                                         transition={{ delay: 0.3 }}
                                         className="font-body text-slate-400 text-sm md:text-base text-center md:text-right space-y-1"
                                     >
-                                        <p className="text-slate-500">? 2026 AIGC Visual Studio</p>
+                                        <p className="text-slate-500">Â© 2026 AIGC Visual Studio</p>
                                         <motion.p 
                                             animate={{ opacity: [0.6, 1, 0.6] }}
                                             transition={{ duration: 2, repeat: Infinity }}
@@ -3832,7 +3832,7 @@
                         </div>
                     </footer>
                     
-                    {/* ÊÓÆµ·Å´ó²¥·Åµ¯´° */}
+                    {/* è§†é¢‘æ”¾å¤§æ’­æ”¾å¼¹çª— */}
                     {selectedVideo && (
                         <VideoModal
                             project={selectedVideo}
@@ -3845,10 +3845,10 @@
         
         const root = ReactDOM.createRoot(document.getElementById('root'));
         
-        // ĞÔÄÜÓÅ»¯£ºÑÓ³Ù³õÊ¼»¯ÒÔ¸ÄÉÆÊ×ÆÁäÖÈ¾
-        // ÏÈäÖÈ¾»ù´¡ UI£¬ÔÙ³õÊ¼»¯¸´ÔÓ½»»¥
+        // æ€§èƒ½ä¼˜åŒ–ï¼šå»¶è¿Ÿåˆå§‹åŒ–ä»¥æ”¹å–„é¦–å±æ¸²æŸ“
+        // å…ˆæ¸²æŸ“åŸºç¡€ UIï¼Œå†åˆå§‹åŒ–å¤æ‚äº¤äº’
         document.addEventListener('DOMContentLoaded', () => {
-            // Ê¹ÓÃ startTransition ½µµÍ³õÊ¼äÖÈ¾ÓÅÏÈ¼¶
+            // ä½¿ç”¨ startTransition é™ä½åˆå§‹æ¸²æŸ“ä¼˜å…ˆçº§
             if (React.startTransition) {
                 React.startTransition(() => {
                     root.render(<App />);
@@ -3857,7 +3857,7 @@
                 root.render(<App />);
             }
             
-            // ÔÚ first paint ºó³õÊ¼»¯ĞÔÄÜÃô¸Ğ¹¦ÄÜ
+            // åœ¨ first paint ååˆå§‹åŒ–æ€§èƒ½æ•æ„ŸåŠŸèƒ½
             if (window.requestIdleCallback) {
                 window.requestIdleCallback(() => {
                     console.log('Performance optimization complete');
@@ -3865,11 +3865,11 @@
             }
         });
         
-        // Fallback: Èç¹û DOM ÉĞÎ´Íê³É¼ÓÔØ
+        // Fallback: å¦‚æœ DOM å°šæœªå®ŒæˆåŠ è½½
         if (document.readyState === 'loading') {
-            // µÈ´ı DOMContentLoaded
+            // ç­‰å¾… DOMContentLoaded
         } else {
-            // DOM ÒÑ¼ÓÔØ£¬Ö±½Ó³õÊ¼»¯
+            // DOM å·²åŠ è½½ï¼Œç›´æ¥åˆå§‹åŒ–
             if (React.startTransition) {
                 React.startTransition(() => {
                     root.render(<App />);
