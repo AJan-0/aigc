@@ -599,13 +599,16 @@
         .video-modal-container {
             position: relative;
             width: 100%;
-            max-width: 1200px;
+            max-width: min(90vw, 1200px);
             max-height: 90vh;
             border-radius: 16px;
             overflow: hidden;
             background: #000;
             box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             animation: modalSlideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         @keyframes modalSlideIn {
             from { transform: scale(0.92); opacity: 0; }
@@ -613,89 +616,115 @@
         }
         .video-modal-video {
             width: 100%;
+            height: 100%;
             max-height: 90vh;
             display: block;
             cursor: pointer;
             object-fit: contain;
+            position: relative;
+            z-index: 1;
         }
         .video-modal-close {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.75rem;
+            right: 0.75rem;
             width: 44px;
             height: 44px;
             border-radius: 50%;
             border: none;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: white;
-            font-size: 1.2rem;
             cursor: pointer;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.2s;
         }
-        .video-modal-close:hover { background: rgba(255,255,255,0.2); }
+        .video-modal-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.08); }
         .video-modal-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 0.75rem 1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 3rem 1rem 0.75rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
             display: flex;
             align-items: center;
             gap: 0.75rem;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
+            z-index: 15;
         }
         .video-modal-controls.visible { opacity: 1; }
         .video-modal-controls button {
             background: none;
             border: none;
             color: white;
-            font-size: 1.1rem;
             cursor: pointer;
             padding: 0.25rem;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-            min-width: 32px;
-            min-height: 32px;
+            opacity: 0.9;
+            transition: opacity 0.2s, transform 0.15s;
+            min-width: 36px;
+            min-height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 6px;
         }
-        .video-modal-controls button:hover { opacity: 1; }
+        .video-modal-controls button:hover { opacity: 1; transform: scale(1.1); }
+        .video-modal-controls button:active { transform: scale(0.95); }
         .video-modal-progress {
             flex: 1;
             height: 4px;
             background: rgba(255,255,255,0.2);
-            border-radius: 2px;
+            border-radius: 3px;
             cursor: pointer;
             position: relative;
+            transition: height 0.15s;
         }
-        .video-modal-progress:hover { height: 6px; }
+        .video-modal-progress:hover { height: 7px; }
         .video-modal-progress-buffer {
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
-            background: rgba(255,255,255,0.15);
-            border-radius: 2px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
             transition: width 0.3s;
+            z-index: 1;
         }
         .video-modal-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #06B6D4, #8B5CF6);
-            border-radius: 2px;
-            transition: width 0.1s;
+            border-radius: 3px;
+            transition: width 0.05s linear;
+            position: relative;
+            z-index: 2;
         }
+        .video-modal-progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .video-modal-progress:hover .video-modal-progress-fill::after { opacity: 1; }
         .video-modal-time {
             font-size: 0.8rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.85);
             font-variant-numeric: tabular-nums;
             white-space: nowrap;
+            font-family: 'Manrope', monospace;
         }
         .video-modal-loading {
             position: absolute;
@@ -707,6 +736,36 @@
             background: rgba(0,0,0,0.7);
             z-index: 5;
             pointer-events: none;
+        }
+        /* Top thin progress bar (YouTube style) */
+        .video-top-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            z-index: 15;
+            transition: opacity 0.3s;
+        }
+        .video-top-progress:hover {
+            height: 5px;
+        }
+        .video-top-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06B6D4, #8B5CF6);
+            transition: width 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+        .video-top-progress-buffer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.15);
+            transition: width 0.3s;
+            z-index: 1;
         }
         .video-modal-spinner {
             width: 40px; height: 40px;
@@ -746,49 +805,46 @@
         @media (max-width: 768px) {
             .video-modal-overlay {
                 padding: 0;
-                align-items: flex-end;
+                align-items: center;
             }
             .video-modal-container {
                 max-width: 100%;
                 max-height: 100vh;
-                border-radius: 16px 16px 0 0;
+                border-radius: 0;
             }
             .video-modal-controls {
-                opacity: 1;
-                padding: 0.5rem 0.75rem;
-                gap: 0.5rem;
+                opacity: 1 !important;
+                padding: 2.5rem 0.6rem 0.6rem;
+                gap: 0.4rem;
+                background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 70%, transparent 100%);
+                padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
             }
             .video-modal-controls button {
                 min-width: 44px;
                 min-height: 44px;
-                font-size: 1.3rem;
+                padding: 0;
             }
             .video-modal-close {
                 top: 0.5rem;
                 right: 0.5rem;
-                width: 44px;
-                height: 44px;
-                font-size: 1.4rem;
+                width: 40px;
+                height: 40px;
             }
             .video-modal-bigplay-btn {
                 width: 72px;
                 height: 72px;
-                font-size: 1.8rem;
             }
             .video-modal-progress {
-                height: 6px;
+                height: 5px;
+                flex: 1;
+                min-width: 0;
             }
             .video-modal-time {
-                font-size: 0.75rem;
+                font-size: 0.65rem;
+                white-space: nowrap;
             }
-            .tilt-card-inner {
-                max-height: 70vh;
-                aspect-ratio: auto;
-            }
-            .project-image {
-                width: 100%;
-                height: auto;
-                display: block;
+            .video-top-progress {
+                height: 3px;
             }
         }
         
@@ -2124,6 +2180,13 @@
                 description: '北美市场定制 | 女性视角叙事 | AI 驱动全流程制作',
                 image: 'v1_cover.jpg', videoUrl: 'v1_mobile.mp4', videoType: 'mp4', isVideo: true,
                 tags: ['AI 制作', '北美发行', '真人短剧'], link: '/project.html?id=1', duration: null
+            },
+            {
+                id: '2', title: '《429》AI 短剧片段',
+                category: 'AI 真人短剧',
+                description: '三段完整拼接 | AI 驱动制作 | 沉浸式叙事',
+                image: '429_cover.jpg', videoUrl: '429.mp4', videoType: 'mp4', isVideo: true,
+                tags: ['AI 制作', '短剧', '完整片段'], link: '/project.html?id=2', duration: '2:24'
             }
         ];
 
@@ -2187,28 +2250,28 @@
 
         const FEATURES_DATA = [
             { 
-                icon: 'AI', 
-                title: 'AI 驱动设计', 
-                description: '运用 Midjourney、Stable Diffusion、ComfyUI 与 Google 系列工具，突破传统设计边界。',
-                highlights: ['Midjourney v6', 'Stable Diffusion', 'Google Gemini', '实时渲染']
+                icon: 'FLOW', 
+                title: 'Workflow 工作流优化', 
+                description: '从脚本到成片，构建端到端 AI 影视制作流水线，将传统数周的制作周期压缩至数天。',
+                highlights: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联', '效率提升 300%+']
             },
             { 
-                icon: 'FAST', 
-                title: '高效制作', 
-                description: '智能化工作流将项目周期缩短约 50%，并保持高质量标准。',
-                highlights: ['自动化流程', '智能优化', '质量保障', '快速交付']
+                icon: 'SD', 
+                title: 'Stable Diffusion 深度应用', 
+                description: '精通 SD 全链路工具，从模型微调到 LoRA 训练，精准控制画面风格与角色一致性。',
+                highlights: ['ControlNet 精控', 'LoRA / IP-Adapter', '图生图/局部重绘', '风格迁移']
             },
             { 
-                icon: 'IDEA', 
-                title: '创意无限', 
-                description: '融合传统工艺与 AI 技术，探索设计的全新维度。',
-                highlights: ['传统工艺', 'AI 创意', '风格融合', '独特表达']
+                icon: 'VIDEO', 
+                title: '前沿视频模型实战', 
+                description: '熟练运用 Seedance、Veo3、可灵等主流 AI 视频模型，实现高质量 AI 短剧与创意视频制作。',
+                highlights: ['Seedance 1.0', 'Google Veo3', '可灵 Kling', 'Runway Gen-4']
             },
             { 
-                icon: '3D', 
-                title: '多维呈现', 
-                description: '从静态到动态，从 2D 到 3D，提供全方位视觉解决方案。',
-                highlights: ['静态设计', '动态效果', '3D 模型', '交互体验']
+                icon: 'LLM', 
+                title: 'LLM 多模态应用', 
+                description: '运用大语言模型优化创意 Prompt，结合图像/视频/文本多模态能力，提升内容生产质量。',
+                highlights: ['Prompt 工程优化', '多模态内容生成', 'AI 辅助编剧', '智能分镜规划']
             }
         ];
         
@@ -3364,10 +3427,28 @@
             const [hasError, setHasError] = React.useState(false);
             const [buffered, setBuffered] = React.useState(0);
             const [isMobile, setIsMobile] = React.useState(false);
+            const [isFullscreen, setIsFullscreen] = React.useState(false);
             const controlsTimeout = React.useRef(null);
             const touchStartY = React.useRef(0);
+            const touchStartX = React.useRef(0);
+            const lastTapTime = React.useRef(0);
             const retryCountRef = React.useRef(0);
             const stalledHandledRef = React.useRef(false);
+
+            const formatTime = (s) => {
+                if (isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return m + ':' + String(sec).padStart(2, '0');
+            };
+
+            const resetControlsTimeout = () => {
+                setShowControls(true);
+                if (controlsTimeout.current) clearTimeout(controlsTimeout.current);
+                controlsTimeout.current = setTimeout(() => {
+                    if (isPlaying) setShowControls(false);
+                }, 3000);
+            };
 
             React.useEffect(() => {
                 const mobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
@@ -3381,13 +3462,17 @@
                     if (e.key === 'm' || e.key === 'M') toggleMute();
                     if (e.key === 'f' || e.key === 'F') toggleFullscreen();
                 };
+                const handleFullscreenChange = () => {
+                    setIsFullscreen(!!document.fullscreenElement);
+                };
                 document.addEventListener('keydown', handleKey);
+                document.addEventListener('fullscreenchange', handleFullscreenChange);
                 document.body.style.overflow = 'hidden';
-                // Prevent background scroll on iOS
                 document.body.style.position = 'fixed';
                 document.body.style.width = '100%';
                 return () => {
                     document.removeEventListener('keydown', handleKey);
+                    document.removeEventListener('fullscreenchange', handleFullscreenChange);
                     document.body.style.overflow = '';
                     document.body.style.position = '';
                     document.body.style.width = '';
@@ -3397,12 +3482,9 @@
             React.useEffect(() => {
                 if (videoRef.current) {
                     const v = videoRef.current;
-                    // Always start paused — show play button
-                    // User tap on play button = user gesture = sound guaranteed
                     v.pause();
                     v.currentTime = 0;
                     setIsPlaying(false);
-                    // Fallback: hide loading after 3s even if events don't fire
                     const loadingTimeout = setTimeout(() => setIsLoading(false), 3000);
                     return () => clearTimeout(loadingTimeout);
                 }
@@ -3412,55 +3494,80 @@
                 if (!videoRef.current) return;
                 const v = videoRef.current;
                 if (v.paused) {
-                    // User-initiated play — browsers allow sound on user gesture
                     v.muted = false;
                     v.play().then(() => {
                         setIsPlaying(true);
                         setIsMuted(false);
+                        resetControlsTimeout();
                     }).catch((err) => {
                         console.error('Play failed:', err);
-                        // Fallback: try muted
                         v.muted = true;
                         v.play().then(() => {
                             setIsPlaying(true);
                             setIsMuted(true);
-                        }).catch(() => {
-                            setIsPlaying(false);
-                        });
+                        }).catch(() => setIsPlaying(false));
                     });
                 } else {
                     v.pause();
                     setIsPlaying(false);
+                    setShowControls(true);
                 }
             };
+
             const toggleMute = () => {
                 if (!videoRef.current) return;
                 videoRef.current.muted = !videoRef.current.muted;
                 setIsMuted(videoRef.current.muted);
             };
+
             const toggleFullscreen = () => {
                 const el = document.getElementById('videoModalWrapper');
                 if (!el) return;
                 if (document.fullscreenElement) document.exitFullscreen();
                 else el.requestFullscreen().catch(() => {});
             };
-            const formatTime = (s) => {
-                if (isNaN(s)) return '0:00';
-                const m = Math.floor(s / 60);
-                const sec = Math.floor(s % 60);
-                return m + ':' + String(sec).padStart(2, '0');
+
+            const seekTo = (e) => {
+                if (!videoRef.current) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                videoRef.current.currentTime = pct * videoRef.current.duration;
             };
-            const handleMouseMove = () => {
-                setShowControls(true);
-                if (controlsTimeout.current) clearTimeout(controlsTimeout.current);
-                controlsTimeout.current = setTimeout(() => setShowControls(false), 3000);
+
+            // Touch handlers
+            const handleTouchStart = (e) => {
+                touchStartY.current = e.touches[0].clientY;
+                touchStartX.current = e.touches[0].clientX;
             };
-            // Touch: swipe down to close
-            const handleTouchStart = (e) => { touchStartY.current = e.touches[0].clientY; };
+
             const handleTouchEnd = (e) => {
                 const dy = e.changedTouches[0].clientY - touchStartY.current;
-                if (dy > 100 && !isPlaying) onClose(); // swipe down 100px+ to close
+                const dx = e.changedTouches[0].clientX - touchStartX.current;
+                // Swipe down to close (only when not in fullscreen)
+                if (dy > 100 && Math.abs(dx) < 50 && !isFullscreen) {
+                    onClose();
+                    return;
+                }
+                // Tap to toggle controls (only on video area, not controls)
+                if (Math.abs(dy) < 10 && Math.abs(dx) < 10) {
+                    const now = Date.now();
+                    if (now - lastTapTime.current < 300) {
+                        // Double tap = toggle fullscreen
+                        toggleFullscreen();
+                        lastTapTime.current = 0;
+                    } else {
+                        lastTapTime.current = now;
+                        // Single tap = toggle controls (with delay to detect double tap)
+                        setTimeout(() => {
+                            if (lastTapTime.current !== 0) {
+                                resetControlsTimeout();
+                            }
+                        }, 300);
+                    }
+                }
             };
+
+            const handleMouseMove = () => resetControlsTimeout();
 
             return (
                 <div
@@ -3471,6 +3578,12 @@
                     onTouchEnd={handleTouchEnd}
                 >
                     <div className="video-modal-container" id="videoModalWrapper">
+                        {/* Top thin progress bar — always visible */}
+                        <div className="video-top-progress" style={{opacity: showControls || !isPlaying ? 1 : 0}}>
+                            <div className="video-top-progress-buffer" style={{width: buffered + '%'}} />
+                            <div className="video-top-progress-fill" style={{width: progress + '%'}} />
+                        </div>
+
                         {/* Loading spinner */}
                         {isLoading && (
                             <div className="video-modal-loading">
@@ -3478,16 +3591,19 @@
                                 <p style={{color: '#94a3b8', textAlign: 'center', marginTop: '12px', fontSize: '14px'}}>加载中...</p>
                             </div>
                         )}
+
                         {/* Error state */}
                         {hasError && (
                             <div className="video-modal-loading">
                                 <p style={{color: '#94a3b8', textAlign: 'center'}}>视频加载失败<br/><small>请检查网络连接</small></p>
                                 <button 
                                     onClick={() => { setHasError(false); setIsLoading(true); retryCountRef.current = 0; if (videoRef.current) videoRef.current.load(); }}
-                                    style={{marginTop: '12px', padding: '8px 24px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px'}}
+                                    style={{marginTop: '12px', padding: '10px 28px', background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 500}}
                                 >重试</button>
                             </div>
                         )}
+
+                        {/* Video element */}
                         <video
                             ref={videoRef}
                             src={project.videoUrl}
@@ -3497,7 +3613,7 @@
                             preload="auto"
                             autoPlay={false}
                             muted={false}
-                            onClick={togglePlay}
+                            onClick={isMobile ? undefined : togglePlay}
                             onLoadStart={() => setIsLoading(true)}
                             onWaiting={() => setIsLoading(true)}
                             onPlaying={() => { setIsLoading(false); setIsPlaying(true); }}
@@ -3505,45 +3621,34 @@
                             onCanPlayThrough={() => setIsLoading(false)}
                             onLoadedData={() => setIsLoading(false)}
                             onLoadedMetadata={() => setIsLoading(false)}
-                            onError={(e) => { 
+                            onError={(e) => {
                                 const err = e.target.error;
                                 console.error('Video error:', err ? err.code : 'unknown', err ? err.message : '');
-                                // Auto-retry on network errors (code 2) or decode errors (code 3)
                                 if (err && (err.code === 2 || err.code === 3) && retryCountRef.current < 3) {
                                     retryCountRef.current++;
-                                    console.warn(`Retrying video load (attempt ${retryCountRef.current}/3)...`);
                                     setTimeout(() => { if (videoRef.current) videoRef.current.load(); }, 1000 * retryCountRef.current);
                                 } else {
-                                    setIsLoading(false); 
-                                    setHasError(true); 
+                                    setIsLoading(false);
+                                    setHasError(true);
                                 }
                             }}
                             onStalled={() => {
-                                // Only reload once, not in a loop
                                 if (!stalledHandledRef.current) {
                                     stalledHandledRef.current = true;
-                                    console.warn('Video stalled, reloading...');
                                     if (videoRef.current) videoRef.current.load();
                                     setTimeout(() => { stalledHandledRef.current = false; }, 5000);
                                 }
                             }}
-                            onSuspend={() => {
-                                // Video loading suspended - may be intentional
-                                console.log('Video loading suspended');
-                            }}
                             onProgress={() => {
                                 if (videoRef.current && videoRef.current.buffered.length > 0) {
                                     const bufferedEnd = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
-                                    const duration = videoRef.current.duration;
-                                    if (duration > 0) {
-                                        setBuffered(Math.round((bufferedEnd / duration) * 100));
-                                    }
+                                    const dur = videoRef.current.duration;
+                                    if (dur > 0) setBuffered(Math.round((bufferedEnd / dur) * 100));
                                 }
                             }}
                             onTimeUpdate={() => {
                                 if (!videoRef.current) return;
-                                const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
-                                setProgress(pct);
+                                setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100);
                                 setCurrentTime(formatTime(videoRef.current.currentTime));
                             }}
                             onLoadedMetadata={() => {
@@ -3551,29 +3656,83 @@
                             }}
                             onEnded={() => { setIsPlaying(false); setShowControls(true); }}
                         />
-                        {/* Big play button (visible when paused) */}
+
+                        {/* Center play button (visible when paused) */}
                         {!isPlaying && !hasError && (
                             <div className="video-modal-bigplay" onClick={togglePlay} style={{zIndex: 10}}>
-                                <div className="video-modal-bigplay-btn">▶</div>
+                                <div className="video-modal-bigplay-btn">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
                             </div>
                         )}
-                        <button className="video-modal-close" onClick={onClose} title="关闭">✕</button>
+
+                        {/* Close button */}
+                        <button className="video-modal-close" onClick={onClose} title="关闭">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+
+                        {/* Bottom controls bar */}
                         <div className={`video-modal-controls ${showControls || !isPlaying ? 'visible' : ''}`}>
-                            <button onClick={togglePlay} title="播放/暂停">
-                                {isPlaying ? '⏸' : '▶'}
+                            <button onClick={togglePlay} title={isPlaying ? '暂停' : '播放'}>
+                                {isPlaying ? (
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+                                        <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                        <rect x="14" y="4" width="4" height="16" rx="1"/>
+                                    </svg>
+                                ) : (
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                )}
                             </button>
-                            <div className="video-modal-progress" onClick={(e) => {
-                                if (!videoRef.current) return;
-                                const rect = e.currentTarget.getBoundingClientRect();
-                                const pct = (e.clientX - rect.left) / rect.width;
-                                videoRef.current.currentTime = pct * videoRef.current.duration;
-                            }}>
-                                <div className="video-modal-progress-fill" style={{ width: progress + '%' }}></div>
-                                <div className="video-modal-progress-buffer" style={{ width: buffered + '%' }}></div>
+
+                            <span className="video-modal-time">{currentTime}</span>
+
+                            <div className="video-modal-progress" onClick={seekTo}>
+                                <div className="video-modal-progress-buffer" style={{width: buffered + '%'}} />
+                                <div className="video-modal-progress-fill" style={{width: progress + '%'}} />
                             </div>
-                            <span className="video-modal-time">{currentTime} / {duration}</span>
-                            <button onClick={toggleMute} title="静音">{isMuted ? '🔇' : '🔊'}</button>
-                            <button onClick={toggleFullscreen} title="全屏">⛶</button>
+
+                            <span className="video-modal-time">{duration}</span>
+
+                            <button onClick={toggleMute} title={isMuted ? '取消静音' : '静音'}>
+                                {isMuted ? (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                        <line x1="23" y1="9" x2="17" y2="15"/>
+                                        <line x1="17" y1="9" x2="23" y2="15"/>
+                                    </svg>
+                                ) : (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                                    </svg>
+                                )}
+                            </button>
+
+                            <button onClick={toggleFullscreen} title={isFullscreen ? '退出全屏' : '全屏'}>
+                                {isFullscreen ? (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                        <path d="M8 3v3a2 2 0 0 1-2 2H3"/>
+                                        <path d="M21 8h-3a2 2 0 0 1-2-2V3"/>
+                                        <path d="M3 16h3a2 2 0 0 1 2 2v3"/>
+                                        <path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+                                    </svg>
+                                ) : (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                        <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+                                        <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+                                        <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+                                        <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                                    </svg>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -3701,7 +3860,7 @@
                                         About
                                     </h2>
                                     <p className="font-body text-base text-slate-300 leading-relaxed">
-                                        我专注于 AI 驱动的视觉创意与交互设计，为品牌打造高识别度的视觉体验。
+                                        AI 影视制作人，专注于 AI 驱动的全流程视频制作。精通 ComfyUI 节点搭建与 Stable Diffusion 工具链，熟练运用 Seedance、Veo3、可灵等前沿视频模型，擅长构建高效 Workflow 工作流，将 LLM 多模态能力融入创意生产，实现从概念到成片的高效交付。
                                     </p>
                                 </motion.div>
 
@@ -3718,9 +3877,12 @@
                                     </h3>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         {[
-                                            { category: '3D 建筑', skills: ['SketchUp', 'V-Ray', '3ds Max'] },
-                                            { category: 'AI 工具', skills: ['Midjourney', 'Google Gemini', 'Stable Diffusion'] },
-                                            { category: '视频创意', skills: ['After Effects', 'Runway', 'Veo3'] }
+                                            { category: '工作流引擎', skills: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联调度'] },
+                                            { category: 'AI 图像生成', skills: ['Stable Diffusion', 'ControlNet', 'LoRA / IP-Adapter', 'Midjourney'] },
+                                            { category: 'AI 视频模型', skills: ['Seedance 1.0', 'Google Veo3', '可灵 Kling', 'Runway Gen-4'] },
+                                            { category: 'LLM 多模态', skills: ['Prompt 工程优化', 'GPT-4o / Claude', 'AI 辅助编剧', '智能分镜'] },
+                                            { category: '后期制作', skills: ['After Effects', 'Premiere Pro', 'DaVinci Resolve'] },
+                                            { category: '3D 可视化', skills: ['SketchUp', 'V-Ray', '3ds Max'] }
                                         ].map((group, i) => (
                                             <motion.div 
                                                 key={i}
@@ -3781,10 +3943,10 @@
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    用 AI 提升效率与表达，交付更具传播力的作品。
+                                    以 AI Workflow 为核心，打通从创意到成片的全链路制作能力。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    高效交付 | 创新思维 | 商业价值
+                                    Workflow 优化 | 前沿模型实战 | Prompt 工程 | 效率交付
                                 </p>
                             </motion.div>
                             
