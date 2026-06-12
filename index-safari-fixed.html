@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="AIGC Visual Studio - 探索 AI 驱动的创意设计与可视化作品集">
+    <title>AIGC Visual Studio | AI-Powered Creativity</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body: ['Manrope', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0F172A',
+                        secondary: '#1E293B',
+                        'accent-blue': '#3B82F6',
+                        'accent-purple': '#8B5CF6',
+                        'accent-cyan': '#06B6D4',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(180deg, #040915 0%, #0A1327 34%, #0F172A 72%, #0F172A 100%);
+            color: #CBD5E1;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* ============================================
+           Safari iPhone 视频修复样式
+           ============================================ */
+        
+        /* 视频容器 */
+        .video-portfolio-item {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            cursor: pointer;
+        }
+        
+        /* 视频元素 */
+        .video-portfolio-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            -webkit-transform: translateZ(0);
+        }
+        
+        /* 播放按钮覆盖层 */
+        .video-play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+        
+        .video-play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .video-play-button {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+        
+        .video-play-button:active {
+            transform: scale(0.95);
+        }
+        
+        .video-play-button svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 4px;
+            fill: #0f172a;
+        }
+        
+        /* 音频提示 */
+        .audio-hint-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        
+        .audio-hint-badge.show {
+            display: flex;
+        }
+        
+        /* 底部控制栏 */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 16px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .video-controls.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .video-control-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .video-control-btn:active {
+            opacity: 0.7;
+        }
+        
+        .video-progress {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .video-progress-bar {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .video-time {
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        /* 项目信息 */
+        .project-info {
+            padding: 16px;
+        }
+        
+        .project-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 8px;
+        }
+        
+        .project-desc {
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .video-play-button {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .video-play-button svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 页面内容 -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        
+        <header class="mb-12 text-center">
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                AIGC Visual Studio
+            </h1>
+            <p class="text-slate-400 text-lg">探索 AI 驱动的创意设计与可视化作品集</p>
+        </header>
+        
+        <!-- 视频作品集 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- 项目 1 -->
+            <div class="bg-slate-800/50 rounded-xl overflow-hidden">
+                <div class="video-portfolio-item" data-video="videos/project1.mp4">
+                    <video 
+                        preload="metadata"
+                        playsinline
+                        webkit-playsinline
+                        x5-playsinline
+                        x5-video-player-type="h5"
+                        x5-video-player-fullscreen="false"
+                        muted
+                        loop
+                        poster="images/project1-thumb.jpg"
+                    >
+                        <source src="videos/project1.mp4" type="video/mp4">
+                    </video>
+                    
+                    <!-- 播放按钮 -->
+                    <div class="video-play-overlay">
+                        <div class="video-play-button">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- 音频提示 -->
+                    <div class="audio-hint-badge">
+                        <span>🔇</span>
+                        <span>点击开启声音</span>
+                    </div>
+                    
+                    <!-- 控制栏 -->
+                    <div class="video-controls">
+                        <button class="video-control-btn play-pause">▶</button>
+                        <div class="video-progress">
+                            <div class="video-progress-bar"></div>
+                        </div>
+                        <span class="video-time">0:00 / 0:00</span>
+                        <button class="video-control-btn mute-btn">🔇</button>
+                        <button class="video-control-btn fullscreen-btn">⛶</button>
+                    </div>
+                </div>
+                
+                <div class="project-info">
+                    <h3 class="project-title">AI 生成艺术作品</h3>
+                    <p class="project-desc">使用 Stable Diffusion 和 ControlNet 创作的数字艺术系列，探索人工智能与创意的边界。</p>
+                </div>
+            </div>
+            
+            <!-- 项目 2 -->
+            <div class="bg-slate-800/50 rounded-xl overflow-hidden">
+                <div class="video-portfolio-item" data-video="videos/project2.mp4">
+                    <video 
+                        preload="metadata"
+                        playsinline
+                        webkit-playsinline
+                        x5-playsinline
+                        x5-video-player-type="h5"
+                        x5-video-player-fullscreen="false"
+                        muted
+                        loop
+                        poster="images/project2-thumb.jpg"
+                    >
+                        <source src="videos/project2.mp4" type="video/mp4">
+                    </video>
+                    
+                    <div class="video-play-overlay">
+                        <div class="video-play-button">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="audio-hint-badge">
+                        <span>🔇</span>
+                        <span>点击开启声音</span>
+                    </div>
+                    
+                    <div class="video-controls">
+                        <button class="video-control-btn play-pause">▶</button>
+                        <div class="video-progress">
+                            <div class="video-progress-bar"></div>
+                        </div>
+                        <span class="video-time">0:00 / 0:00</span>
+                        <button class="video-control-btn mute-btn">🔇</button>
+                        <button class="video-control-btn fullscreen-btn">⛶</button>
+                    </div>
+                </div>
+                
+                <div class="project-info">
+                    <h3 class="project-title">动态视觉设计</h3>
+                    <p class="project-desc">结合 After Effects 和 AI 工具的运动图形设计，为品牌创造独特的视觉语言。</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<script>
+/**
+ * Safari iPhone 视频播放器控制
+ */
+(function() {
+    'use strict';
+    
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    console.log('[VideoPlayer] 设备:', isIOS ? 'iOS' : '其他', '浏览器:', isSafari ? 'Safari' : '其他');
+    
+    // 初始化所有视频
+    document.querySelectorAll('.video-portfolio-item').forEach(initVideoPlayer);
+    
+    function initVideoPlayer(container) {
+        const video = container.querySelector('video');
+        const overlay = container.querySelector('.video-play-overlay');
+        const audioHint = container.querySelector('.audio-hint-badge');
+        const controls = container.querySelector('.video-controls');
+        const playBtn = container.querySelector('.play-pause');
+        const muteBtn = container.querySelector('.mute-btn');
+        const fullscreenBtn = container.querySelector('.fullscreen-btn');
+        const progressBar = container.querySelector('.video-progress-bar');
+        const progressContainer = container.querySelector('.video-progress');
+        const timeDisplay = container.querySelector('.video-time');
+        
+        let controlsTimeout;
+        let isDragging = false;
+        
+        // 格式化时间
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            if (!isDragging && video.duration) {
+                const progress = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = progress + '%';
+                timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+            }
+        }
+        
+        // 显示控制栏
+        function showControls() {
+            controls.classList.add('visible');
+            clearTimeout(controlsTimeout);
+            
+            if (!video.paused) {
+                controlsTimeout = setTimeout(() => {
+                    controls.classList.remove('visible');
+                }, 3000);
+            }
+        }
+        
+        // 点击播放按钮（初始）
+        overlay.addEventListener('click', async () => {
+            console.log('[VideoPlayer] 点击播放');
+            
+            try {
+                // 尝试有声播放
+                video.muted = false;
+                await video.play();
+                
+                overlay.classList.add('hidden');
+                showControls();
+                playBtn.textContent = '⏸';
+                
+                console.log('[VideoPlayer] 有声播放成功');
+                
+            } catch (err) {
+                console.log('[VideoPlayer] 有声播放失败:', err.name);
+                
+                // 降级：静音播放（满足自动播放策略）
+                video.muted = true;
+                try {
+                    await video.play();
+                    
+                    overlay.classList.add('hidden');
+                    audioHint.classList.add('show');
+                    showControls();
+                    playBtn.textContent = '⏸';
+                    muteBtn.textContent = '🔇';
+                    
+                    console.log('[VideoPlayer] 静音播放成功');
+                    
+                } catch (err2) {
+                    console.error('[VideoPlayer] 播放完全失败:', err2);
+                    alert('无法播放视频，请检查视频格式');
+                }
+            }
+        });
+        
+        // 音频提示点击
+        audioHint.addEventListener('click', async () => {
+            console.log('[VideoPlayer] 尝试开启声音');
+            
+            video.muted = false;
+            video.volume = 1;
+            
+            try {
+                await video.play();
+                audioHint.classList.remove('show');
+                muteBtn.textContent = '🔊';
+                console.log('[VideoPlayer] 声音已开启');
+            } catch (err) {
+                console.error('[VideoPlayer] 无法开启声音:', err);
+            }
+        });
+        
+        // 播放/暂停按钮
+        playBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playBtn.textContent = '⏸';
+            } else {
+                video.pause();
+                playBtn.textContent = '▶';
+            }
+            showControls();
+        });
+        
+        // 静音按钮
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? '🔇' : '🔊';
+            
+            if (!video.muted) {
+                audioHint.classList.remove('show');
+            }
+            showControls();
+        });
+        
+        // 全屏按钮
+        fullscreenBtn.addEventListener('click', () => {
+            if (video.webkitEnterFullscreen) {
+                video.webkitEnterFullscreen();
+            } else if (video.requestFullscreen) {
+                video.requestFullscreen();
+            }
+            showControls();
+        });
+        
+        // 进度条点击
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+            showControls();
+        });
+        
+        // 视频事件
+        video.addEventListener('timeupdate', updateProgress);
+        
+        video.addEventListener('loadedmetadata', () => {
+            timeDisplay.textContent = `0:00 / ${formatTime(video.duration)}`;
+        });
+        
+        video.addEventListener('pause', () => {
+            playBtn.textContent = '▶';
+            showControls();
+        });
+        
+        video.addEventListener('playing', () => {
+            playBtn.textContent = '⏸';
+        });
+        
+        video.addEventListener('ended', () => {
+            playBtn.textContent = '▶';
+            overlay.classList.remove('hidden');
+            showControls();
+        });
+        
+        // iOS 全屏事件
+        if (isIOS) {
+            video.addEventListener('webkitbeginfullscreen', () => {
+                console.log('[VideoPlayer] 进入全屏');
+            });
+            
+            video.addEventListener('webkitendfullscreen', () => {
+                console.log('[VideoPlayer] 退出全屏');
+                video.pause();
+                playBtn.textContent = '▶';
+                overlay.classList.remove('hidden');
+            });
+        }
+        
+        // 容器点击显示控制栏
+        container.addEventListener('click', (e) => {
+            if (e.target === container || e.target === video) {
+                showControls();
+            }
+        });
+        
+        // 错误处理
+        video.addEventListener('error', () => {
+            const errors = {
+                1: '下载被中止',
+                2: '网络错误',
+                3: '解码失败（格式不支持）',
+                4: '格式不支持'
+            };
+            
+            console.error('[VideoPlayer] 视频错误:', errors[video.error?.code] || '未知');
+            
+            if (video.error?.code === 3 || video.error?.code === 4) {
+                alert('视频格式不兼容，请使用 H.264 + AAC 编码');
+            }
+        });
+        
+        // 加载失败重试
+        video.addEventListener('stalled', () => {
+            console.warn('[VideoPlayer] 加载停滞，重试...');
+            video.load();
+        });
+    }
+    
+})();
+</script>
+</body>
+</html>

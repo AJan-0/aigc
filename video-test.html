@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Safari Video Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .video-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #94a3b8;
+        }
+        
+        /* 视频容器 */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            -webkit-transform: translateZ(0);
+        }
+        
+        /* 播放按钮 */
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+        
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .play-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .play-icon svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 4px;
+            fill: #0f172a;
+        }
+        
+        /* 音频提示 */
+        .audio-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .audio-badge.show {
+            display: flex;
+        }
+        
+        /* 诊断面板 */
+        .diagnostic-panel {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 13px;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+        
+        .diagnostic-panel h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #60a5fa;
+        }
+        
+        .diag-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .diag-item:last-child {
+            border-bottom: none;
+        }
+        
+        .diag-label {
+            color: #94a3b8;
+        }
+        
+        .diag-value {
+            color: #e2e8f0;
+            word-break: break-all;
+        }
+        
+        .diag-value.success {
+            color: #4ade80;
+        }
+        
+        .diag-value.error {
+            color: #f87171;
+        }
+        
+        /* 测试按钮 */
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #3b82f6;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary {
+            background: #475569;
+        }
+        
+        /* 日志区域 */
+        .log-area {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #94a3b8;
+        }
+        
+        .log-entry {
+            margin-bottom: 4px;
+        }
+        
+        .log-time {
+            color: #64748b;
+        }
+        
+        .log-error {
+            color: #f87171;
+        }
+        
+        .log-success {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎬 Safari iPhone 视频测试</h1>
+    
+    <!-- 测试视频 1: 基础播放 -->
+    <div class="video-section">
+        <div class="section-title">测试 1: 基础播放 (点击播放按钮)</div>
+        <div class="video-wrapper" id="wrapper1">
+            <video 
+                id="video1"
+                preload="metadata"
+                playsinline
+                webkit-playsinline
+                x5-playsinline
+                x5-video-player-type="h5"
+                x5-video-player-fullscreen="false"
+                muted
+                loop
+                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect fill='%23334155' width='640' height='360'/%3E%3Ctext fill='%2394a3b8' x='50%25' y='50%25' text-anchor='middle' font-size='24'%3E视频加载中...%3C/text%3E%3C/svg%3E"
+            >
+                <source src="videos/your-video.mp4" type="video/mp4">
+                <source src="videos/your-video.webm" type="video/webm">
+            </video>
+            
+            <div class="play-overlay" id="playOverlay1">
+                <div class="play-icon">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
+            
+            <div class="audio-badge" id="audioBadge1">
+                <span>🔇</span>
+                <span>点击开启声音</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 测试视频 2: 强制内联 -->
+    <div class="video-section">
+        <div class="section-title">测试 2: 强制内联播放</div>
+        <div class="video-wrapper" id="wrapper2">
+            <video 
+                id="video2"
+                src="videos/your-video.mp4"
+                preload="none"
+                playsinline
+                webkit-playsinline="true"
+                controls
+                muted
+            ></video>
+        </div>
+    </div>
+    
+    <!-- 诊断面板 -->
+    <div class="diagnostic-panel">
+        <h3>📊 诊断信息</h3>
+        <div id="diagnosticContent">
+            <div class="diag-item">
+                <span class="diag-label">加载中...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 测试按钮 -->
+    <div class="test-buttons">
+        <button class="btn" onclick="runDiagnostics()">🔍 运行诊断</button>
+        <button class="btn btn-secondary" onclick="testPlay()">▶️ 测试播放</button>
+        <button class="btn btn-secondary" onclick="testAudio()">🔊 测试音频</button>
+        <button class="btn btn-secondary" onclick="reloadVideo()">🔄 重新加载</button>
+    </div>
+    
+    <!-- 日志 -->
+    <div class="log-area" id="logArea">
+        <div class="log-entry"><span class="log-time">[初始化]</span> 页面加载完成</div>
+    </div>
+
+<script>
+(function() {
+    'use strict';
+    
+    const video1 = document.getElementById('video1');
+    const video2 = document.getElementById('video2');
+    const overlay1 = document.getElementById('playOverlay1');
+    const audioBadge1 = document.getElementById('audioBadge1');
+    const logArea = document.getElementById('logArea');
+    
+    // 检测环境
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isWechat = /MicroMessenger/.test(navigator.userAgent);
+    
+    log(`设备: ${isIOS ? 'iOS' : '其他'}, Safari: ${isSafari}, 微信: ${isWechat}`);
+    
+    // 日志函数
+    function log(msg, type = 'normal') {
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${msg}</span>`;
+        logArea.appendChild(entry);
+        logArea.scrollTop = logArea.scrollHeight;
+        console.log(`[${time}]`, msg);
+    }
+    
+    // 诊断信息
+    function runDiagnostics() {
+        const diagContent = document.getElementById('diagnosticContent');
+        const results = [];
+        
+        // 1. 视频属性
+        results.push({
+            label: '视频源',
+            value: video1.currentSrc || '未设置',
+            success: !!video1.currentSrc
+        });
+        
+        // 2. 浏览器支持
+        const canPlayMP4 = video1.canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+        results.push({
+            label: 'MP4 H.264 支持',
+            value: canPlayMP4 || '不支持',
+            success: canPlayMP4 === 'probably'
+        });
+        
+        // 3. 视频状态
+        results.push({
+            label: '就绪状态',
+            value: ['无信息', '元数据', '当前帧', '当前数据', '足够数据'][video1.readyState] || video1.readyState,
+            success: video1.readyState >= 2
+        });
+        
+        results.push({
+            label: '网络状态',
+            value: ['空', '空闲', '加载中', '加载源'][video1.networkState] || video1.networkState,
+            success: video1.networkState !== 3
+        });
+        
+        // 4. 音频状态
+        results.push({
+            label: '静音状态',
+            value: video1.muted ? '已静音' : '有声',
+            success: !video1.muted
+        });
+        
+        results.push({
+            label: '音量',
+            value: Math.round(video1.volume * 100) + '%',
+            success: video1.volume > 0
+        });
+        
+        // 5. 错误检查
+        if (video1.error) {
+            const errors = ['', '中止', '网络错误', '解码失败', '格式不支持'];
+            results.push({
+                label: '错误',
+                value: errors[video1.error.code] || '未知',
+                success: false
+            });
+        }
+        
+        // 6. 尺寸信息
+        if (video1.videoWidth) {
+            results.push({
+                label: '视频尺寸',
+                value: `${video1.videoWidth}x${video1.videoHeight}`,
+                success: true
+            });
+        }
+        
+        // 7. 时长
+        if (video1.duration) {
+            results.push({
+                label: '时长',
+                value: Math.round(video1.duration) + '秒',
+                success: true
+            });
+        }
+        
+        // 渲染结果
+        diagContent.innerHTML = results.map(r => `
+            <div class="diag-item">
+                <span class="diag-label">${r.label}</span>
+                <span class="diag-value ${r.success ? 'success' : 'error'}">${r.value}</span>
+            </div>
+        `).join('');
+        
+        log('诊断完成', 'success');
+    }
+    
+    // 测试播放
+    async function testPlay() {
+        log('开始测试播放...');
+        
+        try {
+            // 方案1: 直接播放（可能因自动播放策略失败）
+            await video1.play();
+            log('✅ 直接播放成功', 'success');
+            overlay1.classList.add('hidden');
+        } catch (err) {
+            log(`❌ 直接播放失败: ${err.name}`, 'error');
+            
+            // 方案2: 静音播放
+            video1.muted = true;
+            try {
+                await video1.play();
+                log('✅ 静音播放成功', 'success');
+                overlay1.classList.add('hidden');
+                audioBadge1.classList.add('show');
+            } catch (err2) {
+                log(`❌ 静音播放也失败: ${err2.message}`, 'error');
+            }
+        }
+    }
+    
+    // 测试音频
+    async function testAudio() {
+        log('测试音频...');
+        
+        video1.muted = false;
+        video1.volume = 1;
+        
+        try {
+            await video1.play();
+            log('✅ 音频播放成功', 'success');
+            audioBadge1.classList.remove('show');
+        } catch (err) {
+            log(`❌ 音频播放失败: ${err.message}`, 'error');
+            
+            // iOS 需要用户交互后才能开启声音
+            if (isIOS) {
+                log('💡 iOS 需要用户手势才能开启声音', 'normal');
+            }
+        }
+    }
+    
+    // 重新加载
+    function reloadVideo() {
+        log('重新加载视频...');
+        video1.load();
+        overlay1.classList.remove('hidden');
+        audioBadge1.classList.remove('show');
+        
+        video1.addEventListener('loadeddata', () => {
+            log('✅ 视频重新加载完成', 'success');
+        }, { once: true });
+    }
+    
+    // 播放按钮点击
+    overlay1.addEventListener('click', async () => {
+        log('用户点击播放按钮');
+        
+        try {
+            // 先尝试有声播放
+            video1.muted = false;
+            await video1.play();
+            
+            overlay1.classList.add('hidden');
+            log('✅ 有声播放成功', 'success');
+            
+        } catch (err) {
+            log(`❌ 有声播放失败: ${err.name}`, 'error');
+            
+            // 降级到静音播放
+            video1.muted = true;
+            try {
+                await video1.play();
+                overlay1.classList.add('hidden');
+                audioBadge1.classList.add('show');
+                log('✅ 降级为静音播放', 'success');
+            } catch (err2) {
+                log(`❌ 播放完全失败: ${err2.message}`, 'error');
+                alert('无法播放视频，请检查视频文件');
+            }
+        }
+    });
+    
+    // 音频提示点击
+    audioBadge1.addEventListener('click', async () => {
+        log('用户尝试开启声音');
+        
+        video1.muted = false;
+        video1.volume = 1;
+        
+        try {
+            await video1.play();
+            audioBadge1.classList.remove('show');
+            log('✅ 声音已开启', 'success');
+        } catch (err) {
+            log(`❌ 无法开启声音: ${err.message}`, 'error');
+        }
+    });
+    
+    // 视频事件监听
+    video1.addEventListener('loadstart', () => log('事件: loadstart'));
+    video1.addEventListener('loadedmetadata', () => log('事件: loadedmetadata'));
+    video1.addEventListener('loadeddata', () => log('事件: loadeddata'));
+    video1.addEventListener('canplay', () => log('事件: canplay'));
+    video1.addEventListener('playing', () => log('事件: playing'));
+    video1.addEventListener('pause', () => {
+        log('事件: pause');
+        overlay1.classList.remove('hidden');
+    });
+    video1.addEventListener('ended', () => {
+        log('事件: ended');
+        overlay1.classList.remove('hidden');
+    });
+    video1.addEventListener('error', (e) => {
+        const errors = ['', 'MEDIA_ERR_ABORTED', 'MEDIA_ERR_NETWORK', 'MEDIA_ERR_DECODE', 'MEDIA_ERR_SRC_NOT_SUPPORTED'];
+        log(`❌ 视频错误: ${errors[video1.error?.code] || '未知'}`, 'error');
+    });
+    
+    // iOS 全屏事件
+    if (isIOS) {
+        video1.addEventListener('webkitbeginfullscreen', () => log('事件: 进入全屏'));
+        video1.addEventListener('webkitendfullscreen', () => {
+            log('事件: 退出全屏');
+            video1.pause();
+            overlay1.classList.remove('hidden');
+        });
+    }
+    
+    // 自动运行诊断
+    setTimeout(runDiagnostics, 500);
+    
+    // 暴露到全局
+    window.runDiagnostics = runDiagnostics;
+    window.testPlay = testPlay;
+    window.testAudio = testAudio;
+    window.reloadVideo = reloadVideo;
+    
+})();
+</script>
+</body>
+</html>
