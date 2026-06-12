@@ -656,7 +656,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 3rem 1rem 0.75rem;
+            padding: 3rem 1rem 1rem;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
             display: flex;
             align-items: center;
@@ -685,28 +685,32 @@
         .video-modal-controls button:active { transform: scale(0.95); }
         .video-modal-progress {
             flex: 1;
-            height: 4px;
+            height: 8px;
             background: rgba(255,255,255,0.2);
-            border-radius: 3px;
+            border-radius: 6px;
             cursor: pointer;
             position: relative;
-            transition: height 0.15s;
+            transition: height 0.15s, box-shadow 0.15s;
+            /* 扩大点击热区 */
+            padding: 8px 0;
+            background-clip: content-box;
         }
-        .video-modal-progress:hover { height: 7px; }
+        .video-modal-progress:hover { height: 12px; box-shadow: 0 0 12px rgba(6,182,212,0.3); }
         .video-modal-progress-buffer {
             position: absolute;
-            top: 0;
+            top: 8px;
             left: 0;
-            height: 100%;
+            height: calc(100% - 16px);
             background: rgba(255,255,255,0.2);
-            border-radius: 3px;
+            border-radius: 6px;
             transition: width 0.3s;
             z-index: 1;
         }
         .video-modal-progress-fill {
-            height: 100%;
+            height: calc(100% - 16px);
+            top: 8px;
             background: linear-gradient(90deg, #06B6D4, #8B5CF6);
-            border-radius: 3px;
+            border-radius: 6px;
             transition: width 0.05s linear;
             position: relative;
             z-index: 2;
@@ -714,18 +718,18 @@
         .video-modal-progress-fill::after {
             content: '';
             position: absolute;
-            right: -5px;
+            right: -7px;
             top: 50%;
             transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 6px rgba(0,0,0,0.4);
+            box-shadow: 0 0 8px rgba(0,0,0,0.5), 0 0 0 2px rgba(6,182,212,0.4);
             opacity: 0;
-            transition: opacity 0.15s;
+            transition: opacity 0.15s, transform 0.15s;
         }
-        .video-modal-progress:hover .video-modal-progress-fill::after { opacity: 1; }
+        .video-modal-progress:hover .video-modal-progress-fill::after { opacity: 1; transform: translateY(-50%) scale(1.1); }
         .video-modal-time {
             font-size: 0.8rem;
             color: rgba(255,255,255,0.85);
@@ -750,13 +754,14 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 5px;
             background: rgba(255,255,255,0.2);
             z-index: 15;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s, height 0.2s;
+            cursor: pointer;
         }
         .video-top-progress:hover {
-            height: 5px;
+            height: 10px;
         }
         .video-top-progress-fill {
             height: 100%;
@@ -842,9 +847,10 @@
                 height: 72px;
             }
             .video-modal-progress {
-                height: 5px;
+                height: 10px;
                 flex: 1;
                 min-width: 0;
+                padding: 10px 0;
             }
             .video-modal-time {
                 font-size: 0.65rem;
