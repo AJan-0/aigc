@@ -2111,7 +2111,7 @@
                 id: '1', title: '《Bound by Blood》AI 真人短剧',
                 category: 'AI 真人短剧',
                 description: '北美市场定制 | 女性视角叙事 | AI 驱动全流程制作',
-                image: 'images/v1_cover.jpg', videoUrl: 'images/v1.mp4', videoType: 'mp4', isVideo: true,
+                image: 'images/v1_cover.jpg', videoUrl: 'images/v1_mobile.mp4', videoType: 'mp4', isVideo: true,
                 tags: ['AI 制作', '北美发行', '真人短剧'], link: '/project.html?id=1', duration: null
             }
         ];
@@ -3395,14 +3395,33 @@
                 if (!videoRef.current) return;
                 const v = videoRef.current;
                 if (v.paused) {
-                    // CRITICAL: set muted=false BEFORE play(), synchronously within user gesture
-                    v.muted = false;
-                    v.play().then(() => {
-                        setIsPlaying(true);
-                        setIsMuted(false);
-                    }).catch(() => {
-                        setIsPlaying(false);
-                    });
+                    // Mobile: start muted to allow autoplay, then unmute
+                    if (isMobile) {
+                        v.muted = true;
+                        v.play().then(() => {
+                            setIsPlaying(true);
+                            setIsMuted(true);
+                            // Try to unmute after play starts
+                            setTimeout(() => {
+                                v.muted = false;
+                                setIsMuted(false);
+                            }, 100);
+                        }).catch((err) => {
+                            console.error('Play failed:', err);
+                            setIsPlaying(false);
+                            // Fallback: reload and try again
+                            v.load();
+                        });
+                    } else {
+                        // Desktop: play with sound
+                        v.muted = false;
+                        v.play().then(() => {
+                            setIsPlaying(true);
+                            setIsMuted(false);
+                        }).catch(() => {
+                            setIsPlaying(false);
+                        });
+                    }
                 } else {
                     v.pause();
                     setIsPlaying(false);
@@ -3466,11 +3485,25 @@
                             playsInline
                             preload="metadata"
                             webkit-playsinline="true"
+                            x5-playsinline="true"
+                            x5-video-player-type="h5"
+                            x5-video-player-fullscreen="false"
+                            muted={isMobile}
                             onClick={togglePlay}
+                            onLoadStart={() => setIsLoading(true)}
                             onWaiting={() => setIsLoading(true)}
                             onPlaying={() => { setIsLoading(false); setIsPlaying(true); }}
                             onCanPlay={() => setIsLoading(false)}
-                            onError={() => { setIsLoading(false); setHasError(true); }}
+                            onCanPlayThrough={() => setIsLoading(false)}
+                            onError={(e) => { 
+                                console.error('Video error:', e.target.error);
+                                setIsLoading(false); 
+                                setHasError(true); 
+                            }}
+                            onStalled={() => {
+                                console.warn('Video stalled, reloading...');
+                                if (videoRef.current) videoRef.current.load();
+                            }}
                             onTimeUpdate={() => {
                                 if (!videoRef.current) return;
                                 const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
