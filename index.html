@@ -3711,6 +3711,19 @@
             const [projects, setProjects] = React.useState(PROJECTS_DATA);
             const [projectsLoading, setProjectsLoading] = React.useState(true);
             const [selectedVideo, setSelectedVideo] = React.useState(null);
+            const scrollPosRef = React.useRef(0);
+            
+            const openVideo = React.useCallback((project) => {
+                scrollPosRef.current = window.scrollY;
+                setSelectedVideo(project);
+            }, []);
+            
+            const closeVideo = React.useCallback(() => {
+                setSelectedVideo(null);
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, scrollPosRef.current);
+                });
+            }, []);
             useScrollProgress();
             useCustomCursor();
             useFloatingParticles();
@@ -3796,7 +3809,7 @@
                                         project={project}
                                         index={index}
                                         reverse={index % 2 !== 0}
-                                        onVideoClick={setSelectedVideo}
+                                        onVideoClick={openVideo}
                                     />
                                 </motion.div>
                             ))}
@@ -3847,7 +3860,7 @@
                                             { category: '工作流引擎', skills: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联调度'] },
                                             { category: 'AI 图像生成', skills: ['Stable Diffusion', 'ControlNet', 'LoRA / IP-Adapter', 'Midjourney'] },
                                             { category: 'AI 视频模型', skills: ['Seedance 2.0', 'Google Veo3', '可灵 Kling 2.0', 'Sora'] },
-                                            { category: 'LLM 多模态', skills: ['Prompt 工程优化', 'GPT-4o / Claude 4', 'AI 辅助编剧', '智能分镜'] },
+                                            { category: 'LLM 多模态', skills: ['Prompt 工程优化', 'GPT / Claude', 'AI 辅助编剧', '智能分镜'] },
                                             { category: '后期制作', skills: ['After Effects', 'Premiere Pro', 'DaVinci Resolve'] },
                                             { category: '3D 可视化', skills: ['SketchUp', 'V-Ray', '3ds Max'] }
                                         ].map((group, i) => (
@@ -4002,7 +4015,7 @@
                     {selectedVideo && (
                         <VideoModal
                             project={selectedVideo}
-                            onClose={() => setSelectedVideo(null)}
+                            onClose={closeVideo}
                         />
                     )}
                 </>
