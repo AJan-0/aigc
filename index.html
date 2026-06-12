@@ -3744,6 +3744,98 @@
                     <Navbar />
                     <HeroSection />
                     
+                    {/* Personal Introduction Section */}
+                    <section id="intro" className="section-smooth py-20 md:py-28 px-6 relative overflow-hidden">
+                        <div className="absolute top-0 right-1/4 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(80px)', opacity: 0.12}} />
+                        <div className="absolute bottom-0 left-1/3 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(80px)', opacity: 0.1}} />
+                        
+                        <div className="max-w-5xl mx-auto relative z-10">
+                            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+                                {/* Photo */}
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.85, rotate: -4 }}
+                                    whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                    className="flex justify-center"
+                                >
+                                    <div className="relative">
+                                        <div className="w-64 h-80 md:w-72 md:h-96 rounded-3xl overflow-hidden shadow-2xl border border-slate-700/40">
+                                            {/* TODO: Replace with your photo */}
+                                            <div className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 flex items-center justify-center">
+                                                <svg className="w-20 h-20 text-slate-600" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        {/* Glow */}
+                                        <div className="absolute -inset-4 rounded-3xl -z-10" style={{background: 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(139,92,246,0.15))', filter: 'blur(20px)'}} />
+                                    </div>
+                                </motion.div>
+                                
+                                {/* Text */}
+                                <div className="flex flex-col justify-center">
+                                    <motion.p
+                                        initial={{ opacity: 0, y: 15 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: 0.2 }}
+                                        className="text-sm font-semibold text-accent-cyan tracking-[0.2em] uppercase mb-3"
+                                    >
+                                        Undergraduate Class of 2026 · INFJ
+                                    </motion.p>
+                                    <motion.h2
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: 0.3 }}
+                                        className="font-display text-4xl md:text-5xl font-bold mb-3 gradient-text leading-tight"
+                                    >
+                                        Hi, I'm Jan
+                                    </motion.h2>
+                                    <motion.p
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: 0.4 }}
+                                        className="font-body text-lg md:text-xl text-slate-400 leading-relaxed mb-8"
+                                    >
+                                        INFJ 用直觉理解故事，用 AI 讲给全世界听。<br/>
+                                        <span className="text-slate-500 text-base">我写的代码不够优雅，但我的 ComfyUI 工作流跑得比谁都快。</span>
+                                    </motion.p>
+                                    
+                                    {/* Tags */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 15 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: 0.5 }}
+                                        className="flex flex-wrap gap-3"
+                                    >
+                                        {[
+                                            { icon: '🎬', text: 'AIGC 视频内容设计师' },
+                                            { icon: '🌏', text: '海外 AI 短剧制作' },
+                                            { icon: '💻', text: 'Vibe Coding 爱好者' }
+                                        ].map((tag, i) => (
+                                            <motion.span
+                                                key={tag.text}
+                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                whileInView={{ opacity: 1, scale: 1 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
+                                                whileHover={{ scale: 1.05, y: -2 }}
+                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-slate-600/50 hover:border-accent-cyan/50 bg-slate-800/60 transition-all cursor-default"
+                                            >
+                                                <span>{tag.icon}</span>
+                                                <span className="text-slate-300">{tag.text}</span>
+                                            </motion.span>
+                                        ))}
+                                    </motion.div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
                     {/* Projects Section - Moved to Front as Main Focus */}
                     <section id="projects" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-900">
                         {/* Background Decorations */}
@@ -3816,103 +3908,6 @@
                         </div>
                     </section>
                     
-                    {/* Simplified About Section - Moved after Projects */}
-                    {/* Personal Introduction Section */}
-                    <section id="intro" className="section-smooth py-20 md:py-28 px-6 relative overflow-hidden">
-                        <div className="absolute top-0 right-1/4 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(80px)', opacity: 0.12}} />
-                        <div className="absolute bottom-0 left-1/3 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(80px)', opacity: 0.1}} />
-                        
-                        <div className="max-w-5xl mx-auto relative z-10">
-                            <motion.div
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                className="glass rounded-3xl p-8 md:p-12 border border-slate-700/40 relative overflow-hidden"
-                            >
-                                {/* Decorative gradient overlay */}
-                                <div className="absolute top-0 right-0 w-72 h-72 rounded-full" style={{background: 'radial-gradient(circle, rgba(6,182,212,0.15), transparent)', filter: 'blur(40px)'}} />
-                                <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full" style={{background: 'radial-gradient(circle, rgba(139,92,246,0.12), transparent)', filter: 'blur(40px)'}} />
-                                
-                                <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 md:gap-14">
-                                    {/* Photo */}
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.6, delay: 0.2 }}
-                                        className="relative flex-shrink-0"
-                                    >
-                                        <div className="w-40 h-40 md:w-52 md:h-52 rounded-2xl overflow-hidden border-2 border-accent-cyan/30 shadow-2xl relative">
-                                            {/* TODO: Replace with your photo */}
-                                            <div className="w-full h-full bg-gradient-to-br from-accent-cyan/20 via-purple-500/20 to-blue-500/20 flex items-center justify-center">
-                                                <svg className="w-20 h-20 text-slate-500" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        {/* Glow effect */}
-                                        <div className="absolute -inset-2 rounded-2xl" style={{background: 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(139,92,246,0.2))', filter: 'blur(15px)', zIndex: -1}} />
-                                    </motion.div>
-                                    
-                                    {/* Info */}
-                                    <div className="flex-1 text-center md:text-left">
-                                        <motion.h2
-                                            initial={{ opacity: 0, y: 20 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.5, delay: 0.3 }}
-                                            className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-2 gradient-text"
-                                        >
-                                            AIGC Visual Creator
-                                        </motion.h2>
-                                        <motion.p
-                                            initial={{ opacity: 0, y: 15 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.5, delay: 0.4 }}
-                                            className="font-body text-lg text-slate-400 mb-6"
-                                        >
-                                            Turning ideas into motion, one prompt at a time.
-                                        </motion.p>
-                                        
-                                        {/* Info Tags */}
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 15 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.5, delay: 0.5 }}
-                                            className="flex flex-wrap gap-3 justify-center md:justify-start"
-                                        >
-                                            {[
-                                                { icon: '🎓', text: 'Undergraduate Class of 2026' },
-                                                { icon: '🎬', text: 'AIGC 视频内容设计师' },
-                                                { icon: '🌏', text: '海外 AI 短剧应用' },
-                                                { icon: '💻', text: 'Vibe Coding 爱好者' }
-                                            ].map((tag, i) => (
-                                                <motion.span
-                                                    key={tag.text}
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    whileInView={{ opacity: 1, scale: 1 }}
-                                                    viewport={{ once: true }}
-                                                    transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
-                                                    whileHover={{ scale: 1.05, y: -2 }}
-                                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium glass-strong border border-slate-600/40 hover:border-accent-cyan/50 transition-all cursor-default"
-                                                    style={{
-                                                        background: 'linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8))',
-                                                        boxShadow: 'inset 0 1px 2px rgba(6,182,212,0.05)'
-                                                    }}
-                                                >
-                                                    <span className="text-base">{tag.icon}</span>
-                                                    <span className="text-slate-300">{tag.text}</span>
-                                                </motion.span>
-                                            ))}
-                                        </motion.div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    </section>
                     
                     <section id="about" className="section-smooth py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.1}} />
