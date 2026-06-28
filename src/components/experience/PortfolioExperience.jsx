@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion'
 import profilePhoto from '../../../profile-photo.png'
 import {
   categories,
@@ -25,6 +32,14 @@ export default function PortfolioExperience() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
   const [isMuted, setIsMuted] = useState(true)
+  const sectionIds = useMemo(() => navigation.map(item => item.id), [])
+  const activeSection = useActiveSection(sectionIds)
+  const { scrollYProgress } = useScroll()
+  const progressScaleX = useSpring(scrollYProgress, {
+    stiffness: 110,
+    damping: 28,
+    restDelta: 0.001,
+  })
 
   const featuredProjects = useMemo(() => projects.filter(project => project.featured), [])
   const filteredProjects = useMemo(() => {
@@ -34,11 +49,13 @@ export default function PortfolioExperience() {
 
   return (
     <main className="portfolio-page">
-      <SiteHeader />
+      <motion.div className="scroll-progress" style={{ scaleX: progressScaleX }} aria-hidden="true" />
+      <SiteHeader activeSection={activeSection} />
       <HeroSection featuredProjects={featuredProjects} onOpenProject={setSelectedProject} />
       <ProfileSection />
       <WorkSection
         activeCategory={activeCategory}
+        featuredProjects={featuredProjects}
         filteredProjects={filteredProjects}
         onCategoryChange={setActiveCategory}
         onOpenProject={setSelectedProject}
@@ -56,7 +73,49 @@ export default function PortfolioExperience() {
   )
 }
 
-function SiteHeader() {
+function useActiveSection(ids) {
+  const [activeSection, setActiveSection] = useState(ids[0] ?? 'home')
+
+  useEffect(() => {
+    let animationFrame = 0
+
+    const updateActiveSection = () => {
+      animationFrame = 0
+      const marker = window.scrollY + window.innerHeight * 0.34
+      let currentId = ids[0] ?? 'home'
+
+      ids.forEach(id => {
+        const element = document.getElementById(id)
+        if (!element) return
+        if (element.offsetTop <= marker) {
+          currentId = id
+        }
+      })
+
+      setActiveSection(currentId)
+    }
+
+    const requestUpdate = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(updateActiveSection)
+      }
+    }
+
+    updateActiveSection()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      if (animationFrame) window.cancelAnimationFrame(animationFrame)
+    }
+  }, [ids])
+
+  return activeSection
+}
+
+function SiteHeader({ activeSection }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleNavigate = id => {
@@ -84,7 +143,12 @@ function SiteHeader() {
 
       <nav id="site-nav" className={isOpen ? 'site-nav is-open' : 'site-nav'} aria-label="页面导航">
         {navigation.map(item => (
-          <button key={item.id} type="button" onClick={() => handleNavigate(item.id)}>
+          <button
+            key={item.id}
+            type="button"
+            className={activeSection === item.id ? 'is-active' : ''}
+            onClick={() => handleNavigate(item.id)}
+          >
             {item.label}
           </button>
         ))}
@@ -94,18 +158,50 @@ function SiteHeader() {
 }
 
 function HeroSection({ featuredProjects, onOpenProject }) {
+  const sectionRef = useRef(null)
+  const shouldReduceMotion = useReducedMotion()
   const leadProject = featuredProjects[0] ?? projects[0]
   const galleryProjects = featuredProjects.slice(0, 4)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+  const backdropY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
+  const backdropScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16])
+  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '7rem'])
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.72], [1, 0.28])
+  const galleryY = useTransform(scrollYProgress, [0, 1], ['0rem', '-4.5rem'])
+  const galleryRotate = useTransform(scrollYProgress, [0, 1], [0, -5])
+  const marqueeItems = [
+    'AI Drama',
+    '3C Film',
+    'AIGC Animation',
+    'Brand Visual',
+    'Experimental Space',
+    'Short-form Story',
+  ]
 
   return (
-    <section className="hero-section" id="home" aria-label="我的作品集">
-      <div className="hero-backdrop" aria-hidden="true">
+    <section ref={sectionRef} className="hero-section" id="home" aria-label="我的作品集">
+      <motion.div
+        className="hero-backdrop"
+        aria-hidden="true"
+        style={{
+          y: shouldReduceMotion ? 0 : backdropY,
+          scale: shouldReduceMotion ? 1.04 : backdropScale,
+        }}
+      >
         <img src={leadProject.cover} alt="" />
-      </div>
+      </motion.div>
+      <div className="hero-depth-lines" aria-hidden="true" />
 
       <div className="hero-inner">
         <motion.div
           className="hero-copy"
+          style={{
+            y: shouldReduceMotion ? 0 : copyY,
+            opacity: copyOpacity,
+          }}
           initial="hidden"
           animate="show"
           variants={stagger}
@@ -113,25 +209,28 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           <motion.span className="section-kicker" variants={fadeUp}>
             AIGC Creative Portfolio
           </motion.span>
-          <motion.h1 variants={fadeUp}>
-            AIGC Moving Image Archive
-          </motion.h1>
-          <motion.p variants={fadeUp}>
-            海外真人 AI 剧、3C 创意短片、动画短片与实验视觉。
-          </motion.p>
+          <InteractiveTitle text="AIGC Moving Image Archive" />
+          <TextReveal
+            text="海外真人 AI 剧、3C 创意短片、动画短片与实验视觉。"
+            className="hero-lede"
+          />
 
           <motion.div className="hero-actions" variants={fadeUp}>
-            <button type="button" onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}>
+            <MagneticButton type="button" className="is-primary" onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}>
               查看作品
-            </button>
-            <button type="button" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+            </MagneticButton>
+            <MagneticButton type="button" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
               联系合作
-            </button>
+            </MagneticButton>
           </motion.div>
         </motion.div>
 
         <motion.div
           className="hero-showcase"
+          style={{
+            y: shouldReduceMotion ? 0 : galleryY,
+            rotateX: shouldReduceMotion ? 0 : galleryRotate,
+          }}
           initial={{ opacity: 0, x: 28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
@@ -169,13 +268,30 @@ function HeroSection({ featuredProjects, onOpenProject }) {
         </motion.div>
       </div>
 
-      <div className="category-strip" aria-label="内容方向">
+      <motion.div
+        className="category-strip"
+        aria-label="内容方向"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.38 }}
+      >
         {categories.filter(category => category.id !== 'all').map(category => (
           <span key={category.id} style={{ '--accent': category.accent }}>
             {category.labelZh}
           </span>
         ))}
-      </div>
+      </motion.div>
+
+      <KineticMarquee items={marqueeItems} />
+
+      <button
+        className="hero-scroll-cue"
+        type="button"
+        onClick={() => document.getElementById('profile')?.scrollIntoView({ behavior: 'smooth' })}
+        aria-label="滚动到个人简介"
+      >
+        <span />
+      </button>
     </section>
   )
 }
@@ -209,7 +325,7 @@ function ProfileSection() {
         >
           <motion.span className="section-kicker" variants={fadeUp}>{profile.title}</motion.span>
           <motion.h2 variants={fadeUp}>{profile.name}</motion.h2>
-          <motion.p className="profile-headline" variants={fadeUp}>{profile.headline}</motion.p>
+          <TextReveal text={profile.headline} className="profile-headline" />
           {profile.bio.map(paragraph => (
             <motion.p key={paragraph} variants={fadeUp}>{paragraph}</motion.p>
           ))}
@@ -235,7 +351,7 @@ function ProfileSection() {
   )
 }
 
-function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpenProject }) {
+function WorkSection({ activeCategory, featuredProjects, filteredProjects, onCategoryChange, onOpenProject }) {
   return (
     <section className="work-section page-section" id="work" aria-label="作品">
       <SectionHeader
@@ -244,6 +360,7 @@ function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpe
         intro="以作品为主轴，按内容方向浏览。"
       />
 
+      <FeaturedTrack projects={featuredProjects} onOpenProject={onOpenProject} />
       <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
 
       <motion.div layout className="project-grid">
@@ -254,6 +371,43 @@ function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpe
         </AnimatePresence>
       </motion.div>
     </section>
+  )
+}
+
+function FeaturedTrack({ projects: featuredProjects, onOpenProject }) {
+  return (
+    <motion.div
+      className="featured-track"
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.24 }}
+      transition={{ duration: 0.68, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="featured-track-header">
+        <span className="section-kicker">Featured Flow</span>
+        <p>优先浏览最能代表方向的作品。</p>
+      </div>
+      <div className="featured-track-scroll" role="list" aria-label="精选作品滚动展示">
+        {featuredProjects.map((project, index) => (
+          <motion.button
+            key={project.slug}
+            type="button"
+            role="listitem"
+            className="featured-track-card"
+            style={{ '--track-index': index }}
+            onClick={() => onOpenProject(project)}
+            whileHover={{ y: -8 }}
+            whileTap={{ scale: 0.985 }}
+            aria-label={`打开精选作品 ${project.titleEn}`}
+          >
+            <img src={project.cover} alt={project.titleZh} loading="lazy" />
+            <span>{project.type}</span>
+            <strong>{project.titleEn}</strong>
+            <small>{project.introEn}</small>
+          </motion.button>
+        ))}
+      </div>
+    </motion.div>
   )
 }
 
@@ -293,12 +447,29 @@ function ProjectCard({ project, onOpen }) {
     }
   }, [isPreviewing])
 
+  const startPreview = () => {
+    const canPreview = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches
+    if (canPreview) setIsPreviewing(true)
+  }
+
   const handlePointerMove = event => {
     const rect = event.currentTarget.getBoundingClientRect()
     const x = ((event.clientX - rect.left) / rect.width) * 100
     const y = ((event.clientY - rect.top) / rect.height) * 100
+    const tiltX = ((x - 50) / 50) * 4
+    const tiltY = ((50 - y) / 50) * 5
     cardRef.current?.style.setProperty('--spotlight-x', `${x}%`)
     cardRef.current?.style.setProperty('--spotlight-y', `${y}%`)
+    cardRef.current?.style.setProperty('--tilt-x', `${tiltX}deg`)
+    cardRef.current?.style.setProperty('--tilt-y', `${tiltY}deg`)
+  }
+
+  const resetMotion = () => {
+    setIsPreviewing(false)
+    cardRef.current?.style.setProperty('--tilt-x', '0deg')
+    cardRef.current?.style.setProperty('--tilt-y', '0deg')
+    cardRef.current?.style.setProperty('--spotlight-x', '50%')
+    cardRef.current?.style.setProperty('--spotlight-y', '35%')
   }
 
   return (
@@ -315,15 +486,16 @@ function ProjectCard({ project, onOpen }) {
         type="button"
         className="project-media"
         onClick={() => onOpen(project)}
-        onMouseEnter={() => setIsPreviewing(true)}
-        onMouseLeave={() => setIsPreviewing(false)}
-        onFocus={() => setIsPreviewing(true)}
+        onMouseEnter={startPreview}
+        onMouseLeave={resetMotion}
+        onPointerLeave={resetMotion}
+        onFocus={startPreview}
         onBlur={() => setIsPreviewing(false)}
         onPointerMove={handlePointerMove}
         aria-label={`查看作品 ${project.titleEn}`}
       >
         <img src={project.cover} alt={project.titleZh} loading="lazy" />
-        {project.video && (
+        {project.video && isPreviewing && (
           <video
             ref={videoRef}
             src={project.video}
@@ -360,15 +532,21 @@ function ProjectCard({ project, onOpen }) {
 function StandardsSection() {
   return (
     <section className="standards-section page-section" aria-label="执行标准">
-      <div className="standards-row">
+      <motion.div
+        className="standards-row"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={stagger}
+      >
         <span className="section-kicker">Execution Standard</span>
         {executionStandards.map(item => (
-          <article key={item.label}>
+          <motion.article key={item.label} variants={fadeUp}>
             <strong>{item.label}</strong>
             <p>{item.text}</p>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -526,6 +704,98 @@ function DetailBlock({ title, text }) {
       <h3>{title}</h3>
       <p>{text}</p>
     </section>
+  )
+}
+
+function InteractiveTitle({ text }) {
+  const words = text.split(' ')
+
+  return (
+    <motion.h1 className="interactive-title" variants={fadeUp} aria-label={text}>
+      {words.map((word, wordIndex) => (
+        <span className="title-word" aria-hidden="true" key={`${word}-${wordIndex}`}>
+          {word.split('').map((letter, letterIndex) => (
+            <span
+              className="title-letter"
+              style={{ '--letter-index': letterIndex }}
+              key={`${word}-${letter}-${letterIndex}`}
+            >
+              {letter}
+            </span>
+          ))}
+          {wordIndex < words.length - 1 && <span className="title-space"> </span>}
+        </span>
+      ))}
+    </motion.h1>
+  )
+}
+
+function TextReveal({ text, className = '' }) {
+  return (
+    <motion.p className={`text-reveal ${className}`} variants={fadeUp} aria-label={text}>
+      {text.split(' ').map((word, index) => (
+        <motion.span
+          key={`${word}-${index}`}
+          className="text-reveal-word"
+          initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, amount: 0.7 }}
+          transition={{ duration: 0.48, delay: index * 0.035, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </motion.p>
+  )
+}
+
+function MagneticButton({ children, className = '', ...props }) {
+  const buttonRef = useRef(null)
+
+  const handlePointerMove = event => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    const moveX = (x - rect.width / 2) * 0.12
+    const moveY = (y - rect.height / 2) * 0.18
+
+    buttonRef.current?.style.setProperty('--magnet-x', `${moveX}px`)
+    buttonRef.current?.style.setProperty('--magnet-y', `${moveY}px`)
+    buttonRef.current?.style.setProperty('--magnet-glow-x', `${(x / rect.width) * 100}%`)
+    buttonRef.current?.style.setProperty('--magnet-glow-y', `${(y / rect.height) * 100}%`)
+  }
+
+  const resetPointer = () => {
+    buttonRef.current?.style.setProperty('--magnet-x', '0px')
+    buttonRef.current?.style.setProperty('--magnet-y', '0px')
+    buttonRef.current?.style.setProperty('--magnet-glow-x', '50%')
+    buttonRef.current?.style.setProperty('--magnet-glow-y', '50%')
+  }
+
+  return (
+    <button
+      ref={buttonRef}
+      className={`magnetic-button ${className}`}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
+      {...props}
+    >
+      <span>{children}</span>
+    </button>
+  )
+}
+
+function KineticMarquee({ items }) {
+  const trackItems = [...items, ...items]
+
+  return (
+    <div className="kinetic-marquee" aria-hidden="true">
+      <div className="kinetic-marquee-track">
+        {trackItems.map((item, index) => (
+          <span key={`${item}-${index}`}>{item}</span>
+        ))}
+      </div>
+    </div>
   )
 }
 
