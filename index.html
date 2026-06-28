@@ -908,7 +908,10 @@
         .loading-screen {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #0F172A 0%, #1a2847 100%);
+            background:
+                radial-gradient(circle at 18% 22%, rgba(6, 182, 212, 0.18), transparent 30%),
+                radial-gradient(circle at 78% 62%, rgba(139, 92, 246, 0.16), transparent 34%),
+                linear-gradient(135deg, #020617 0%, #07111f 48%, #0F172A 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -928,6 +931,81 @@
             height: 100%;
             inset: 0;
             pointer-events: none;
+        }
+
+        .loading-panel {
+            position: relative;
+            z-index: 10;
+            width: min(86vw, 520px);
+            display: grid;
+            gap: 1.2rem;
+            padding: 2.25rem;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(2, 6, 23, 0.58);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .loading-kicker {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            color: rgba(103, 232, 249, 0.86);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+        }
+
+        .loading-kicker::before {
+            content: '';
+            width: 3.5rem;
+            height: 1px;
+            background: rgba(103, 232, 249, 0.48);
+        }
+
+        .loading-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.9rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            color: #F8FAFC;
+            letter-spacing: 0;
+        }
+
+        .loading-status {
+            color: rgba(203, 213, 225, 0.74);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .loading-bars {
+            display: grid;
+            gap: 0.6rem;
+            margin-top: 0.2rem;
+        }
+
+        .loading-bar {
+            height: 2px;
+            overflow: hidden;
+            background: rgba(148, 163, 184, 0.14);
+        }
+
+        .loading-bar::after {
+            content: '';
+            display: block;
+            width: 42%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(103, 232, 249, 0), #67E8F9, #A78BFA);
+            animation: loading-scan 1.45s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        .loading-bar:nth-child(2)::after {
+            animation-delay: 0.18s;
+        }
+
+        .loading-bar:nth-child(3)::after {
+            animation-delay: 0.34s;
         }
 
         .particle {
@@ -956,29 +1034,15 @@
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(59, 130, 246, 0.1);
-            border-top-color: #3B82F6;
-            border-right-color: #8B5CF6;
-            border-radius: 50%;
-            animation: spin 2s linear infinite;
-            position: relative;
-            z-index: 10;
-            /* 性能优化：移除昂贵的 box-shadow */
-            will-change: transform;
+            display: none;
         }
 
         .loading-text {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            color: rgba(148, 163, 184, 0.7);
-            letter-spacing: 2px;
-            opacity: 0;
-            animation: fade-in-out 2s ease-in-out infinite;
+            color: rgba(148, 163, 184, 0.72);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
 
         @keyframes fade-in-out {
@@ -988,6 +1052,11 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        @keyframes loading-scan {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(260%); }
         }
 
         @keyframes shimmer {
@@ -1236,7 +1305,8 @@
            ============================================ */
         .profile-intro-section {
             background:
-                radial-gradient(circle at 82% 20%, rgba(6, 182, 212, 0.14), transparent 28%),
+                radial-gradient(circle at 82% 20%, rgba(6, 182, 212, 0.18), transparent 28%),
+                radial-gradient(circle at 22% 72%, rgba(59, 130, 246, 0.12), transparent 32%),
                 linear-gradient(180deg, #030712 0%, #07111f 55%, #0f172a 100%);
         }
 
@@ -1258,8 +1328,8 @@
         }
 
         .profile-intro-quote {
-            max-width: 55rem;
-            font-size: clamp(2rem, 4.6vw, 5.75rem);
+            max-width: 60rem;
+            font-size: clamp(2.15rem, 4.9vw, 6rem);
             line-height: 1.05;
             font-weight: 300;
             letter-spacing: 0;
@@ -1276,32 +1346,31 @@
 
         .profile-avatar-wrap {
             position: relative;
-            width: clamp(9.5rem, 18vw, 16rem);
-            aspect-ratio: 1;
-            border-radius: 999px;
-            padding: 0.5rem;
-            background:
-                linear-gradient(135deg, rgba(103, 232, 249, 0.85), rgba(167, 139, 250, 0.8)),
-                rgba(15, 23, 42, 0.7);
-            box-shadow: 0 24px 90px rgba(6, 182, 212, 0.16);
+            width: min(100%, 21rem);
+            border-radius: 1.5rem;
+            padding: 0.45rem;
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.8), rgba(167, 139, 250, 0.7));
+            box-shadow: 0 24px 90px rgba(6, 182, 212, 0.18);
         }
 
         .profile-avatar-wrap::after {
             content: '';
             position: absolute;
-            inset: -1.25rem;
-            border-radius: 999px;
+            inset: -1rem;
+            border-radius: 1.9rem;
             border: 1px solid rgba(148, 163, 184, 0.18);
             pointer-events: none;
         }
 
         .profile-avatar {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: inherit;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            border-radius: 1.1rem;
             filter: grayscale(1) contrast(1.08);
             border: 1px solid rgba(255, 255, 255, 0.18);
+            background: #0f172a;
         }
 
         .profile-signature-line {
@@ -1331,6 +1400,84 @@
             text-align: left;
         }
 
+        .profile-proof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .profile-proof-item {
+            padding: 1rem;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(15, 23, 42, 0.54);
+            transition: transform 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+        }
+
+        .profile-proof-item:hover {
+            transform: translateY(-4px);
+            border-color: rgba(103, 232, 249, 0.42);
+            background: rgba(15, 23, 42, 0.78);
+        }
+
+        .profile-proof-number {
+            color: #67E8F9;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.55rem;
+        }
+
+        .profile-proof-label {
+            color: var(--text-quaternary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+        }
+
+        .workflow-strip {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(148, 163, 184, 0.16);
+        }
+
+        .workflow-step {
+            min-height: 8.5rem;
+            padding: 1.1rem;
+            background: rgba(2, 6, 23, 0.72);
+            transition: background 0.28s ease, transform 0.28s ease;
+        }
+
+        .workflow-step:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .workflow-step-index {
+            color: rgba(103, 232, 249, 0.8);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.85rem;
+        }
+
+        .workflow-step-title {
+            color: #F8FAFC;
+            font-weight: 700;
+            margin-bottom: 0.45rem;
+        }
+
+        .workflow-step-desc {
+            color: rgba(203, 213, 225, 0.72);
+            font-size: 0.86rem;
+            line-height: 1.55;
+            text-align: left;
+        }
+
         @media (max-width: 768px) {
             .profile-intro-eyebrow {
                 letter-spacing: 0.22em;
@@ -1343,6 +1490,15 @@
 
             .profile-avatar-wrap {
                 margin-top: 0.5rem;
+            }
+
+            .profile-proof-grid,
+            .workflow-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-step {
+                min-height: auto;
             }
         }
 
@@ -2367,8 +2523,17 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen" role="status" aria-live="polite">
         <div class="loading-particles" id="loadingParticles"></div>
-        <div class="loading-spinner"></div>
-        <div class="loading-text">加载中...</div>
+        <div class="loading-panel">
+            <div class="loading-kicker">AIGC Visual Studio</div>
+            <div class="loading-title">Initializing cinematic workflow.</div>
+            <div class="loading-status">正在准备作品影像、交互预览与制作流程信息。</div>
+            <div class="loading-bars" aria-hidden="true">
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-text">Portfolio Experience</div>
+        </div>
     </div>
     
     <!-- Scroll Progress -->
@@ -2495,28 +2660,28 @@
 
         const FEATURES_DATA = [
             { 
-                icon: 'FLOW', 
-                title: 'Workflow 工作流优化', 
-                description: '从脚本到成片，构建端到端 AI 影视制作流水线，将传统数周的制作周期压缩至数天。',
-                highlights: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联', '效率提升 300%+']
+                icon: 'FLOW',
+                title: '可复用制作系统',
+                description: '把单次灵感沉淀成可迭代的工作流，覆盖角色资产、镜头批处理、风格一致性与成片交付。',
+                highlights: ['ComfyUI Workflow', '批量出图/出片', '版本可追踪', '交付标准化']
             },
             { 
-                icon: 'SD', 
-                title: 'Stable Diffusion 深度应用', 
-                description: '精通 SD 全链路工具，从模型微调到 LoRA 训练，精准控制画面风格与角色一致性。',
-                highlights: ['ControlNet 精控', 'LoRA / IP-Adapter', '图生图/局部重绘', '风格迁移']
+                icon: 'CHAR',
+                title: '角色与镜头控制',
+                description: '围绕人物一致性、表演状态、景别变化和镜头衔接建立控制策略，让 AI 影像更接近可剪辑素材。',
+                highlights: ['角色一致性', 'ControlNet', 'LoRA / IP-Adapter', '镜头连续性']
             },
             { 
-                icon: 'VIDEO', 
-                title: '前沿视频模型实战', 
-                description: '熟练运用 Seedance、Veo3、可灵2.0、Sora 等主流 AI 视频模型，实现高质量 AI 短剧与创意视频制作。',
-                highlights: ['Seedance 2.0', 'Google Veo3', '可灵 Kling 2.0', 'OpenAI Sora']
+                icon: 'EDIT',
+                title: 'AI 视频到成片',
+                description: '将 Seedance、Veo3、可灵、Sora 等模型输出接入剪辑、调色、字幕和包装流程，服务真实发布场景。',
+                highlights: ['Seedance 2.0', 'Veo3', 'Kling', '后期包装']
             },
             { 
-                icon: 'LLM', 
-                title: 'LLM 多模态应用', 
-                description: '运用大语言模型优化创意 Prompt，结合图像/视频/文本多模态能力，提升内容生产质量。',
-                highlights: ['Prompt 工程优化', '多模态内容生成', 'AI 辅助编剧', '智能分镜规划']
+                icon: 'PLAN',
+                title: '创意策略与分镜',
+                description: '用 LLM 辅助拆解卖点、情绪曲线和镜头脚本，让内容从视觉实验进入可沟通、可复盘的制作方案。',
+                highlights: ['脚本拆解', 'Prompt 设计', '分镜规划', '传播场景']
             }
         ];
         
@@ -3093,7 +3258,7 @@
                         }}
                         className="mt-0 bg-gradient-to-br from-slate-100 via-cyan-100 to-slate-300 py-3 bg-clip-text text-center text-[2.05rem] leading-[1.05] font-semibold tracking-tight text-transparent sm:text-5xl md:text-7xl"
                     >
-                        Welcome to My Portfolio
+                        AIGC Visual Pipeline for Cinematic Work
                     </motion.h1>
 
                     <motion.p
@@ -3102,7 +3267,7 @@
                         transition={{ delay: 0.55, duration: 0.6 }}
                         className="mt-4 max-w-xl text-center text-slate-200/90 text-sm sm:text-base md:text-lg"
                     >
-                        AIGC-driven visualization, motion, and brand storytelling.
+                        用 AI 影像工作流完成角色、镜头、叙事和交付，让创意从概念直接进入可发布的成片阶段。
                     </motion.p>
 
                     <motion.div
@@ -3115,7 +3280,7 @@
                             onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
                             className="min-w-[160px] px-5 py-2 text-sm md:text-base"
                         >
-                            View Selected Work
+                            Explore Selected Work
                         </HoverButton>
                     </motion.div>
                 </LampContainer>
@@ -3125,40 +3290,61 @@
         function ProfileIntroSection() {
             const profilePoints = [
                 {
-                    label: 'Focus',
-                    value: 'AI 真人短剧、品牌影像与视觉叙事，负责从概念、分镜、角色设定到成片交付的完整链路。'
+                    label: 'Direction',
+                    value: '专注 AI 真人短剧、品牌影像和叙事型视觉内容，把抽象创意拆成可执行的镜头与资产清单。'
                 },
                 {
                     label: 'Workflow',
-                    value: '以 ComfyUI、Stable Diffusion、ControlNet、LoRA / IP-Adapter 与前沿视频模型搭建可复用制作流程。'
+                    value: '以 ComfyUI、Stable Diffusion、ControlNet、LoRA / IP-Adapter 和视频模型搭建稳定流程，减少重复试错。'
                 },
                 {
-                    label: 'Delivery',
-                    value: '面向真实项目交付，兼顾角色一致性、镜头节奏、画面风格和多平台传播需求。'
+                    label: 'Output',
+                    value: '关注角色一致性、镜头节奏、画面风格与传播适配，目标不是生成素材，而是完成可发布作品。'
                 }
+            ];
+            const proofItems = [
+                { number: '01', label: 'Script to shot' },
+                { number: '02', label: 'Character consistency' },
+                { number: '03', label: 'Model orchestration' }
+            ];
+            const workflowSteps = [
+                { title: 'Brief', desc: '明确受众、题材、卖点和交付口径。' },
+                { title: 'Storyboard', desc: '拆解情绪曲线、镜头表和关键画面。' },
+                { title: 'Assets', desc: '建立角色、场景、风格和参考资产。' },
+                { title: 'Generate', desc: '多模型生成、筛选、补帧与重绘。' },
+                { title: 'Finish', desc: '剪辑、调色、字幕、包装与发布版本。' }
             ];
 
             return (
                 <section id="profile" aria-label="Profile Introduction" className="profile-intro-section section-smooth py-20 md:py-28 px-6 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto">
-                        <div className="grid lg:grid-cols-[minmax(0,1fr)_18rem] gap-12 lg:gap-20 items-center">
+                        <div className="grid lg:grid-cols-[minmax(0,1fr)_22rem] gap-12 lg:gap-20 items-center">
                             <motion.div
                                 initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <div className="profile-intro-eyebrow mb-8">AIGC Creator</div>
+                                <div className="profile-intro-eyebrow mb-8">AIGC Workflow Designer</div>
                                 <h2 className="profile-intro-quote">
-                                    用 <strong>AI Workflow</strong> 把创意、角色与镜头节奏连接成可交付的影像作品。
+                                    建立 <strong>AI 影像生产线</strong>，让角色、镜头和叙事不止停留在生成效果里。
                                 </h2>
 
                                 <div className="mt-10 flex items-center gap-6">
                                     <div className="profile-signature-line" />
                                     <div>
                                         <div className="text-white font-semibold text-lg">AJan</div>
-                                        <div className="text-slate-400 text-sm">AI 影视制作人 / AIGC Workflow Designer</div>
+                                        <div className="text-slate-400 text-sm">AI 影视制作人 / AIGC Pipeline Builder</div>
                                     </div>
+                                </div>
+
+                                <div className="profile-proof-grid mt-10">
+                                    {proofItems.map((item) => (
+                                        <div className="profile-proof-item" key={item.label}>
+                                            <div className="profile-proof-number">{item.number}</div>
+                                            <div className="profile-proof-label">{item.label}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </motion.div>
 
@@ -3171,7 +3357,7 @@
                             >
                                 <div className="profile-avatar-wrap">
                                     <img
-                                        src="profile-avatar.png"
+                                        src="profile-photo.png"
                                         alt="AJan profile portrait"
                                         className="profile-avatar"
                                         loading="lazy"
@@ -3193,6 +3379,25 @@
                                     <p className="profile-stat-value mb-0">{point.value}</p>
                                 </div>
                             ))}
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 36 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.24 }}
+                            className="mt-14 md:mt-20"
+                        >
+                            <div className="profile-intro-eyebrow mb-6">Interactive Pipeline</div>
+                            <div className="workflow-strip">
+                                {workflowSteps.map((step, index) => (
+                                    <div className="workflow-step" key={step.title}>
+                                        <div className="workflow-step-index">{String(index + 1).padStart(2, '0')}</div>
+                                        <div className="workflow-step-title">{step.title}</div>
+                                        <p className="workflow-step-desc mb-0">{step.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </motion.div>
                     </div>
                 </section>
@@ -3896,7 +4101,7 @@
                         {isLoading && (
                             <div className="video-modal-loading">
                                 <div className="video-modal-spinner"></div>
-                                <p style={{color: '#94a3b8', textAlign: 'center', marginTop: '12px', fontSize: '14px'}}>加载中...</p>
+                                <p style={{color: '#94a3b8', textAlign: 'center', marginTop: '12px', fontSize: '14px'}}>正在同步作品数据与影像资源...</p>
                             </div>
                         )}
 
@@ -4145,7 +4350,7 @@
                                         transition={{ duration: 0.8 }}
                                         className="font-display text-4xl md:text-5xl lg:text-6xl font-bold gradient-text mb-2"
                                     >
-                                        Featured Work
+                                        Selected Production Cases
                                     </motion.h2>
                                     <motion.div 
                                         initial={{ opacity: 0 }}
@@ -4154,14 +4359,14 @@
                                         transition={{ duration: 0.8, delay: 0.1 }}
                                         className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-cyan"
                                     >
-                                        精选项目
+                                        代表作品
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    AI 驱动的真人短剧制作，探索 AIGC 在影视内容领域的前沿应用。
+                                    每个项目都围绕真实交付场景组织：题材定位、角色一致性、镜头生成、剪辑包装与传播版本。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    点击项目查看完整片段。
+                                    点击作品可查看完整片段；桌面端悬停可预览动态内容。
                                 </p>
                             </motion.div>
                             
@@ -4218,10 +4423,10 @@
                                     className="md:col-span-1"
                                 >
                                     <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 gradient-text">
-                                        About
+                                        About the Practice
                                     </h2>
                                     <p className="font-body text-base text-slate-300 leading-relaxed">
-                                        AI 影视制作人，专注于 AI 驱动的全流程视频制作。精通 ComfyUI 节点搭建与 Stable Diffusion 工具链，熟练运用 Seedance、Veo3、可灵2.0、Sora 等前沿视频模型，擅长构建高效 Workflow 工作流，将 LLM 多模态能力融入创意生产，实现从概念到成片的高效交付。
+                                        我把 AIGC 当作一套可设计的生产系统，而不是单点工具。项目从脚本拆解开始，经过角色资产、镜头生成、模型调度和后期整合，最终服务短剧、品牌影像和视觉叙事的实际发布。
                                     </p>
                                 </motion.div>
 
@@ -4234,16 +4439,16 @@
                                     className="md:col-span-2"
                                 >
                                     <h3 className="font-display text-2xl font-bold mb-4 gradient-text">
-                                        技能领域
+                                        Capability Stack
                                     </h3>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         {[
-                                            { category: '工作流引擎', skills: ['ComfyUI 节点搭建', '自动化批处理', '多工具串联调度'] },
-                                            { category: 'AI 图像生成', skills: ['Stable Diffusion', 'ControlNet', 'LoRA / IP-Adapter', 'Midjourney'] },
-                                            { category: 'AI 视频模型', skills: ['Seedance 2.0', 'Google Veo3', '可灵 Kling 2.0', 'Sora'] },
-                                            { category: 'LLM 多模态', skills: ['Prompt 工程优化', 'GPT / Claude', 'AI 辅助编剧', '智能分镜'] },
-                                            { category: '后期制作', skills: ['After Effects', 'Premiere Pro', 'DaVinci Resolve'] },
-                                            { category: '3D 可视化', skills: ['SketchUp', 'V-Ray', '3ds Max'] }
+                                            { category: 'Pipeline', skills: ['ComfyUI 节点系统', '批量生成与筛选', '资产版本管理'] },
+                                            { category: 'Character', skills: ['角色一致性', 'ControlNet', 'LoRA / IP-Adapter'] },
+                                            { category: 'Video Models', skills: ['Seedance 2.0', 'Google Veo3', 'Kling 2.0', 'Sora'] },
+                                            { category: 'Narrative', skills: ['脚本拆解', '分镜规划', 'Prompt 设计'] },
+                                            { category: 'Post Production', skills: ['剪辑包装', '字幕节奏', '调色与声音'] },
+                                            { category: 'Visualization', skills: ['SketchUp', 'V-Ray', '3ds Max', 'AI 增强'] }
                                         ].map((group, i) => (
                                             <motion.div 
                                                 key={i}
@@ -4291,7 +4496,7 @@
                                         transition={{ duration: 0.8 }}
                                         className="font-display text-4xl md:text-5xl lg:text-6xl font-bold gradient-text mb-2"
                                     >
-                                        Why Choose Me
+                                        Production Advantages
                                     </motion.h2>
                                     <motion.div 
                                         initial={{ opacity: 0 }}
@@ -4300,14 +4505,14 @@
                                         transition={{ duration: 0.8, delay: 0.1 }}
                                         className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-purple"
                                     >
-                                        为什么选择我
+                                        制作优势
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    以 AI Workflow 为核心，打通从创意到成片的全链路制作能力。
+                                    不只展示“生成结果”，而是建立能反复交付的 AIGC 影像制作方法。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    Workflow 优化 | 前沿模型实战 | Prompt 工程 | 效率交付
+                                    策略拆解 | 角色控制 | 多模型调度 | 剪辑包装 | 发布适配
                                 </p>
                             </motion.div>
                             
