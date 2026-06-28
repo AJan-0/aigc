@@ -55,7 +55,6 @@ export default function PortfolioExperience() {
       <ProfileSection />
       <WorkSection
         activeCategory={activeCategory}
-        featuredProjects={featuredProjects}
         filteredProjects={filteredProjects}
         onCategoryChange={setActiveCategory}
         onOpenProject={setSelectedProject}
@@ -351,7 +350,7 @@ function ProfileSection() {
   )
 }
 
-function WorkSection({ activeCategory, featuredProjects, filteredProjects, onCategoryChange, onOpenProject }) {
+function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpenProject }) {
   return (
     <section className="work-section page-section" id="work" aria-label="作品">
       <SectionHeader
@@ -360,55 +359,222 @@ function WorkSection({ activeCategory, featuredProjects, filteredProjects, onCat
         intro="以作品为主轴，按内容方向浏览。"
       />
 
-      <FeaturedTrack projects={featuredProjects} onOpenProject={onOpenProject} />
       <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
-
-      <motion.div layout className="project-grid">
-        <AnimatePresence mode="popLayout">
-          {filteredProjects.map(project => (
-            <ProjectCard key={project.slug} project={project} onOpen={onOpenProject} />
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <ProjectCarousel projects={filteredProjects} onOpenProject={onOpenProject} />
     </section>
   )
 }
 
-function FeaturedTrack({ projects: featuredProjects, onOpenProject }) {
+function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [direction, setDirection] = useState(1)
+  const [isPaused, setIsPaused] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
+  const carouselLength = carouselProjects.length
+
+  useEffect(() => {
+    setActiveIndex(0)
+    setDirection(1)
+  }, [carouselProjects])
+
+  useEffect(() => {
+    if (shouldReduceMotion || isPaused || carouselLength <= 1) return undefined
+
+    const timer = window.setInterval(() => {
+      setDirection(1)
+      setActiveIndex(index => wrapIndex(index + 1, carouselLength))
+    }, 5200)
+
+    return () => window.clearInterval(timer)
+  }, [carouselLength, isPaused, shouldReduceMotion])
+
+  const moveCarousel = offset => {
+    if (carouselLength <= 1) return
+    setDirection(offset > 0 ? 1 : -1)
+    setActiveIndex(index => wrapIndex(index + offset, carouselLength))
+  }
+
+  const jumpToOffset = offset => {
+    if (offset === 0 || carouselLength <= 1) return
+    moveCarousel(offset)
+  }
+
+  const handleKeyDown = event => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      moveCarousel(1)
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      moveCarousel(-1)
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onOpenProject(carouselProjects[activeIndex])
+    }
+  }
+
+  if (!carouselLength) {
+    return (
+      <div className="carousel-empty">
+        <span className="section-kicker">No Work</span>
+        <p>There are no projects in this direction yet.</p>
+      </div>
+    )
+  }
+
+  const activeProject = carouselProjects[activeIndex]
+  const offsets = carouselLength === 1 ? [0] : carouselLength === 2 ? [-1, 0, 1] : [-2, -1, 0, 1, 2]
+  const progress = ((activeIndex + 1) / carouselLength) * 100
+
   return (
     <motion.div
-      className="featured-track"
+      className="project-carousel"
       initial={{ opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.24 }}
-      transition={{ duration: 0.68, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+      onPointerEnter={() => setIsPaused(true)}
+      onPointerLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={() => setIsPaused(false)}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="作品轮播"
     >
-      <div className="featured-track-header">
-        <span className="section-kicker">Featured Flow</span>
-        <p>优先浏览最能代表方向的作品。</p>
+      <div className="carousel-copy">
+        <span className="section-kicker">Showreel Loop</span>
+        <h3>
+          <WordArtText text={activeProject.titleEn} />
+        </h3>
+        <p>{activeProject.introEn}</p>
+        <div className="carousel-meta">
+          <span>{activeProject.id}</span>
+          <span>{activeProject.type}</span>
+          <span>{activeProject.year}</span>
+        </div>
       </div>
-      <div className="featured-track-scroll" role="list" aria-label="精选作品滚动展示">
-        {featuredProjects.map((project, index) => (
-          <motion.button
+
+      <motion.div
+        className="carousel-stage"
+        drag={carouselLength > 1 ? 'x' : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.12}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -54) moveCarousel(1)
+          if (info.offset.x > 54) moveCarousel(-1)
+        }}
+      >
+        <AnimatePresence initial={false} custom={direction}>
+          {offsets.map(offset => {
+            const projectIndex = wrapIndex(activeIndex + offset, carouselLength)
+            const project = carouselProjects[projectIndex]
+            const isActive = offset === 0
+
+            return (
+              <motion.button
+                key={`${project.slug}-${offset}-${activeIndex}`}
+                type="button"
+                className={isActive ? 'carousel-card is-active' : 'carousel-card'}
+                style={{ '--slot': offset }}
+                custom={direction}
+                initial={{
+                  opacity: 0,
+                  x: `${(offset + direction) * 19}%`,
+                  scale: isActive ? 0.92 : 0.72,
+                  rotateY: offset * -12,
+                }}
+                animate={{
+                  opacity: isActive ? 1 : Math.max(0.26, 0.6 - Math.abs(offset) * 0.15),
+                  x: `calc(${offset} * min(27vw, 18rem))`,
+                  y: Math.abs(offset) * 18,
+                  scale: isActive ? 1 : 0.78 - Math.min(Math.abs(offset), 2) * 0.08,
+                  rotateY: offset * -12,
+                  zIndex: 10 - Math.abs(offset),
+                }}
+                exit={{
+                  opacity: 0,
+                  x: `${(offset - direction) * 23}%`,
+                  scale: 0.68,
+                }}
+                transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
+                onClick={() => (isActive ? onOpenProject(project) : jumpToOffset(offset))}
+                aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
+              >
+                <img src={project.cover} alt={project.titleEn} loading={isActive ? 'eager' : 'lazy'} />
+                {isActive && project.video && (
+                  <video
+                    src={project.video}
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="carousel-card-index">{project.id}</span>
+                <div className="carousel-card-copy">
+                  <span>{project.type}</span>
+                  <h4>
+                    <WordArtText text={project.titleEn} />
+                  </h4>
+                  <small>{project.duration}</small>
+                </div>
+              </motion.button>
+            )
+          })}
+        </AnimatePresence>
+      </motion.div>
+
+      <div className="carousel-controls">
+        <button
+          type="button"
+          className="carousel-arrow"
+          onClick={() => moveCarousel(-1)}
+          disabled={carouselLength <= 1}
+          aria-label="Previous project"
+        >
+          ←
+        </button>
+        <div className="carousel-progress" aria-hidden="true">
+          <span style={{ width: `${progress}%` }} />
+        </div>
+        <button
+          type="button"
+          className="carousel-arrow"
+          onClick={() => moveCarousel(1)}
+          disabled={carouselLength <= 1}
+          aria-label="Next project"
+        >
+          →
+        </button>
+      </div>
+
+      <div className="carousel-dots" aria-label="作品快速切换">
+        {carouselProjects.map((project, index) => (
+          <button
             key={project.slug}
             type="button"
-            role="listitem"
-            className="featured-track-card"
-            style={{ '--track-index': index }}
-            onClick={() => onOpenProject(project)}
-            whileHover={{ y: -8 }}
-            whileTap={{ scale: 0.985 }}
-            aria-label={`打开精选作品 ${project.titleEn}`}
-          >
-            <img src={project.cover} alt={project.titleZh} loading="lazy" />
-            <span>{project.type}</span>
-            <strong>{project.titleEn}</strong>
-            <small>{project.introEn}</small>
-          </motion.button>
+            className={index === activeIndex ? 'is-active' : ''}
+            onClick={() => {
+              setDirection(index > activeIndex ? 1 : -1)
+              setActiveIndex(index)
+            }}
+            aria-label={`Show ${project.titleEn}`}
+          />
         ))}
       </div>
     </motion.div>
   )
+}
+
+function wrapIndex(index, length) {
+  return ((index % length) + length) % length
 }
 
 function CategoryFilter({ activeCategory, onChange }) {
@@ -494,7 +660,7 @@ function ProjectCard({ project, onOpen }) {
         onPointerMove={handlePointerMove}
         aria-label={`查看作品 ${project.titleEn}`}
       >
-        <img src={project.cover} alt={project.titleZh} loading="lazy" />
+        <img src={project.cover} alt={project.titleEn} loading="lazy" />
         {project.video && isPreviewing && (
           <video
             ref={videoRef}
@@ -509,8 +675,7 @@ function ProjectCard({ project, onOpen }) {
         <span className="media-badge">{project.video ? project.duration : 'Still'}</span>
         <div className="project-overlay">
           <span>{project.type}</span>
-          <h3>{project.titleEn}</h3>
-          <strong>{project.titleZh}</strong>
+          <h3><WordArtText text={project.titleEn} /></h3>
         </div>
       </button>
 
@@ -664,21 +829,31 @@ function ProjectModal({ project, isMuted, onClose, onMuteChange }) {
                   playsInline
                 />
               ) : (
-                <img src={project.cover} alt={project.titleZh} />
+                <img src={project.cover} alt={project.titleEn} />
               )}
             </div>
 
             <div className="modal-content">
               <span className="section-kicker">{project.type}</span>
               <h2>{project.titleEn}</h2>
-              <strong>{project.titleZh}</strong>
               <p>{project.introEn}</p>
 
               <div className="modal-detail-grid">
-                <DetailBlock title="Challenge" text={project.challenge} />
-                <DetailBlock title="Approach" text={project.approach} />
-                <DetailBlock title="Outcome" text={project.outcome} />
+                <DetailBlock title="Role" text={project.role} />
+                <DetailBlock title="Year" text={project.year} />
+                <DetailBlock title="Format" text={project.duration} />
               </div>
+
+              {project.metrics?.length > 0 && (
+                <div className="modal-metrics" aria-label="Project metrics">
+                  {project.metrics.map(metric => (
+                    <span key={`${metric.label}-${metric.value}`}>
+                      <strong>{metric.value}</strong>
+                      <small>{metric.label}</small>
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="modal-footer-row">
                 <div className="modal-tools">
@@ -686,7 +861,7 @@ function ProjectModal({ project, isMuted, onClose, onMuteChange }) {
                 </div>
                 {project.video && (
                   <button type="button" onClick={() => onMuteChange(value => !value)}>
-                    {isMuted ? '打开声音' : '关闭声音'}
+                    {isMuted ? 'Unmute' : 'Mute'}
                   </button>
                 )}
               </div>
@@ -727,6 +902,27 @@ function InteractiveTitle({ text }) {
         </span>
       ))}
     </motion.h1>
+  )
+}
+
+function WordArtText({ text }) {
+  return (
+    <span className="word-art">
+      <span className="word-art-readable">{text}</span>
+      {text.split(' ').map((word, wordIndex) => (
+        <span className="word-art-word" aria-hidden="true" key={`${word}-${wordIndex}`}>
+          {word.split('').map((letter, letterIndex) => (
+            <span
+              className="word-art-letter"
+              style={{ '--letter-index': letterIndex, '--word-index': wordIndex }}
+              key={`${word}-${letter}-${letterIndex}`}
+            >
+              {letter}
+            </span>
+          ))}
+        </span>
+      ))}
+    </span>
   )
 }
 
