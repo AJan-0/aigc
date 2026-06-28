@@ -4,6 +4,7 @@ import profilePhoto from '../../../profile-photo.png'
 import {
   categories,
   contact,
+  executionStandards,
   navigation,
   profile,
   projects,
@@ -42,6 +43,7 @@ export default function PortfolioExperience() {
         onCategoryChange={setActiveCategory}
         onOpenProject={setSelectedProject}
       />
+      <StandardsSection />
       <SkillsSection />
       <ContactSection />
       <ProjectModal
@@ -93,6 +95,7 @@ function SiteHeader() {
 
 function HeroSection({ featuredProjects, onOpenProject }) {
   const leadProject = featuredProjects[0] ?? projects[0]
+  const galleryProjects = featuredProjects.slice(0, 4)
 
   return (
     <section className="hero-section" id="home" aria-label="我的作品集">
@@ -133,15 +136,29 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
         >
-          <button type="button" className="hero-feature-card" onClick={() => onOpenProject(leadProject)}>
-            <img src={leadProject.cover} alt={leadProject.titleZh} />
-            <span>{leadProject.type}</span>
-            <strong>{leadProject.titleEn}</strong>
-            <small>{leadProject.titleZh}</small>
-          </button>
+          <div className="portfolio-gallery" aria-label="精选作品画廊">
+            {galleryProjects.map((project, index) => (
+              <button
+                key={project.id}
+                type="button"
+                className="gallery-card"
+                style={{
+                  '--offset': index,
+                  '--rotate': `${(index - 1) * 4}deg`,
+                }}
+                onClick={() => onOpenProject(project)}
+                aria-label={`查看精选作品 ${project.titleEn}`}
+              >
+                <img src={project.cover} alt={project.titleZh} />
+                <span>{project.id}</span>
+                <strong>{project.titleEn}</strong>
+                <small>{project.type}</small>
+              </button>
+            ))}
+          </div>
 
-          <div className="hero-index" aria-label="精选作品">
-            {featuredProjects.map(project => (
+          <div className="hero-index" aria-label="精选作品索引">
+            {galleryProjects.map(project => (
               <button key={project.id} type="button" onClick={() => onOpenProject(project)}>
                 <span>{project.id}</span>
                 <strong>{project.titleEn}</strong>
@@ -264,6 +281,7 @@ function CategoryFilter({ activeCategory, onChange }) {
 function ProjectCard({ project, onOpen }) {
   const [isPreviewing, setIsPreviewing] = useState(false)
   const videoRef = useRef(null)
+  const cardRef = useRef(null)
 
   useEffect(() => {
     if (!videoRef.current) return
@@ -275,8 +293,17 @@ function ProjectCard({ project, onOpen }) {
     }
   }, [isPreviewing])
 
+  const handlePointerMove = event => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width) * 100
+    const y = ((event.clientY - rect.top) / rect.height) * 100
+    cardRef.current?.style.setProperty('--spotlight-x', `${x}%`)
+    cardRef.current?.style.setProperty('--spotlight-y', `${y}%`)
+  }
+
   return (
     <motion.article
+      ref={cardRef}
       layout
       className={project.featured ? 'project-card is-featured' : 'project-card'}
       initial={{ opacity: 0, y: 24, scale: 0.98 }}
@@ -292,6 +319,7 @@ function ProjectCard({ project, onOpen }) {
         onMouseLeave={() => setIsPreviewing(false)}
         onFocus={() => setIsPreviewing(true)}
         onBlur={() => setIsPreviewing(false)}
+        onPointerMove={handlePointerMove}
         aria-label={`查看作品 ${project.titleEn}`}
       >
         <img src={project.cover} alt={project.titleZh} loading="lazy" />
@@ -326,6 +354,22 @@ function ProjectCard({ project, onOpen }) {
         </div>
       </div>
     </motion.article>
+  )
+}
+
+function StandardsSection() {
+  return (
+    <section className="standards-section page-section" aria-label="执行标准">
+      <div className="standards-row">
+        <span className="section-kicker">Execution Standard</span>
+        {executionStandards.map(item => (
+          <article key={item.label}>
+            <strong>{item.label}</strong>
+            <p>{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   )
 }
 

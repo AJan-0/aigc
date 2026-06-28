@@ -272,6 +272,13 @@ export const skillGroups = [
   },
 ]
 
+export const executionStandards = [
+  { label: 'Visual-first', text: '作品封面优先，说明只保留必要信息。' },
+  { label: 'Fast path', text: '首屏可读，作品两步内打开。' },
+  { label: 'Responsive', text: '桌面、平板、移动端独立校准。' },
+  { label: 'Media-aware', text: '视频按需加载，封面先行。' },
+]
+
 export const contact = {
   email: 'hello@poetfolio.art',
   availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '3C / 品牌创意短片', 'AIGC 动画短片制作'],
