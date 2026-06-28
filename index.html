@@ -1301,13 +1301,122 @@
         }
 
         /* ============================================
-           PROFILE INTRO SECTION
+           CREATOR NOTE + PORTFOLIO RHYTHM
            ============================================ */
+        .portfolio-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: rgba(103, 232, 249, 0.86);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+        }
+
+        .portfolio-kicker::before,
+        .portfolio-kicker::after {
+            content: '';
+            width: 3.2rem;
+            height: 1px;
+            background: rgba(103, 232, 249, 0.35);
+        }
+
+        .portfolio-transition-band {
+            position: relative;
+            min-height: 12rem;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0), rgba(2, 6, 23, 0.86) 48%, rgba(15, 23, 42, 0));
+        }
+
+        .portfolio-transition-band::before {
+            content: '';
+            position: absolute;
+            inset: 50% 8% auto;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.45), transparent);
+        }
+
+        .portfolio-transition-text {
+            position: relative;
+            z-index: 1;
+            color: rgba(203, 213, 225, 0.82);
+            font-size: clamp(0.78rem, 1.1vw, 0.95rem);
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+        }
+
+        .portfolio-section-label {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.4rem;
+            align-items: center;
+            color: rgba(148, 163, 184, 0.72);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+
+        .portfolio-section-label::before,
+        .portfolio-section-label::after {
+            content: '';
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.26));
+        }
+
+        .portfolio-section-label::after {
+            background: linear-gradient(90deg, rgba(148, 163, 184, 0.26), transparent);
+        }
+
+        .project-index-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            color: rgba(103, 232, 249, 0.78);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+        }
+
+        .project-index-mark::after {
+            content: '';
+            width: 4rem;
+            height: 1px;
+            background: rgba(103, 232, 249, 0.28);
+        }
+
+        .project-action-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: rgba(203, 213, 225, 0.72);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .project-action-note::before {
+            content: '';
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 999px;
+            background: #67E8F9;
+            box-shadow: 0 0 18px rgba(103, 232, 249, 0.7);
+        }
+
         .profile-intro-section {
             background:
-                radial-gradient(circle at 82% 20%, rgba(6, 182, 212, 0.18), transparent 28%),
-                radial-gradient(circle at 22% 72%, rgba(59, 130, 246, 0.12), transparent 32%),
-                linear-gradient(180deg, #030712 0%, #07111f 55%, #0f172a 100%);
+                radial-gradient(circle at 86% 26%, rgba(6, 182, 212, 0.12), transparent 24%),
+                linear-gradient(180deg, #0f172a 0%, #07111f 60%, #030712 100%);
         }
 
         .profile-intro-eyebrow {
@@ -1328,8 +1437,8 @@
         }
 
         .profile-intro-quote {
-            max-width: 60rem;
-            font-size: clamp(2.15rem, 4.9vw, 6rem);
+            max-width: 54rem;
+            font-size: clamp(1.8rem, 3.8vw, 4.5rem);
             line-height: 1.05;
             font-weight: 300;
             letter-spacing: 0;
@@ -3258,7 +3367,7 @@
                         }}
                         className="mt-0 bg-gradient-to-br from-slate-100 via-cyan-100 to-slate-300 py-3 bg-clip-text text-center text-[2.05rem] leading-[1.05] font-semibold tracking-tight text-transparent sm:text-5xl md:text-7xl"
                     >
-                        AIGC Visual Pipeline for Cinematic Work
+                        AI Film Portfolio
                     </motion.h1>
 
                     <motion.p
@@ -3267,7 +3376,7 @@
                         transition={{ delay: 0.55, duration: 0.6 }}
                         className="mt-4 max-w-xl text-center text-slate-200/90 text-sm sm:text-base md:text-lg"
                     >
-                        用 AI 影像工作流完成角色、镜头、叙事和交付，让创意从概念直接进入可发布的成片阶段。
+                        精选 AI 真人短剧、品牌影像与视觉实验。先看作品，再进入背后的制作系统。
                     </motion.p>
 
                     <motion.div
@@ -3280,7 +3389,7 @@
                             onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
                             className="min-w-[160px] px-5 py-2 text-sm md:text-base"
                         >
-                            Explore Selected Work
+                            View Portfolio
                         </HoverButton>
                     </motion.div>
                 </LampContainer>
@@ -3316,7 +3425,7 @@
             ];
 
             return (
-                <section id="profile" aria-label="Profile Introduction" className="profile-intro-section section-smooth py-20 md:py-28 px-6 relative overflow-hidden">
+                <section id="profile" aria-label="Creator Method" className="profile-intro-section section-smooth py-16 md:py-24 px-6 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid lg:grid-cols-[minmax(0,1fr)_22rem] gap-12 lg:gap-20 items-center">
                             <motion.div
@@ -3325,9 +3434,9 @@
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <div className="profile-intro-eyebrow mb-8">AIGC Workflow Designer</div>
+                                <div className="profile-intro-eyebrow mb-8">Behind the Work</div>
                                 <h2 className="profile-intro-quote">
-                                    建立 <strong>AI 影像生产线</strong>，让角色、镜头和叙事不止停留在生成效果里。
+                                    作品背后是一套 <strong>AI 影像生产方法</strong>：从题材判断到镜头生成，再到剪辑发布。
                                 </h2>
 
                                 <div className="mt-10 flex items-center gap-6">
@@ -3739,6 +3848,9 @@
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
                             transition={{ duration: 0.8, delay: 0.3 }}
                         >
+                            <div className="project-index-mark">
+                                {String(index + 1).padStart(2, '0')} / Selected Work
+                            </div>
                             <motion.h3
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -3747,15 +3859,10 @@
                             >
                                 {project.title}
                             </motion.h3>
-                            
-                            <motion.p
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: 0.6 }}
-                                className="font-body text-lg md:text-xl text-slate-400 leading-relaxed mb-8"
-                            >
-                                {project.description}
-                            </motion.p>
+
+                            <div className="project-action-note">
+                                Play
+                            </div>
                         </motion.div>
                     </div>
                 </motion.div>
@@ -4319,7 +4426,9 @@
                 <>
                     <Navbar />
                     <HeroSection />
-                    <ProfileIntroSection />
+                    <div className="portfolio-transition-band">
+                        <div className="portfolio-transition-text">Scroll for selected moving-image works</div>
+                    </div>
                     
                     
                     {/* Projects Section - Moved to Front as Main Focus */}
@@ -4329,6 +4438,7 @@
                         <div className="absolute bottom-32 -left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(60px)'}} />
                         
                         <div className="max-w-7xl mx-auto relative z-10">
+                            <div className="portfolio-section-label">Works open first</div>
                             <motion.div
                                 initial={{ opacity: 0, y: 60 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -4350,7 +4460,7 @@
                                         transition={{ duration: 0.8 }}
                                         className="font-display text-4xl md:text-5xl lg:text-6xl font-bold gradient-text mb-2"
                                     >
-                                        Selected Production Cases
+                                        Portfolio Reel
                                     </motion.h2>
                                     <motion.div 
                                         initial={{ opacity: 0 }}
@@ -4359,14 +4469,14 @@
                                         transition={{ duration: 0.8, delay: 0.1 }}
                                         className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-cyan"
                                     >
-                                        代表作品
+                                        精选影像
                                     </motion.div>
                                 </motion.div>
                                 <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    每个项目都围绕真实交付场景组织：题材定位、角色一致性、镜头生成、剪辑包装与传播版本。
+                                    以作品画面作为第一语言，呈现 AI 影像从叙事设定到成片交付的不同方向。
                                 </p>
                                 <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    点击作品可查看完整片段；桌面端悬停可预览动态内容。
+                                    Hover to preview / Click to watch.
                                 </p>
                             </motion.div>
                             
@@ -4402,6 +4512,7 @@
                         </div>
                     </section>
                     
+                    <ProfileIntroSection />
                     
                     <section id="about" className="section-smooth py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.1}} />
