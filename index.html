@@ -1067,6 +1067,294 @@
                 backgroundPosition: 200% 0;
             }
         }
+
+        /* ============================================
+           CINEMATIC PORTFOLIO HERO
+           ============================================ */
+        .film-grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.055;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .portfolio-hero {
+            position: relative;
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            padding: 7rem 1.5rem 4rem;
+            background:
+                radial-gradient(circle at 16% 20%, rgba(6, 182, 212, 0.16), transparent 28%),
+                radial-gradient(circle at 80% 36%, rgba(139, 92, 246, 0.18), transparent 34%),
+                linear-gradient(180deg, #020617 0%, #07111f 56%, #0F172A 100%);
+        }
+
+        .portfolio-hero-grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.4;
+            pointer-events: none;
+            background-size: 60px 60px;
+            background-image:
+                linear-gradient(to right, rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+        }
+
+        .portfolio-hero-card {
+            position: relative;
+            z-index: 4;
+            width: min(100%, 1180px);
+            min-height: min(72svh, 760px);
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.72fr);
+            gap: clamp(2rem, 5vw, 5rem);
+            align-items: center;
+            padding: clamp(2rem, 5vw, 4.75rem);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: clamp(1.5rem, 4vw, 2.8rem);
+            background:
+                radial-gradient(900px circle at var(--mouse-x, 50%) var(--mouse-y, 45%), rgba(255,255,255,0.075), transparent 38%),
+                linear-gradient(145deg, rgba(22, 44, 109, 0.78) 0%, rgba(7, 16, 32, 0.94) 56%, rgba(2, 6, 23, 0.98) 100%);
+            box-shadow:
+                0 44px 110px -34px rgba(0, 0, 0, 0.95),
+                inset 0 1px 2px rgba(255, 255, 255, 0.18),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.72);
+            overflow: hidden;
+        }
+
+        .portfolio-hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+                linear-gradient(110deg, rgba(255,255,255,0.13), transparent 24%, transparent 72%, rgba(103,232,249,0.08)),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 14px);
+            opacity: 0.45;
+        }
+
+        .portfolio-hero-content,
+        .portfolio-hero-visual {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.9rem;
+            color: rgba(103, 232, 249, 0.84);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+        }
+
+        .hero-label::before {
+            content: '';
+            width: clamp(3rem, 8vw, 6rem);
+            height: 1px;
+            background: rgba(103, 232, 249, 0.45);
+        }
+
+        .portfolio-hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(4.2rem, 13vw, 10.5rem);
+            line-height: 0.84;
+            font-weight: 800;
+            letter-spacing: 0;
+            color: #F8FAFC;
+            text-shadow:
+                0 24px 70px rgba(0, 0, 0, 0.78),
+                0 0 36px rgba(103, 232, 249, 0.14);
+        }
+
+        .portfolio-hero-subtitle {
+            max-width: 42rem;
+            margin-top: 2rem;
+            color: rgba(226, 232, 240, 0.82);
+            font-size: clamp(1rem, 1.35vw, 1.22rem);
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2.2rem;
+        }
+
+        .hero-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 3.25rem;
+            padding: 0 1.2rem;
+            border: 0;
+            cursor: pointer;
+            border-radius: 1rem;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+        }
+
+        .hero-action.primary {
+            color: #020617;
+            background: linear-gradient(180deg, #FFFFFF 0%, #DFF7FF 100%);
+            box-shadow: 0 18px 34px -18px rgba(103, 232, 249, 0.9), inset 0 1px 1px rgba(255,255,255,1);
+        }
+
+        .hero-action.secondary {
+            color: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.035);
+            backdrop-filter: blur(18px);
+        }
+
+        .hero-action:hover {
+            transform: translateY(-3px);
+        }
+
+        .hero-proof-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1px;
+            margin-top: 3rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .hero-proof {
+            padding: 1rem;
+            background: rgba(2, 6, 23, 0.55);
+        }
+
+        .hero-proof strong {
+            display: block;
+            color: #FFFFFF;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.55rem;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-proof span {
+            color: rgba(203, 213, 225, 0.66);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .portfolio-hero-visual {
+            display: grid;
+            place-items: center;
+            min-height: 33rem;
+        }
+
+        .hero-photo-frame {
+            position: relative;
+            width: min(100%, 22rem);
+            transform-style: preserve-3d;
+        }
+
+        .hero-photo-frame::before {
+            content: '';
+            position: absolute;
+            inset: 8% -10% -8% 12%;
+            border-radius: 2rem;
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.32), rgba(139, 92, 246, 0.22));
+            filter: blur(26px);
+            transform: translateZ(-1px);
+        }
+
+        .hero-photo {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 1.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            filter: grayscale(1) contrast(1.08);
+            box-shadow:
+                0 40px 90px -34px rgba(0, 0, 0, 0.96),
+                inset 0 1px 1px rgba(255,255,255,0.2);
+        }
+
+        .hero-floating-badge {
+            position: absolute;
+            display: grid;
+            gap: 0.25rem;
+            padding: 0.85rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(2, 6, 23, 0.66);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 28px 60px -32px rgba(0,0,0,0.9);
+        }
+
+        .hero-floating-badge.one {
+            left: -2rem;
+            top: 18%;
+        }
+
+        .hero-floating-badge.two {
+            right: -2rem;
+            bottom: 14%;
+        }
+
+        .hero-floating-badge b {
+            color: #F8FAFC;
+            font-size: 0.9rem;
+        }
+
+        .hero-floating-badge span {
+            color: rgba(203,213,225,0.62);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .portfolio-hero-card {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .portfolio-hero-visual {
+                min-height: auto;
+            }
+
+            .hero-photo-frame {
+                width: min(100%, 17rem);
+            }
+
+            .hero-proof-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-floating-badge.one {
+                left: -0.6rem;
+            }
+
+            .hero-floating-badge.two {
+                right: -0.6rem;
+            }
+        }
         
         /* ============================================
            SCROLL PROGRESS INDICATOR
@@ -3355,44 +3643,101 @@
 
         // Lamp-style hero for first screen optimization
         function HeroSection() {
-            return (
-                <LampContainer className="hero-mobile-optimized">
-                    <motion.h1
-                        initial={{ opacity: 0.5, y: 100 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{
-                            delay: 0.3,
-                            duration: 0.8,
-                            ease: "easeInOut",
-                        }}
-                        className="mt-0 bg-gradient-to-br from-slate-100 via-cyan-100 to-slate-300 py-3 bg-clip-text text-center text-[2.05rem] leading-[1.05] font-semibold tracking-tight text-transparent sm:text-5xl md:text-7xl"
-                    >
-                        AI Film Portfolio
-                    </motion.h1>
+            const heroCardRef = useRef(null);
+            const handleHeroMouseMove = useCallback((event) => {
+                if (!heroCardRef.current) return;
+                const rect = heroCardRef.current.getBoundingClientRect();
+                heroCardRef.current.style.setProperty('--mouse-x', `${event.clientX - rect.left}px`);
+                heroCardRef.current.style.setProperty('--mouse-y', `${event.clientY - rect.top}px`);
+            }, []);
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 18 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.55, duration: 0.6 }}
-                        className="mt-4 max-w-xl text-center text-slate-200/90 text-sm sm:text-base md:text-lg"
-                    >
-                        精选 AI 真人短剧、品牌影像与视觉实验。先看作品，再进入背后的制作系统。
-                    </motion.p>
+            return (
+                <section className="portfolio-hero" aria-label="Poetfolio">
+                    <div className="portfolio-hero-grid" aria-hidden="true"></div>
+                    <div className="film-grain" aria-hidden="true"></div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.8, duration: 0.7 }}
-                        className="mt-7 flex w-full justify-center"
+                        ref={heroCardRef}
+                        onMouseMove={handleHeroMouseMove}
+                        initial={{ opacity: 0, y: 56, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                        className="portfolio-hero-card"
                     >
-                        <HoverButton
-                            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                            className="min-w-[160px] px-5 py-2 text-sm md:text-base"
+                        <div className="portfolio-hero-content">
+                            <motion.div
+                                initial={{ opacity: 0, x: -24 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.7 }}
+                                className="hero-label"
+                            >
+                                AIGC Creator
+                            </motion.div>
+
+                            <motion.h1
+                                initial={{ opacity: 0, y: 42, filter: 'blur(16px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{ delay: 0.32, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                                className="portfolio-hero-title"
+                            >
+                                Poetfolio
+                            </motion.h1>
+
+                            <motion.p
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.58, duration: 0.7 }}
+                                className="portfolio-hero-subtitle"
+                            >
+                                AI 影像作品集，聚焦真人短剧、品牌影像与视觉叙事。以镜头、角色与成片交付为核心，呈现从概念到可发布作品的完整制作能力。
+                            </motion.p>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.74, duration: 0.7 }}
+                                className="hero-actions"
+                            >
+                                <button className="hero-action primary" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
+                                    Creator Intro
+                                </button>
+                                <button className="hero-action secondary" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
+                                    Selected Works
+                                </button>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.9, duration: 0.7 }}
+                                className="hero-proof-row"
+                            >
+                                <div className="hero-proof"><strong>AI</strong><span>Film Workflow</span></div>
+                                <div className="hero-proof"><strong>6+</strong><span>Selected Pieces</span></div>
+                                <div className="hero-proof"><strong>End</strong><span>To Delivery</span></div>
+                            </motion.div>
+                        </div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 42, rotateY: -10 }}
+                            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                            transition={{ delay: 0.48, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                            className="portfolio-hero-visual"
                         >
-                            View Portfolio
-                        </HoverButton>
+                            <div className="hero-photo-frame">
+                                <img src="profile-photo.png" alt="AJan profile portrait" className="hero-photo" />
+                                <div className="hero-floating-badge one">
+                                    <b>Workflow</b>
+                                    <span>ComfyUI / SD / Video</span>
+                                </div>
+                                <div className="hero-floating-badge two">
+                                    <b>Output</b>
+                                    <span>Short drama / Brand film</span>
+                                </div>
+                            </div>
+                        </motion.div>
                     </motion.div>
-                </LampContainer>
+                </section>
             );
         }
 
@@ -3425,7 +3770,7 @@
             ];
 
             return (
-                <section id="profile" aria-label="Creator Method" className="profile-intro-section section-smooth py-16 md:py-24 px-6 relative overflow-hidden">
+                <section id="profile" aria-label="Creator Introduction" className="profile-intro-section section-smooth py-16 md:py-24 px-6 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid lg:grid-cols-[minmax(0,1fr)_22rem] gap-12 lg:gap-20 items-center">
                             <motion.div
@@ -3434,9 +3779,9 @@
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <div className="profile-intro-eyebrow mb-8">Behind the Work</div>
+                                <div className="profile-intro-eyebrow mb-8">Creator Profile</div>
                                 <h2 className="profile-intro-quote">
-                                    作品背后是一套 <strong>AI 影像生产方法</strong>：从题材判断到镜头生成，再到剪辑发布。
+                                    我用 <strong>AI 影像生产方法</strong> 组织作品：题材判断、角色控制、镜头生成与成片交付。
                                 </h2>
 
                                 <div className="mt-10 flex items-center gap-6">
@@ -4426,6 +4771,7 @@
                 <>
                     <Navbar />
                     <HeroSection />
+                    <ProfileIntroSection />
                     <div className="portfolio-transition-band">
                         <div className="portfolio-transition-text">Scroll for selected moving-image works</div>
                     </div>
@@ -4438,7 +4784,7 @@
                         <div className="absolute bottom-32 -left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(60px)'}} />
                         
                         <div className="max-w-7xl mx-auto relative z-10">
-                            <div className="portfolio-section-label">Works open first</div>
+                            <div className="portfolio-section-label">Selected works</div>
                             <motion.div
                                 initial={{ opacity: 0, y: 60 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -4511,8 +4857,6 @@
                             ))}
                         </div>
                     </section>
-                    
-                    <ProfileIntroSection />
                     
                     <section id="about" className="section-smooth py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.1}} />
