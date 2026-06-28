@@ -1,0 +1,144 @@
+/* ============================================
+   加载屏幕 - 电影感设计
+   ============================================ */
+
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 18% 20%, rgba(255, 77, 0, 0.12), transparent 34%),
+        radial-gradient(circle at 84% 70%, rgba(0, 240, 255, 0.1), transparent 36%),
+        #050505;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-frame {
+    position: relative;
+    width: min(88vw, 1040px);
+    min-height: min(62vh, 560px);
+    padding: clamp(1.1rem, 3vw, 2rem);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    border: 1px solid rgba(244, 241, 232, 0.24);
+    background:
+        linear-gradient(90deg, transparent 49.8%, rgba(244, 241, 232, 0.1) 50%, transparent 50.2%),
+        rgba(3, 4, 7, 0.82);
+    box-shadow: 0 34px 110px rgba(0, 0, 0, 0.62);
+    overflow: hidden;
+}
+
+.loader-frame::before,
+.loader-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.loader-frame::before {
+    background-image: repeating-linear-gradient(90deg, transparent 0 34px, rgba(244, 241, 232, 0.1) 34px 35px);
+    opacity: 0.18;
+}
+
+.loader-frame::after {
+    background: linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.13), transparent);
+    height: 34%;
+    animation: projector-scan 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes projector-scan {
+    from { transform: translateY(-120%); }
+    to { transform: translateY(340%); }
+}
+
+.loader-topline,
+.loader-bottomline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgba(244, 241, 232, 0.58);
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.loader-title {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 11vw, 8rem);
+    line-height: 0.78;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: var(--text-warm);
+    text-transform: none;
+}
+
+.loader-bottomline {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.loader-progress {
+    height: 1px;
+    background: rgba(244, 241, 232, 0.16);
+    overflow: hidden;
+}
+
+.loader-progress span {
+    display: block;
+    width: 42%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--text-warm), var(--accent-ice));
+    animation: loading-scan 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes loading-scan {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(260%); }
+}
+
+/* 移动端加载屏幕优化 */
+@media (max-width: 700px) {
+    .loader-frame {
+        width: min(86vw, 34rem);
+        min-height: min(62vh, 34rem);
+        padding: 1rem;
+    }
+
+    .loader-topline,
+    .loader-bottomline {
+        gap: 0.7rem;
+        font-size: 0.58rem;
+        letter-spacing: 0.12em;
+    }
+
+    .loader-topline span:last-child {
+        display: none;
+    }
+
+    .loader-title {
+        font-size: clamp(2.35rem, 17vw, 4rem);
+        line-height: 0.82;
+    }
+
+    .loader-bottomline {
+        grid-template-columns: auto 1fr;
+    }
+
+    .loader-bottomline > span:last-child {
+        display: none;
+    }
+}

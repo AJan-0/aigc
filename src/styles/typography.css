@@ -1,0 +1,201 @@
+/* ============================================
+   高级排版系统 - 8级层次结构
+   ============================================ */
+
+:root {
+    /* 文字颜色梯度系统 - 5 级对比 */
+    --text-primary: #F8FAFC;
+    --text-secondary: #E2E8F0;
+    --text-tertiary: #CBD5E1;
+    --text-quaternary: #94A3B8;
+    --text-quinary: #64748B;
+
+    /* 强调色系 */
+    --accent-flame: #ff4d00;
+    --accent-ice: #00f0ff;
+    --accent-gold: #ffd700;
+    --accent-blood: #dc143c;
+    --text-warm: #f5f0e8;
+    --text-dim: rgba(245, 240, 232, 0.62);
+
+    /* 垂直韵律系统 - 基础单位：8px */
+    --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+    --space-sm: clamp(0.5rem, 1vw, 0.75rem);
+    --space-md: clamp(0.75rem, 1.5vw, 1rem);
+    --space-lg: clamp(1rem, 2vw, 1.5rem);
+    --space-xl: clamp(1.5rem, 3vw, 2rem);
+    --space-2xl: clamp(2rem, 4vw, 2.5rem);
+    --space-3xl: clamp(2.5rem, 5vw, 3rem);
+    --space-4xl: clamp(3rem, 6vw, 4rem);
+    --space-5xl: clamp(4rem, 8vw, 5rem);
+
+    /* 行高比例 */
+    --lh-tight: 1;
+    --lh-snug: 1.1;
+    --lh-normal: 1.5;
+    --lh-relaxed: 1.75;
+    --lh-loose: 2;
+}
+
+/* Hero 超大标题 - 页面主标题 */
+.typography-hero-mega,
+.hero-title-mega {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem);
+    font-weight: 800;
+    line-height: var(--lh-tight);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--text-warm);
+}
+
+/* Display Heading - 重要章节 */
+h1, .typography-display {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.875rem, 3.5vw, 3.25rem);
+    font-weight: 700;
+    line-height: var(--lh-snug);
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+}
+
+/* Heading Secondary - 中等标题 */
+h2, .typography-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.5rem, 2.5vw + 0.3rem, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+}
+
+/* Heading Tertiary - 次级标题 */
+h3, .typography-subheading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.25rem, 2vw + 0.2rem, 2rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--text-secondary);
+}
+
+/* Heading Quaternary */
+h4 {
+    font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-tertiary);
+}
+
+/* Subtitle - heading 下的描述 */
+.typography-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.015em;
+    color: var(--text-tertiary);
+    opacity: 0.95;
+}
+
+/* Body Lead - 开场段落 */
+.typography-lead {
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.65;
+    letter-spacing: 0.003em;
+    color: var(--text-secondary);
+}
+
+/* Regular Body - 正文 */
+p, .typography-body {
+    font-size: clamp(0.95rem, 1vw, 1.125rem);
+    font-weight: 400;
+    line-height: var(--lh-relaxed);
+    letter-spacing: 0.002em;
+    color: var(--text-tertiary);
+    word-spacing: 0.1em;
+    margin-bottom: var(--space-lg);
+}
+
+/* Label / Tag - 标签文本 */
+label, .typography-label {
+    font-size: clamp(0.8rem, 0.85vw, 0.95rem);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-quaternary);
+}
+
+/* Caption - 图注 */
+small, .typography-caption {
+    font-size: clamp(0.75rem, 0.75vw, 0.875rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--text-quinary);
+}
+
+/* 粗体词汇强调 */
+strong {
+    font-weight: 700;
+    color: var(--accent-flame);
+}
+
+/* 斜体强调 */
+em {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 引用块 */
+blockquote {
+    border-left: 3px solid var(--accent-flame);
+    padding-left: var(--space-lg);
+    margin-left: 0;
+    margin-bottom: var(--space-lg);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Heading 间距 */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+    scroll-margin-top: 80px;
+}
+
+h1 {
+    margin-top: var(--space-5xl);
+    margin-bottom: var(--space-xl);
+}
+
+h2 {
+    margin-top: var(--space-4xl);
+    margin-bottom: var(--space-lg);
+}
+
+h3 {
+    margin-top: var(--space-3xl);
+    margin-bottom: var(--space-md);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    p, span {
+        line-height: 1.6;
+        color: #cbd5e1;
+    }
+}
