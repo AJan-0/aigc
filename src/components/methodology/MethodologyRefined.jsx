@@ -25,6 +25,12 @@ export default function MethodologyRefined() {
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
+  const methodology = content.methodology ?? {}
+  const coreMetric = methodology.coreMetric ?? {
+    value: '3847',
+    label: '实验样本与参数记录'
+  }
+  const workflow = methodology.workflow ?? methodology.stages ?? []
 
   return (
     <section
@@ -52,7 +58,7 @@ export default function MethodologyRefined() {
             transition={{ duration: 0.6 }}
             className="label mb-[var(--space-lg)] block"
           >
-            {content.methodology.eyebrow}
+            {methodology.eyebrow ?? 'WORKFLOW / METHOD'}
           </motion.span>
 
           <motion.h2
@@ -61,7 +67,7 @@ export default function MethodologyRefined() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="title-section mb-[var(--space-lg)]"
           >
-            {content.methodology.title}
+            {methodology.title}
           </motion.h2>
 
           <motion.p
@@ -70,7 +76,7 @@ export default function MethodologyRefined() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="body-large"
           >
-            {content.methodology.intro}
+            {methodology.intro ?? methodology.subtitle}
           </motion.p>
         </div>
 
@@ -92,18 +98,18 @@ export default function MethodologyRefined() {
                 className="text-[var(--color-ember)]"
                 style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', fontWeight: 700, lineHeight: 1 }}
               >
-                {content.methodology.coreMetric.value}
+                {coreMetric.value}
               </motion.div>
             </div>
             <p className="body-regular text-[var(--text-tertiary)]">
-              {content.methodology.coreMetric.label}
+              {coreMetric.label}
             </p>
           </div>
         </motion.div>
 
         {/* 流程步骤 - 垂直时间轴 */}
         <div className="space-y-[var(--space-3xl)] max-w-[900px] mx-auto">
-          {content.methodology.workflow.map((step, index) => (
+          {workflow.map((step, index) => (
             <WorkflowStep
               key={step.stage}
               step={step}
@@ -133,6 +139,7 @@ export default function MethodologyRefined() {
 
 function WorkflowStep({ step, index, isInView, y }) {
   const isEven = index % 2 === 0
+  const techniques = step.techniques ?? (step.output ? [step.output] : [])
 
   return (
     <motion.div
@@ -159,7 +166,7 @@ function WorkflowStep({ step, index, isInView, y }) {
 
           {/* 技术点 */}
           <ul className="space-y-[var(--space-xs)] text-[var(--text-sm)]">
-            {step.techniques.map((tech, i) => (
+            {techniques.map((tech, i) => (
               <li
                 key={i}
                 className="flex items-start gap-2 text-[var(--text-tertiary)]"
