@@ -25,7 +25,7 @@ export const content = {
       {
         label: "01 / 技术壁垒",
         title: "角色一致性的工程解",
-        description: "通过 LoRA 微调、IP-Adapter 注入和 ControlNet 约束的三重控制策略，将角色一致性从"运气问题"转化为"参数问题"。单角色跨镜头一致性达 92%，远超行业平均的 60%。",
+        description: "通过 LoRA 微调、IP-Adapter 注入和 ControlNet 约束的三重控制策略，将角色一致性从「运气问题」转化为「参数问题」。单角色跨镜头一致性达 92%，远超行业平均的 60%。",
         metrics: [
           { value: "92%", label: "角色一致性" },
           { value: "247h", label: "模型训练投入" },
@@ -45,7 +45,7 @@ export const content = {
       {
         label: "03 / 方法论沉淀",
         title: "从经验到系统",
-        description: "将 3847 次实验的教训编码为可复用的参数数据库和决策树。任何场景都能在 2 小时内找到最优生成策略，告别"炼丹"式的反复试错。",
+        description: "将 3847 次实验的教训编码为可复用的参数数据库和决策树。任何场景都能在 2 小时内找到最优生成策略，告别「炼丹」式的反复试错。",
         metrics: [
           { value: "3847", label: "实验样本" },
           { value: "2h", label: "策略定位" },
@@ -67,7 +67,7 @@ export const content = {
     ],
     philosophy: {
       title: "创作哲学",
-      content: "AI 不会取代人，但会重新定义"创作"本身。我们的角色从执行者变为策展人——在无限的可能中，选择、组合、赋予意义。"
+      content: "AI 不会取代人，但会重新定义「创作」本身。我们的角色从执行者变为策展人——在无限的可能中，选择、组合、赋予意义。"
     },
     capabilities: [
       {
@@ -106,10 +106,10 @@ export const content = {
         poetic: "在命定与偶然之间，用 AI 探索狼人传说的视觉语言。",
 
         // 技术挑战
-        challenge: "如何让 AI 理解"命运感"这种抽象概念，并将其转化为可视的镜头语言？",
+        challenge: "如何让 AI 理解「命运感」这种抽象概念，并将其转化为可视的镜头语言？",
 
         // 解决方案
-        solution: "通过情绪关键词的语义映射，将"命运"拆解为 17 个视觉元素（光影对比、色温偏移、景深控制等），建立从抽象到具象的翻译系统。",
+        solution: "通过情绪关键词的语义映射，将「命运」拆解为 17 个视觉元素（光影对比、色温偏移、景深控制等），建立从抽象到具象的翻译系统。",
 
         // 数据
         metrics: {
@@ -136,7 +136,7 @@ export const content = {
         titleEN: "Betrayed by the Wolf, Claimed by the Alpha",
         poetic: "用强烈的情绪张力测试 AI 的表达极限。",
         challenge: "短剧的钩子在于情绪冲击，但 AI 生成的人脸往往缺乏微表情的细腻度。如何突破？",
-        solution: "放弃"完美面部"，转而强调构图、光影和肢体语言。通过 ControlNet 的姿态控制 + 情绪化的打光设计，让情绪在"氛围"而非"表情"中传递。",
+        solution: "放弃「完美面部」，转而强调构图、光影和肢体语言。通过 ControlNet 的姿态控制 + 情绪化的打光设计，让情绪在「氛围」而非「表情」中传递。",
         metrics: {
           iterations: 183,
           successRate: "24%",
@@ -156,8 +156,8 @@ export const content = {
         titleCN: "与 Alpha 的诅咒结契",
         titleEN: "Mated to the Alpha's Curse",
         poetic: "在连续性中寻找 AI 影像的叙事可能。",
-        challenge: "镜头连续性是 AI 视频的最大痛点。如何让多个独立生成的镜头看起来"属于同一部电影"？",
-        solution: "建立"场景 DNA"系统：固定色彩方案、光源方向、景别规律、角色服装。每个镜头生成前先采样"DNA"，用 ControlNet 和 Img2Img 强制继承。",
+        challenge: "镜头连续性是 AI 视频的最大痛点。如何让多个独立生成的镜头看起来「属于同一部电影」？",
+        solution: "建立「场景 DNA」系统：固定色彩方案、光源方向、景别规律、角色服装。每个镜头生成前先采样「DNA」，用 ControlNet 和 Img2Img 强制继承。",
         metrics: {
           iterations: 412,
           successRate: "31%",
@@ -168,7 +168,7 @@ export const content = {
           model: "SDXL + 自定义 Checkpoint",
           lora: "场景一致性 LoRA",
           controlnet: "多模态（Depth + Canny + Tile）",
-          innovation: "自研"场景 DNA"提示词模板系统"
+          innovation: "自研「场景 DNA」提示词模板系统"
         },
         business: "形成可复制的连续性解决方案，已授权给 2 个商业项目使用。"
       }
