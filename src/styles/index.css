@@ -2,6 +2,9 @@
    主样式入口 - 整合所有样式模块
    ============================================ */
 
+/* 设计系统 - 优先加载 */
+@import './design-system.css';
+
 /* 基础样式 */
 @import './base.css';
 @import './typography.css';

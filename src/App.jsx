@@ -11,11 +11,11 @@ import CustomCursor from './components/ui/CustomCursor'
 import ScrollProgress from './components/ui/ScrollProgress'
 
 // 懒加载组件以优化性能
-const EditorialHero = lazy(() => import('./components/hero/EditorialHero'))
-const ProfileSection = lazy(() => import('./components/profile/ProfileSection'))
-const PortfolioSection = lazy(() => import('./components/portfolio/PortfolioSection'))
-const MethodSection = lazy(() => import('./components/method/MethodSection'))
-const Footer = lazy(() => import('./components/footer/Footer'))
+const HeroRefined = lazy(() => import('./components/hero/HeroRefined'))
+const ProfileRefined = lazy(() => import('./components/profile/ProfileRefined'))
+const PortfolioRefined = lazy(() => import('./components/portfolio/PortfolioRefined'))
+const MethodologyRefined = lazy(() => import('./components/methodology/MethodologyRefined'))
+const FooterRefined = lazy(() => import('./components/footer/FooterRefined'))
 
 export default function App() {
   return (
@@ -44,19 +44,19 @@ export default function App() {
       <main>
         <Suspense fallback={<div className="min-h-screen bg-black"></div>}>
           {/* 英雄区 */}
-          <EditorialHero />
+          <HeroRefined />
 
           {/* 个人简介区 */}
-          <ProfileSection />
+          <ProfileRefined />
 
           {/* 作品集区 */}
-          <PortfolioSection />
+          <PortfolioRefined />
 
           {/* 工作方法区 */}
-          <MethodSection />
+          <MethodologyRefined />
 
           {/* 页脚 */}
-          <Footer />
+          <FooterRefined />
         </Suspense>
       </main>
     </>
