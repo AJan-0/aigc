@@ -1,0 +1,278 @@
+import v1Video from '../../v1_mobile.mp4'
+import v1FullVideo from '../../v1.mp4'
+import v1Cover from '../../v1_cover.jpg'
+import betrayalVideo from '../../429.mp4'
+import betrayalCover from '../../429_cover.jpg'
+import curseVideo from '../../795.mp4'
+import curseCover from '../../795_cover.jpg'
+import rebornVideo from '../../reborn.mp4'
+import rebornCover from '../../reborn_cover.jpg'
+import pickingVideo from '../../picking.mp4'
+import pickingCover from '../../picking_cover.jpg'
+import f1Cover from '../../bilibili-showcase.jpg'
+import animationCover from '../../animation-showcase.jpg'
+import architectureCover from '../../architecture-showcase.jpg'
+
+export const navigation = [
+  { id: 'home', label: '首页' },
+  { id: 'profile', label: '个人简介' },
+  { id: 'work', label: '作品' },
+  { id: 'skills', label: '技能展示' },
+  { id: 'contact', label: '联系我' },
+]
+
+export const profile = {
+  name: 'AJan',
+  title: 'AIGC 影像创作者 / AI Video Workflow Designer',
+  headline: '我把 AIGC 从单次生成，整理成可以持续生产、迭代和交付的影像系统。',
+  bio: [
+    '我关注的不只是 AI 能否生成漂亮画面，而是它能否承担角色、情绪、节奏和商业表达。',
+    '目前作品集中包含海外真人 AI 剧、创意 AIGC 动画短片、品牌视觉和 3C 创意短片方向。后续这个页面会继续沉淀为一个多领域 AIGC 作品档案。',
+  ],
+  principles: [
+    { label: 'Narrative First', text: '先判断观众情绪和内容钩子，再决定画面、模型和镜头语言。' },
+    { label: 'Workflow Driven', text: '用可复用流程降低随机性，把试错记录转化为下一次创作的生产资料。' },
+    { label: 'Delivery Mindset', text: '把成片、节奏、封面、字幕和平台适配都纳入创作闭环。' },
+  ],
+}
+
+export const categories = [
+  { id: 'all', label: 'All Work', labelZh: '全部作品', accent: '#f2d06b' },
+  { id: 'ai-drama', label: 'AI Drama', labelZh: '海外真人 AI 剧', accent: '#ff6a3d' },
+  { id: '3c-film', label: '3C Film', labelZh: '3C 创意短片', accent: '#67e8f9' },
+  { id: 'animation', label: 'Animation', labelZh: 'AIGC 动画短片', accent: '#a7f3d0' },
+  { id: 'commercial', label: 'Commercial', labelZh: '品牌与商业视觉', accent: '#c4b5fd' },
+  { id: 'experimental', label: 'Experiment', labelZh: '实验视觉', accent: '#f9a8d4' },
+]
+
+export const projects = [
+  {
+    id: '01',
+    slug: 'dreams-lead-to-my-alpha',
+    category: 'ai-drama',
+    type: 'Vertical AI Drama',
+    titleZh: '梦把我带向那只 Alpha',
+    titleEn: 'Dreams Lead to My Alpha',
+    introZh: '把狼人短剧里的命运感、逃离欲和第一眼钩子压缩进竖屏影像，测试 AI 真人短剧的开场吸引力。',
+    introEn: 'A vertical AI drama test that turns fate, desire, and escape into a first-frame hook for a wolf-romance narrative.',
+    challenge: '如何让 AI 理解“命运感”这种抽象情绪，并转化为观众愿意停留的镜头氛围。',
+    approach: '用情绪词映射光线、色温、景深和角色姿态，再通过移动端竖屏剪辑强化短剧开场节奏。',
+    outcome: '建立了狼人题材短剧的首屏视觉模板，并验证了竖屏 AI 真人剧的封面和前 5 秒叙事钩子。',
+    cover: v1Cover,
+    video: v1Video,
+    fullVideo: v1FullVideo,
+    duration: '0:52',
+    year: '2026',
+    role: 'AI Director / Workflow Designer',
+    tools: ['SDXL', 'ComfyUI', 'LoRA', 'Runway', 'DaVinci Resolve'],
+    tags: ['AI 真人短剧', '狼人题材', '竖屏叙事'],
+    metrics: [
+      { label: 'Shots', value: '42' },
+      { label: 'Iterations', value: '237' },
+      { label: 'Format', value: '9:16' },
+    ],
+    featured: true,
+  },
+  {
+    id: '02',
+    slug: 'betrayed-by-the-wolf',
+    category: 'ai-drama',
+    type: 'AI Short Drama',
+    titleZh: '背叛之后，被 Alpha 认领',
+    titleEn: 'Betrayed by the Wolf, Claimed by the Alpha',
+    introZh: '用强情绪短剧钩子做压力测试：人物要稳定，氛围要先于技术出现。',
+    introEn: 'A high-emotion short-drama concept built to test character stability, betrayal tension, and cinematic close-up continuity.',
+    challenge: '短剧需要迅速建立背叛、占有和情绪冲突，但 AI 生成的人脸与微表情容易失焦。',
+    approach: '减少对完美表情的依赖，转向构图、肢体、灯光和剪辑节奏来传递情绪。',
+    outcome: '形成了一套适合海外强情绪短剧的角色稳定与氛围控制方法。',
+    cover: betrayalCover,
+    video: betrayalVideo,
+    duration: '2:24',
+    year: '2026',
+    role: 'AI Drama Visual Direction',
+    tools: ['SDXL', 'RealisticVision', 'ControlNet', 'Sound Design'],
+    tags: ['强情绪', '角色一致性', '海外短剧'],
+    metrics: [
+      { label: 'Shots', value: '38' },
+      { label: 'Duration', value: '2:24' },
+      { label: 'Mood', value: 'Betrayal' },
+    ],
+    featured: true,
+  },
+  {
+    id: '03',
+    slug: 'mated-to-the-alpha-curse',
+    category: 'ai-drama',
+    type: 'Supernatural Romance',
+    titleZh: '与 Alpha 的诅咒结契',
+    titleEn: "Mated to the Alpha's Curse",
+    introZh: '在类型片语法里处理人物连续性，让 AI 画面不只像预告片，也能进入剪辑。',
+    introEn: 'A supernatural romance reel focused on curse, intimacy, and scene continuity across independently generated AI shots.',
+    challenge: '多个独立生成镜头需要看起来属于同一部电影，而不是一组风格相近的海报。',
+    approach: '建立场景 DNA：固定色彩、光源方向、景别规律、服装和角色关系，再用多轮筛选保持连续性。',
+    outcome: '沉淀出适合奇幻爱情题材的镜头一致性规则，可继续扩展成长剧集资产。',
+    cover: curseCover,
+    video: curseVideo,
+    duration: '1:39',
+    year: '2026',
+    role: 'Continuity Workflow',
+    tools: ['SDXL', 'ControlNet', 'Img2Img', 'Prompt System'],
+    tags: ['奇幻爱情', '镜头连续性', '场景 DNA'],
+    metrics: [
+      { label: 'Shots', value: '56' },
+      { label: 'Duration', value: '1:39' },
+      { label: 'System', value: 'DNA' },
+    ],
+  },
+  {
+    id: '04',
+    slug: 'reborn-killers-uncle',
+    category: 'ai-drama',
+    type: 'AI Romance Drama',
+    titleZh: '重生后，我选择凶手的叔叔',
+    titleEn: "Reborn This Time I Choose My Killer's Uncle",
+    introZh: '把夸张标题里的戏剧性压进镜头节奏，测试英文短剧的画面可信度。',
+    introEn: 'A revenge-romance short built around dramatic title logic, pacing, and believable AI live-action framing.',
+    challenge: '重生复仇题材需要快速建立身份、权力关系和选择冲突，画面不能只停留在氛围。',
+    approach: '用角色站位、镜头距离和转场节奏区分“复仇”“选择”“危险关系”三种叙事层。',
+    outcome: '验证了 AI 真人短剧在黑色浪漫方向上的商业化包装潜力。',
+    cover: rebornCover,
+    video: rebornVideo,
+    duration: '1:24',
+    year: '2026',
+    role: 'AI Short Drama Packaging',
+    tools: ['ComfyUI', 'LoRA', 'Kling', 'DaVinci Resolve'],
+    tags: ['重生复仇', '黑色浪漫', '英文短剧'],
+    metrics: [
+      { label: 'Duration', value: '1:24' },
+      { label: 'Tone', value: 'Noir' },
+      { label: 'Format', value: 'Drama' },
+    ],
+  },
+  {
+    id: '05',
+    slug: 'picking-up-governor',
+    category: 'ai-drama',
+    type: 'Absurd Drama Concept',
+    titleZh: '街头捡到一位州长',
+    titleEn: 'Picking Up a Governor from the Street',
+    introZh: '从荒诞设定开始，观察 AI 如何处理场景切换、人物身份和叙事反差。',
+    introEn: 'An absurd power-reversal concept testing street-level realism, identity contrast, and scene transitions.',
+    challenge: '荒诞设定容易显得悬浮，需要让街头真实感和身份反差同时成立。',
+    approach: '通过环境细节、人物服装层级和剪辑点控制反差感，避免只依赖标题制造戏剧性。',
+    outcome: '形成了“现实场景 + 高概念剧情”的 AI 短剧包装方向。',
+    cover: pickingCover,
+    video: pickingVideo,
+    duration: '1:46',
+    year: '2026',
+    role: 'Concept Trailer Direction',
+    tools: ['SDXL', 'Video Generation', 'Editing', 'Color Grade'],
+    tags: ['荒诞设定', '权力反差', '剧情预告'],
+    metrics: [
+      { label: 'Duration', value: '1:46' },
+      { label: 'Hook', value: 'Power' },
+      { label: 'Style', value: 'Street' },
+    ],
+  },
+  {
+    id: '06',
+    slug: 'aigc-f1-promo',
+    category: '3c-film',
+    type: '3C / Brand Creative Film',
+    titleZh: 'AIGC F1 科技宣传片',
+    titleEn: 'AIGC F1 Promo Video',
+    introZh: '围绕速度、科技和产品传播语境建立高强度视觉节奏，适合 3C 与品牌短片方向扩展。',
+    introEn: 'A high-intensity brand video themed around speed and technology, designed for multi-platform campaign storytelling.',
+    challenge: '3C 和科技产品内容需要兼顾产品质感、传播记忆点和短视频节奏。',
+    approach: '用速度线索、冷暖对比和快速剪辑建立技术感，再预留品牌信息与社媒裁切空间。',
+    outcome: '作为后续 3C 创意短片栏目的视觉基准，可扩展到手机、耳机、汽车科技与智能硬件。',
+    cover: f1Cover,
+    duration: 'Campaign',
+    year: '2025',
+    role: 'Creative Visual Direction',
+    tools: ['AIGC Visuals', 'Motion Design', 'Editing'],
+    tags: ['3C 创意', '品牌片', '速度感'],
+    metrics: [
+      { label: 'Use', value: 'Campaign' },
+      { label: 'Format', value: 'Multi' },
+      { label: 'Focus', value: 'Tech' },
+    ],
+    featured: true,
+  },
+  {
+    id: '07',
+    slug: 'puan-animation-short',
+    category: 'animation',
+    type: 'AIGC Animation Short',
+    titleZh: 'PUAN 动画短片',
+    titleEn: 'PUAN Animation Short',
+    introZh: '将 AIGC 图像生成与动画流程结合，探索风格化短片在快速制作中的可行性。',
+    introEn: 'A stylized animation short that combines AIGC image generation with an animation pipeline for fast narrative prototyping.',
+    challenge: '动画短片需要统一风格、镜头节奏和角色动作，不能只是一组漂亮的关键帧。',
+    approach: '先确定美术规则与镜头表，再用 AI 生成关键视觉，进入动画化、剪辑和节奏包装。',
+    outcome: '适合作为创意 AIGC 动画短片栏目入口，后续可承载音乐、品牌和故事化动画。',
+    cover: animationCover,
+    duration: 'Short',
+    year: '2025',
+    role: 'AIGC Animation Workflow',
+    tools: ['AIGC Image', 'Animation Pipeline', 'Editing'],
+    tags: ['动画短片', '风格化', '快速原型'],
+    metrics: [
+      { label: 'Type', value: 'Short' },
+      { label: 'Mode', value: 'Stylized' },
+      { label: 'Pipeline', value: 'AIGC' },
+    ],
+  },
+  {
+    id: '08',
+    slug: 'spatial-visual-archive',
+    category: 'experimental',
+    type: 'Spatial Visualization',
+    titleZh: '黄洞水库游客空间视觉',
+    titleEn: 'Huangdong Reservoir Visitor Space',
+    introZh: '从空间、材质和场景叙事出发，保留为 AIGC 空间视觉与商业提案方向的扩展样本。',
+    introEn: 'A spatial visualization case for investor-facing presentation, exploring atmosphere, material, and environmental storytelling.',
+    challenge: '空间视觉需要让人快速理解场地气质、游览动线和商业展示价值。',
+    approach: '以场景层次和光照关系组织视觉信息，让空间图像承担说明、传播和提案功能。',
+    outcome: '作为 AIGC 多领域作品集的实验视觉分支，连接建筑可视化、品牌空间和场景概念设计。',
+    cover: architectureCover,
+    duration: 'Still Set',
+    year: '2025',
+    role: 'Spatial Visual Direction',
+    tools: ['Visualization', 'AIGC Concept', 'Presentation Design'],
+    tags: ['空间视觉', '商业提案', '实验视觉'],
+    metrics: [
+      { label: 'Use', value: 'Pitch' },
+      { label: 'Type', value: 'Space' },
+      { label: 'Output', value: 'Still' },
+    ],
+  },
+]
+
+export const skillGroups = [
+  {
+    title: 'Creative Direction',
+    summary: '从选题、钩子、角色关系到分镜节奏，先建立内容判断，再进入模型和工具。',
+    items: ['短剧钩子设计', '品牌视觉叙事', '分镜与节奏规划', '社媒传播包装'],
+  },
+  {
+    title: 'AI Production',
+    summary: '围绕角色一致性、画面风格和批量生成建立可复用工作流。',
+    items: ['ComfyUI 工作流', 'SDXL / LoRA', 'ControlNet', '视频生成模型整合'],
+  },
+  {
+    title: 'Post Production',
+    summary: '把 AI 素材推进到成片，处理剪辑、调色、字幕、声音和平台规格。',
+    items: ['剪辑节奏', 'DaVinci Resolve', '字幕包装', '交付规格管理'],
+  },
+  {
+    title: 'Commercial Delivery',
+    summary: '面向不同内容形态制定交付方式，兼顾审美、效率和传播结果。',
+    items: ['海外真人 AI 剧', '3C 创意短片', 'AIGC 动画短片', '品牌商业视觉'],
+  },
+]
+
+export const contact = {
+  email: 'hello@poetfolio.art',
+  availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '3C / 品牌创意短片', 'AIGC 动画短片制作'],
+}
