@@ -1069,14 +1069,14 @@
         }
 
         /* ============================================
-           CINEMATIC PORTFOLIO HERO
+           EDITORIAL PORTFOLIO HERO
            ============================================ */
         .film-grain {
             position: absolute;
             inset: 0;
             pointer-events: none;
             z-index: 3;
-            opacity: 0.055;
+            opacity: 0.05;
             mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
@@ -1085,277 +1085,148 @@
             position: relative;
             min-height: 100svh;
             display: grid;
-            place-items: center;
+            align-items: end;
             overflow: hidden;
-            padding: 7rem 1.5rem 4rem;
+            padding: clamp(7rem, 12vw, 10rem) 1.5rem clamp(3rem, 7vw, 5rem);
             background:
-                radial-gradient(circle at 16% 20%, rgba(6, 182, 212, 0.16), transparent 28%),
-                radial-gradient(circle at 80% 36%, rgba(139, 92, 246, 0.18), transparent 34%),
-                linear-gradient(180deg, #020617 0%, #07111f 56%, #0F172A 100%);
+                radial-gradient(circle at 18% 18%, rgba(6, 182, 212, 0.1), transparent 30%),
+                linear-gradient(180deg, #020617 0%, #050915 54%, #0F172A 100%);
         }
 
         .portfolio-hero-grid {
             position: absolute;
             inset: 0;
-            opacity: 0.4;
+            opacity: 0.28;
             pointer-events: none;
-            background-size: 60px 60px;
+            background-size: 72px 72px;
             background-image:
                 linear-gradient(to right, rgba(148, 163, 184, 0.055) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
-            mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+            mask-image: linear-gradient(to bottom, black, transparent 78%);
+            -webkit-mask-image: linear-gradient(to bottom, black, transparent 78%);
         }
 
-        .portfolio-hero-card {
+        .portfolio-hero-inner {
             position: relative;
             z-index: 4;
-            width: min(100%, 1180px);
-            min-height: min(72svh, 760px);
+            width: min(100%, 1320px);
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.72fr);
-            gap: clamp(2rem, 5vw, 5rem);
-            align-items: center;
-            padding: clamp(2rem, 5vw, 4.75rem);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: clamp(1.5rem, 4vw, 2.8rem);
-            background:
-                radial-gradient(900px circle at var(--mouse-x, 50%) var(--mouse-y, 45%), rgba(255,255,255,0.075), transparent 38%),
-                linear-gradient(145deg, rgba(22, 44, 109, 0.78) 0%, rgba(7, 16, 32, 0.94) 56%, rgba(2, 6, 23, 0.98) 100%);
-            box-shadow:
-                0 44px 110px -34px rgba(0, 0, 0, 0.95),
-                inset 0 1px 2px rgba(255, 255, 255, 0.18),
-                inset 0 -2px 6px rgba(0, 0, 0, 0.72);
-            overflow: hidden;
+            gap: clamp(2rem, 5vw, 4rem);
         }
 
-        .portfolio-hero-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            background:
-                linear-gradient(110deg, rgba(255,255,255,0.13), transparent 24%, transparent 72%, rgba(103,232,249,0.08)),
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 14px);
-            opacity: 0.45;
-        }
-
-        .portfolio-hero-content,
-        .portfolio-hero-visual {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.9rem;
-            color: rgba(103, 232, 249, 0.84);
-            font-size: 0.72rem;
+        .portfolio-hero-meta {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: end;
+            color: rgba(203, 213, 225, 0.72);
+            font-size: 0.76rem;
             font-weight: 800;
-            letter-spacing: 0.28em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
-            margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
         }
 
-        .hero-label::before {
+        .portfolio-hero-meta::before {
             content: '';
-            width: clamp(3rem, 8vw, 6rem);
             height: 1px;
-            background: rgba(103, 232, 249, 0.45);
+            background: linear-gradient(90deg, rgba(203, 213, 225, 0.36), transparent);
         }
 
         .portfolio-hero-title {
             font-family: 'Syne', sans-serif;
-            font-size: clamp(4.2rem, 13vw, 10.5rem);
-            line-height: 0.84;
+            font-size: clamp(4.6rem, 18vw, 14.5rem);
+            line-height: 0.78;
             font-weight: 800;
             letter-spacing: 0;
             color: #F8FAFC;
-            text-shadow:
-                0 24px 70px rgba(0, 0, 0, 0.78),
-                0 0 36px rgba(103, 232, 249, 0.14);
+            text-shadow: 0 28px 80px rgba(0, 0, 0, 0.82);
+        }
+
+        .portfolio-hero-lower {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: clamp(2rem, 6vw, 5rem);
+            align-items: end;
         }
 
         .portfolio-hero-subtitle {
             max-width: 42rem;
-            margin-top: 2rem;
-            color: rgba(226, 232, 240, 0.82);
-            font-size: clamp(1rem, 1.35vw, 1.22rem);
+            color: rgba(226, 232, 240, 0.8);
+            font-size: clamp(1rem, 1.35vw, 1.2rem);
             line-height: 1.8;
             text-align: left;
+            margin: 0;
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2.2rem;
+            gap: 0.75rem;
+            justify-content: flex-end;
         }
 
         .hero-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 3.25rem;
-            padding: 0 1.2rem;
-            border: 0;
+            min-height: 3rem;
+            padding: 0 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.14);
             cursor: pointer;
-            border-radius: 1rem;
-            font-size: 0.82rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.035);
+            color: rgba(248, 250, 252, 0.9);
+            font-size: 0.72rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+            transition: transform 0.28s ease, border-color 0.28s ease, background 0.28s ease;
         }
 
         .hero-action.primary {
-            color: #020617;
-            background: linear-gradient(180deg, #FFFFFF 0%, #DFF7FF 100%);
-            box-shadow: 0 18px 34px -18px rgba(103, 232, 249, 0.9), inset 0 1px 1px rgba(255,255,255,1);
-        }
-
-        .hero-action.secondary {
-            color: rgba(248, 250, 252, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.035);
-            backdrop-filter: blur(18px);
+            background: rgba(103, 232, 249, 0.12);
+            border-color: rgba(103, 232, 249, 0.42);
         }
 
         .hero-action:hover {
             transform: translateY(-3px);
+            border-color: rgba(248, 250, 252, 0.42);
         }
 
-        .hero-proof-row {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1px;
-            margin-top: 3rem;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.08);
-        }
-
-        .hero-proof {
-            padding: 1rem;
-            background: rgba(2, 6, 23, 0.55);
-        }
-
-        .hero-proof strong {
-            display: block;
-            color: #FFFFFF;
-            font-family: 'Syne', sans-serif;
-            font-size: 1.55rem;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-proof span {
-            color: rgba(203, 213, 225, 0.66);
+        .hero-scroll-cue {
+            position: absolute;
+            right: clamp(1.5rem, 4vw, 4rem);
+            bottom: clamp(1.5rem, 4vw, 3rem);
+            z-index: 5;
+            writing-mode: vertical-rl;
+            color: rgba(148, 163, 184, 0.6);
             font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-        }
-
-        .portfolio-hero-visual {
-            display: grid;
-            place-items: center;
-            min-height: 33rem;
-        }
-
-        .hero-photo-frame {
-            position: relative;
-            width: min(100%, 22rem);
-            transform-style: preserve-3d;
-        }
-
-        .hero-photo-frame::before {
-            content: '';
-            position: absolute;
-            inset: 8% -10% -8% 12%;
-            border-radius: 2rem;
-            background: linear-gradient(135deg, rgba(103, 232, 249, 0.32), rgba(139, 92, 246, 0.22));
-            filter: blur(26px);
-            transform: translateZ(-1px);
-        }
-
-        .hero-photo {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: auto;
-            border-radius: 1.6rem;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            filter: grayscale(1) contrast(1.08);
-            box-shadow:
-                0 40px 90px -34px rgba(0, 0, 0, 0.96),
-                inset 0 1px 1px rgba(255,255,255,0.2);
-        }
-
-        .hero-floating-badge {
-            position: absolute;
-            display: grid;
-            gap: 0.25rem;
-            padding: 0.85rem 1rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(2, 6, 23, 0.66);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 28px 60px -32px rgba(0,0,0,0.9);
-        }
-
-        .hero-floating-badge.one {
-            left: -2rem;
-            top: 18%;
-        }
-
-        .hero-floating-badge.two {
-            right: -2rem;
-            bottom: 14%;
-        }
-
-        .hero-floating-badge b {
-            color: #F8FAFC;
-            font-size: 0.9rem;
-        }
-
-        .hero-floating-badge span {
-            color: rgba(203,213,225,0.62);
-            font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
         }
 
         @media (max-width: 900px) {
-            .portfolio-hero-card {
-                grid-template-columns: 1fr;
-                min-height: auto;
+            .portfolio-hero {
+                align-items: center;
+                padding-top: 6.5rem;
             }
 
-            .portfolio-hero-visual {
-                min-height: auto;
-            }
-
-            .hero-photo-frame {
-                width: min(100%, 17rem);
-            }
-
-            .hero-proof-row {
+            .portfolio-hero-meta,
+            .portfolio-hero-lower {
                 grid-template-columns: 1fr;
             }
 
-            .hero-floating-badge.one {
-                left: -0.6rem;
+            .hero-actions {
+                justify-content: flex-start;
             }
 
-            .hero-floating-badge.two {
-                right: -0.6rem;
+            .hero-scroll-cue {
+                display: none;
             }
         }
-        
+
         /* ============================================
            SCROLL PROGRESS INDICATOR
            ============================================ */
@@ -1770,33 +1641,6 @@
             background: #0f172a;
         }
 
-        .profile-signature-line {
-            width: 4.5rem;
-            height: 1px;
-            background: rgba(148, 163, 184, 0.35);
-        }
-
-        .profile-stat {
-            border-top: 1px solid rgba(148, 163, 184, 0.18);
-            padding-top: 1.1rem;
-        }
-
-        .profile-stat-label {
-            color: var(--accent-primary);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 0.45rem;
-        }
-
-        .profile-stat-value {
-            color: var(--text-secondary);
-            font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-            line-height: 1.65;
-            text-align: left;
-        }
-
         .profile-proof-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1833,48 +1677,6 @@
             text-transform: uppercase;
         }
 
-        .workflow-strip {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 1px;
-            overflow: hidden;
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            background: rgba(148, 163, 184, 0.16);
-        }
-
-        .workflow-step {
-            min-height: 8.5rem;
-            padding: 1.1rem;
-            background: rgba(2, 6, 23, 0.72);
-            transition: background 0.28s ease, transform 0.28s ease;
-        }
-
-        .workflow-step:hover {
-            background: rgba(6, 182, 212, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .workflow-step-index {
-            color: rgba(103, 232, 249, 0.8);
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-            margin-bottom: 0.85rem;
-        }
-
-        .workflow-step-title {
-            color: #F8FAFC;
-            font-weight: 700;
-            margin-bottom: 0.45rem;
-        }
-
-        .workflow-step-desc {
-            color: rgba(203, 213, 225, 0.72);
-            font-size: 0.86rem;
-            line-height: 1.55;
-            text-align: left;
-        }
-
         @media (max-width: 768px) {
             .profile-intro-eyebrow {
                 letter-spacing: 0.22em;
@@ -1889,13 +1691,8 @@
                 margin-top: 0.5rem;
             }
 
-            .profile-proof-grid,
-            .workflow-strip {
+            .profile-proof-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .workflow-step {
-                min-height: auto;
             }
         }
 
@@ -3641,162 +3438,82 @@
             );
         }
 
-        // Lamp-style hero for first screen optimization
+        // Editorial opening hero focused on the portfolio title.
         function HeroSection() {
-            const heroCardRef = useRef(null);
-            const handleHeroMouseMove = useCallback((event) => {
-                if (!heroCardRef.current) return;
-                const rect = heroCardRef.current.getBoundingClientRect();
-                heroCardRef.current.style.setProperty('--mouse-x', `${event.clientX - rect.left}px`);
-                heroCardRef.current.style.setProperty('--mouse-y', `${event.clientY - rect.top}px`);
-            }, []);
-
             return (
                 <section className="portfolio-hero" aria-label="Poetfolio">
                     <div className="portfolio-hero-grid" aria-hidden="true"></div>
                     <div className="film-grain" aria-hidden="true"></div>
 
-                    <motion.div
-                        ref={heroCardRef}
-                        onMouseMove={handleHeroMouseMove}
-                        initial={{ opacity: 0, y: 56, scale: 0.97 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                        className="portfolio-hero-card"
-                    >
-                        <div className="portfolio-hero-content">
-                            <motion.div
-                                initial={{ opacity: 0, x: -24 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2, duration: 0.7 }}
-                                className="hero-label"
-                            >
-                                AIGC Creator
-                            </motion.div>
+                    <div className="portfolio-hero-inner">
+                        <motion.div
+                            initial={{ opacity: 0, y: 28 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            className="portfolio-hero-meta"
+                        >
+                            <span>AIGC Moving Image Portfolio</span>
+                        </motion.div>
 
-                            <motion.h1
-                                initial={{ opacity: 0, y: 42, filter: 'blur(16px)' }}
-                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                                transition={{ delay: 0.32, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                                className="portfolio-hero-title"
-                            >
-                                Poetfolio
-                            </motion.h1>
-
-                            <motion.p
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.58, duration: 0.7 }}
-                                className="portfolio-hero-subtitle"
-                            >
-                                AI 影像作品集，聚焦真人短剧、品牌影像与视觉叙事。以镜头、角色与成片交付为核心，呈现从概念到可发布作品的完整制作能力。
-                            </motion.p>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.74, duration: 0.7 }}
-                                className="hero-actions"
-                            >
-                                <button className="hero-action primary" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
-                                    Creator Intro
-                                </button>
-                                <button className="hero-action secondary" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
-                                    Selected Works
-                                </button>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.9, duration: 0.7 }}
-                                className="hero-proof-row"
-                            >
-                                <div className="hero-proof"><strong>AI</strong><span>Film Workflow</span></div>
-                                <div className="hero-proof"><strong>6+</strong><span>Selected Pieces</span></div>
-                                <div className="hero-proof"><strong>End</strong><span>To Delivery</span></div>
-                            </motion.div>
-                        </div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 52, filter: 'blur(18px)' }}
+                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                            transition={{ delay: 0.18, duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
+                            className="portfolio-hero-title"
+                        >
+                            Poetfolio
+                        </motion.h1>
 
                         <motion.div
-                            initial={{ opacity: 0, x: 42, rotateY: -10 }}
-                            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                            transition={{ delay: 0.48, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                            className="portfolio-hero-visual"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.42, duration: 0.8 }}
+                            className="portfolio-hero-lower"
                         >
-                            <div className="hero-photo-frame">
-                                <img src="profile-photo.png" alt="AJan profile portrait" className="hero-photo" />
-                                <div className="hero-floating-badge one">
-                                    <b>Workflow</b>
-                                    <span>ComfyUI / SD / Video</span>
-                                </div>
-                                <div className="hero-floating-badge two">
-                                    <b>Output</b>
-                                    <span>Short drama / Brand film</span>
-                                </div>
+                            <p className="portfolio-hero-subtitle">
+                                AI 真人短剧、品牌影像与视觉叙事作品集。以作品画面、镜头节奏和交付质量作为第一表达。
+                            </p>
+                            <div className="hero-actions">
+                                <button className="hero-action primary" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
+                                    Intro
+                                </button>
+                                <button className="hero-action" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
+                                    Works
+                                </button>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
+
+                    <button className="hero-scroll-cue" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
+                        Scroll
+                    </button>
                 </section>
             );
         }
 
         function ProfileIntroSection() {
-            const profilePoints = [
-                {
-                    label: 'Direction',
-                    value: '专注 AI 真人短剧、品牌影像和叙事型视觉内容，把抽象创意拆成可执行的镜头与资产清单。'
-                },
-                {
-                    label: 'Workflow',
-                    value: '以 ComfyUI、Stable Diffusion、ControlNet、LoRA / IP-Adapter 和视频模型搭建稳定流程，减少重复试错。'
-                },
-                {
-                    label: 'Output',
-                    value: '关注角色一致性、镜头节奏、画面风格与传播适配，目标不是生成素材，而是完成可发布作品。'
-                }
-            ];
-            const proofItems = [
-                { number: '01', label: 'Script to shot' },
-                { number: '02', label: 'Character consistency' },
-                { number: '03', label: 'Model orchestration' }
-            ];
-            const workflowSteps = [
-                { title: 'Brief', desc: '明确受众、题材、卖点和交付口径。' },
-                { title: 'Storyboard', desc: '拆解情绪曲线、镜头表和关键画面。' },
-                { title: 'Assets', desc: '建立角色、场景、风格和参考资产。' },
-                { title: 'Generate', desc: '多模型生成、筛选、补帧与重绘。' },
-                { title: 'Finish', desc: '剪辑、调色、字幕、包装与发布版本。' }
-            ];
+            const profileTags = ['AI Film Workflow', 'Character Consistency', 'Cinematic Delivery'];
 
             return (
                 <section id="profile" aria-label="Creator Introduction" className="profile-intro-section section-smooth py-16 md:py-24 px-6 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto">
-                        <div className="grid lg:grid-cols-[minmax(0,1fr)_22rem] gap-12 lg:gap-20 items-center">
+                        <div className="grid lg:grid-cols-[minmax(0,1fr)_18rem] gap-10 lg:gap-16 items-end">
                             <motion.div
                                 initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <div className="profile-intro-eyebrow mb-8">Creator Profile</div>
+                                <div className="profile-intro-eyebrow mb-7">Creator Profile</div>
                                 <h2 className="profile-intro-quote">
-                                    我用 <strong>AI 影像生产方法</strong> 组织作品：题材判断、角色控制、镜头生成与成片交付。
+                                    AJan，AI 影视制作人。用 <strong>Workflow</strong> 把角色、镜头与叙事组织成可交付的影像作品。
                                 </h2>
 
-                                <div className="mt-10 flex items-center gap-6">
-                                    <div className="profile-signature-line" />
-                                    <div>
-                                        <div className="text-white font-semibold text-lg">AJan</div>
-                                        <div className="text-slate-400 text-sm">AI 影视制作人 / AIGC Pipeline Builder</div>
-                                    </div>
-                                </div>
-
                                 <div className="profile-proof-grid mt-10">
-                                    {proofItems.map((item) => (
-                                        <div className="profile-proof-item" key={item.label}>
-                                            <div className="profile-proof-number">{item.number}</div>
-                                            <div className="profile-proof-label">{item.label}</div>
+                                    {profileTags.map((tag, index) => (
+                                        <div className="profile-proof-item" key={tag}>
+                                            <div className="profile-proof-number">{String(index + 1).padStart(2, '0')}</div>
+                                            <div className="profile-proof-label">{tag}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -3819,40 +3536,6 @@
                                 </div>
                             </motion.div>
                         </div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 36 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.18 }}
-                            className="grid md:grid-cols-3 gap-7 md:gap-10 mt-14 md:mt-20"
-                        >
-                            {profilePoints.map((point) => (
-                                <div className="profile-stat" key={point.label}>
-                                    <div className="profile-stat-label">{point.label}</div>
-                                    <p className="profile-stat-value mb-0">{point.value}</p>
-                                </div>
-                            ))}
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 36 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.24 }}
-                            className="mt-14 md:mt-20"
-                        >
-                            <div className="profile-intro-eyebrow mb-6">Interactive Pipeline</div>
-                            <div className="workflow-strip">
-                                {workflowSteps.map((step, index) => (
-                                    <div className="workflow-step" key={step.title}>
-                                        <div className="workflow-step-index">{String(index + 1).padStart(2, '0')}</div>
-                                        <div className="workflow-step-title">{step.title}</div>
-                                        <p className="workflow-step-desc mb-0">{step.desc}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
                     </div>
                 </section>
             );
