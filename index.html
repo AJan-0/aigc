@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AIGC Visual Studio - 探索 AI 驱动的创意设计与可视化作品集">
-    <title>AIGC Visual Studio | AI-Powered Creativity</title>
+    <meta name="description" content="Poetfolio - AJan 的 AI 影像作品集，呈现 AI 真人短剧、角色一致性与可交付影像工作流。">
+    <title>Poetfolio | AJan AI Moving Image Portfolio</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1287,6 +1287,7 @@
             z-index: 10000;
             transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             mix-blend-mode: difference;
+            opacity: 0;
         }
         
         .cursor-dot {
@@ -1297,6 +1298,12 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
+            opacity: 0;
+        }
+
+        .cursor.active,
+        .cursor-dot.active {
+            opacity: 1;
         }
         
         .cursor.hover {
@@ -2702,6 +2709,893 @@
 .skip-link { position: absolute; top: -100%; left: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; border-radius: 0 0 8px 8px; z-index: 100000; font-weight: 600; transition: top 0.3s; }
 .skip-link:focus { top: 0; }
 
+/* ============================================
+   EDITORIAL FILM PORTFOLIO SYSTEM
+   ============================================ */
+:root {
+    --ink: #030407;
+    --ink-soft: #080B12;
+    --paper: #F4F1E8;
+    --silver: #D8DCE2;
+    --muted-silver: rgba(216, 220, 226, 0.62);
+    --line-soft: rgba(244, 241, 232, 0.13);
+    --accent-film: #67E8F9;
+}
+
+body {
+    background: var(--ink);
+}
+
+.noise-overlay,
+.floating-particles-bg {
+    opacity: 0.24;
+}
+
+.editorial-loader.loading-screen {
+    background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+        radial-gradient(circle at 78% 18%, rgba(103, 232, 249, 0.1), transparent 28%),
+        #030407;
+    background-size: 48px 48px, 48px 48px, auto, auto;
+}
+
+.editorial-loader .loading-particles {
+    display: none;
+}
+
+.loader-frame {
+    position: relative;
+    width: min(88vw, 1040px);
+    min-height: min(62vh, 560px);
+    padding: clamp(1.1rem, 3vw, 2rem);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    border: 1px solid rgba(244, 241, 232, 0.24);
+    background:
+        linear-gradient(90deg, transparent 49.8%, rgba(244, 241, 232, 0.1) 50%, transparent 50.2%),
+        rgba(3, 4, 7, 0.82);
+    box-shadow: 0 34px 110px rgba(0, 0, 0, 0.62);
+    overflow: hidden;
+}
+
+.loader-frame::before,
+.loader-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.loader-frame::before {
+    background-image: repeating-linear-gradient(90deg, transparent 0 34px, rgba(244, 241, 232, 0.1) 34px 35px);
+    opacity: 0.18;
+}
+
+.loader-frame::after {
+    background: linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.13), transparent);
+    height: 34%;
+    animation: projector-scan 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.loader-topline,
+.loader-bottomline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgba(244, 241, 232, 0.58);
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.loader-title {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 11vw, 8rem);
+    line-height: 0.78;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: var(--paper);
+    text-transform: none;
+}
+
+.loader-bottomline {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.loader-progress {
+    height: 1px;
+    background: rgba(244, 241, 232, 0.16);
+    overflow: hidden;
+}
+
+.loader-progress span {
+    display: block;
+    width: 42%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--paper), var(--accent-film));
+    animation: loading-scan 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes projector-scan {
+    from { transform: translateY(-120%); }
+    to { transform: translateY(340%); }
+}
+
+.editorial-nav {
+    border-bottom: 1px solid rgba(244, 241, 232, 0.08);
+}
+
+.nav-wordmark {
+    font-family: 'Syne', sans-serif;
+    color: var(--paper);
+    letter-spacing: 0;
+}
+
+.nav-link-editorial {
+    color: rgba(244, 241, 232, 0.62);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.nav-link-editorial:hover {
+    color: var(--paper);
+}
+
+.editorial-hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    padding: clamp(7rem, 12vw, 10rem) clamp(1.25rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+    background:
+        radial-gradient(circle at 70% 26%, rgba(103, 232, 249, 0.07), transparent 28%),
+        linear-gradient(180deg, #030407 0%, #060911 62%, #030407 100%);
+}
+
+.editorial-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(rgba(244, 241, 232, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244, 241, 232, 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.18) 72%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.18) 72%, transparent);
+}
+
+.editorial-hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(244, 241, 232, 0.32), transparent);
+}
+
+.hero-film-edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(2.5rem, 6vw, 5rem);
+    opacity: 0.2;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(to bottom, rgba(244, 241, 232, 0.42) 0 10px, transparent 10px 32px);
+}
+
+.hero-film-edge.left { left: 0; }
+.hero-film-edge.right { right: 0; }
+
+.editorial-hero-inner {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 1440px);
+    margin: 0 auto;
+    display: grid;
+    gap: clamp(2rem, 5vw, 5rem);
+}
+
+.hero-ledger {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    color: rgba(244, 241, 232, 0.54);
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.hero-ledger::before,
+.hero-ledger::after {
+    content: '';
+    height: 1px;
+    background: rgba(244, 241, 232, 0.18);
+}
+
+.editorial-hero-title {
+    font-family: 'Syne', sans-serif;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    font-size: clamp(2.35rem, 12vw, 13rem);
+    line-height: 0.72;
+    font-weight: 800;
+    color: var(--paper);
+    letter-spacing: 0;
+    text-transform: none;
+    text-wrap: balance;
+    text-shadow: 0 40px 120px rgba(0, 0, 0, 0.9);
+}
+
+.editorial-hero .editorial-hero-title {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: var(--paper) !important;
+    color: var(--paper) !important;
+}
+
+.editorial-hero-lower {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 0.55fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+}
+
+.hero-statement {
+    max-width: 48rem;
+    color: rgba(244, 241, 232, 0.78);
+    font-size: clamp(1.18rem, 2.2vw, 2.2rem);
+    line-height: 1.36;
+    font-weight: 300;
+}
+
+.hero-statement strong {
+    color: var(--paper);
+    font-weight: 700;
+}
+
+.hero-reel-index {
+    display: grid;
+    border-top: 1px solid rgba(244, 241, 232, 0.18);
+}
+
+.hero-reel-index button {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.86rem 0;
+    border-bottom: 1px solid rgba(244, 241, 232, 0.12);
+    color: rgba(244, 241, 232, 0.62);
+    text-align: left;
+    transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.hero-reel-index button:hover {
+    color: var(--paper);
+    transform: translateX(8px);
+}
+
+.hero-reel-index .idx {
+    color: var(--accent-film);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+}
+
+.hero-reel-index .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    font-weight: 700;
+}
+
+.hero-reel-index .cue {
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.editorial-scroll-cue {
+    position: absolute;
+    right: clamp(1.25rem, 3vw, 3rem);
+    bottom: clamp(1rem, 2vw, 1.5rem);
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: rgba(244, 241, 232, 0.52);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.editorial-scroll-cue::before {
+    content: '';
+    width: 4.5rem;
+    height: 1px;
+    background: rgba(244, 241, 232, 0.28);
+}
+
+.editorial-profile {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 4rem);
+    background: #030407;
+    border-top: 1px solid rgba(244, 241, 232, 0.1);
+    border-bottom: 1px solid rgba(244, 241, 232, 0.1);
+}
+
+.editorial-profile-inner {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(17rem, 26rem) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+}
+
+.section-tag {
+    color: var(--accent-film);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+}
+
+.profile-nameplate {
+    display: grid;
+    gap: 1.5rem;
+    align-self: stretch;
+    border-top: 1px solid rgba(244, 241, 232, 0.18);
+    padding-top: 1.2rem;
+}
+
+.profile-nameplate h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 6.5rem);
+    line-height: 0.86;
+    color: var(--paper);
+    letter-spacing: 0;
+}
+
+.profile-nameplate p {
+    color: rgba(244, 241, 232, 0.68);
+    font-size: clamp(1rem, 1.25vw, 1.16rem);
+    line-height: 1.8;
+    max-width: 31rem;
+}
+
+.profile-photo-plate {
+    position: relative;
+    padding: 0.55rem;
+    border: 1px solid rgba(244, 241, 232, 0.18);
+    background: rgba(244, 241, 232, 0.035);
+}
+
+.profile-photo-plate::before,
+.profile-photo-plate::after {
+    content: '';
+    position: absolute;
+    left: -1.1rem;
+    right: -1.1rem;
+    height: 1px;
+    background: rgba(244, 241, 232, 0.14);
+}
+
+.profile-photo-plate::before { top: 1.4rem; }
+.profile-photo-plate::after { bottom: 1.4rem; }
+
+.profile-photo-plate img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: grayscale(1) contrast(1.05);
+}
+
+.profile-capability {
+    display: grid;
+    gap: 1rem;
+    align-self: stretch;
+}
+
+.profile-capability li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid rgba(244, 241, 232, 0.14);
+}
+
+.profile-capability li:last-child {
+    border-bottom: 1px solid rgba(244, 241, 232, 0.14);
+}
+
+.profile-capability .num {
+    color: var(--accent-film);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+}
+
+.profile-capability strong {
+    display: block;
+    color: var(--paper);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.profile-capability span {
+    color: rgba(244, 241, 232, 0.58);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.portfolio-reel-section {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 4rem);
+    background:
+        linear-gradient(90deg, rgba(244, 241, 232, 0.045) 1px, transparent 1px),
+        #030407;
+    background-size: 22vw 100%;
+}
+
+.portfolio-reel-inner {
+    width: min(100%, 1440px);
+    margin: 0 auto;
+}
+
+.reel-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: end;
+    padding-bottom: clamp(3rem, 7vw, 6rem);
+    border-bottom: 1px solid rgba(244, 241, 232, 0.16);
+}
+
+.reel-heading {
+    font-family: 'Syne', sans-serif;
+    color: var(--paper);
+    font-size: clamp(3.8rem, 12vw, 11rem);
+    line-height: 0.82;
+    letter-spacing: 0;
+}
+
+.reel-intro {
+    color: rgba(244, 241, 232, 0.66);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.reel-project {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.22fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 4rem);
+    padding: clamp(2rem, 5vw, 4.2rem) 0;
+    border-bottom: 1px solid rgba(244, 241, 232, 0.13);
+}
+
+.reel-project-meta {
+    display: grid;
+    align-content: space-between;
+    min-height: 100%;
+    color: rgba(244, 241, 232, 0.52);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.reel-project-number {
+    color: var(--accent-film);
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.8;
+    letter-spacing: 0;
+}
+
+.reel-project-body {
+    display: grid;
+    gap: 1rem;
+}
+
+.reel-project-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 8.2;
+    overflow: hidden;
+    border: 1px solid rgba(244, 241, 232, 0.16);
+    background: #0B0E14;
+    cursor: pointer;
+    text-align: left;
+}
+
+.reel-project-frame img,
+.reel-project-frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.18) contrast(1.08) brightness(0.82);
+    transform: scale(1.03);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reel-project-frame:hover img,
+.reel-project-frame:hover video {
+    transform: scale(1.08);
+    filter: grayscale(0) contrast(1.04) brightness(0.96);
+}
+
+.reel-project-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(3, 4, 7, 0.1), transparent 38%, rgba(3, 4, 7, 0.78)),
+        repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0 1px, transparent 1px 5px);
+    opacity: 0.6;
+}
+
+.reel-project-frame::after {
+    content: '';
+    position: absolute;
+    inset: 1rem;
+    z-index: 3;
+    pointer-events: none;
+    border: 1px solid rgba(244, 241, 232, 0.18);
+    opacity: 0;
+    transform: scale(0.985);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.reel-project-frame:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.reel-play-mark {
+    position: absolute;
+    z-index: 4;
+    left: 1.3rem;
+    right: 1.3rem;
+    bottom: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    color: var(--paper);
+    pointer-events: none;
+}
+
+.reel-play-mark span:first-child {
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-film);
+}
+
+.reel-play-mark span:last-child {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 0.75;
+}
+
+.reel-caption {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+.reel-caption h3 {
+    font-family: 'Syne', sans-serif;
+    color: var(--paper);
+    font-size: clamp(2.1rem, 5vw, 5.2rem);
+    line-height: 0.92;
+    letter-spacing: 0;
+    text-wrap: balance;
+}
+
+.reel-caption-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: rgba(244, 241, 232, 0.52);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.reel-caption-meta::before {
+    content: '';
+    width: 3.5rem;
+    height: 1px;
+    background: rgba(244, 241, 232, 0.2);
+}
+
+.reel-loading {
+    min-height: 42vh;
+    display: grid;
+    place-items: center;
+    border-bottom: 1px solid rgba(244, 241, 232, 0.13);
+    color: rgba(244, 241, 232, 0.54);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.method-section {
+    position: relative;
+    padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 4rem);
+    background: linear-gradient(180deg, #030407 0%, #080B12 100%);
+    border-top: 1px solid rgba(244, 241, 232, 0.1);
+}
+
+.method-inner {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: start;
+}
+
+.method-title {
+    position: sticky;
+    top: 8rem;
+}
+
+.method-title h2 {
+    font-family: 'Syne', sans-serif;
+    color: var(--paper);
+    font-size: clamp(3rem, 9vw, 8rem);
+    line-height: 0.86;
+    letter-spacing: 0;
+    margin-top: 1.2rem;
+}
+
+.method-lines {
+    display: grid;
+}
+
+.method-line {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+    padding: clamp(1.4rem, 3vw, 2.4rem) 0;
+    border-top: 1px solid rgba(244, 241, 232, 0.16);
+}
+
+.method-line:last-child {
+    border-bottom: 1px solid rgba(244, 241, 232, 0.16);
+}
+
+.method-line .num {
+    color: var(--accent-film);
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.method-line h3 {
+    color: var(--paper);
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    line-height: 1;
+    margin-bottom: 0.7rem;
+}
+
+.method-line p {
+    color: rgba(244, 241, 232, 0.62);
+    line-height: 1.8;
+}
+
+.editorial-footer {
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 4rem);
+    background: #030407;
+    border-top: 1px solid rgba(244, 241, 232, 0.14);
+}
+
+.editorial-footer-inner {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: end;
+}
+
+.footer-wordmark {
+    font-family: 'Syne', sans-serif;
+    color: var(--paper);
+    font-size: clamp(2.4rem, 7vw, 6.8rem);
+    line-height: 0.8;
+    letter-spacing: 0;
+}
+
+.footer-contact {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: end;
+    color: rgba(244, 241, 232, 0.6);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.footer-contact a {
+    color: var(--paper);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 1rem;
+}
+
+@media (max-width: 960px) {
+    .editorial-hero-lower,
+    .editorial-profile-inner,
+    .reel-header,
+    .method-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-reel-index {
+        max-width: 100%;
+    }
+
+    .profile-photo-plate {
+        max-width: 24rem;
+    }
+
+    .method-title {
+        position: relative;
+        top: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .loader-frame {
+        width: min(86vw, 34rem);
+        min-height: min(62vh, 34rem);
+        padding: 1rem;
+    }
+
+    .loader-topline,
+    .loader-bottomline {
+        gap: 0.7rem;
+        font-size: 0.58rem;
+        letter-spacing: 0.12em;
+    }
+
+    .loader-topline span:last-child {
+        display: none;
+    }
+
+    .loader-title {
+        font-size: clamp(2.35rem, 17vw, 4rem);
+        line-height: 0.82;
+    }
+
+    .loader-bottomline {
+        grid-template-columns: auto 1fr;
+    }
+
+    .loader-bottomline > span:last-child {
+        display: none;
+    }
+
+    .editorial-hero {
+        align-items: center;
+        padding-top: 6.5rem;
+        padding-bottom: 2rem;
+    }
+
+    .hero-ledger {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-ledger::before,
+    .hero-ledger::after,
+    .hero-film-edge,
+    .editorial-scroll-cue {
+        display: none;
+    }
+
+    .editorial-hero-title {
+        font-size: clamp(2.65rem, 12.7vw, 4rem) !important;
+        line-height: 0.76 !important;
+    }
+
+    .hero-statement {
+        font-size: 1.08rem;
+    }
+
+    .hero-reel-index button {
+        grid-template-columns: 2.4rem minmax(0, 1fr);
+        gap: 0.7rem;
+    }
+
+    .hero-reel-index .cue {
+        display: none;
+    }
+
+    .hero-reel-index .name {
+        display: -webkit-box;
+        overflow: hidden;
+        white-space: normal;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: 0.82rem;
+        line-height: 1.25;
+    }
+
+    .reel-project {
+        grid-template-columns: 1fr;
+    }
+
+    .reel-project-meta {
+        grid-template-columns: auto 1fr;
+        align-items: end;
+        gap: 1rem;
+    }
+
+    .reel-project-frame {
+        aspect-ratio: 4 / 5;
+    }
+
+    .reel-caption {
+        grid-template-columns: 1fr;
+    }
+
+    .reel-caption-meta {
+        white-space: normal;
+    }
+
+    .method-line {
+        grid-template-columns: 1fr;
+    }
+
+    .editorial-footer-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-contact {
+        justify-items: start;
+    }
+}
+
     </style>
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SB38PYTM46"></script>
@@ -2715,18 +3609,18 @@
 <body>
     <a href="#projects" class="skip-link">Skip to content</a>
     <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen" role="status" aria-live="polite">
-        <div class="loading-particles" id="loadingParticles"></div>
-        <div class="loading-panel">
-            <div class="loading-kicker">AIGC Visual Studio</div>
-            <div class="loading-title">Initializing cinematic workflow.</div>
-            <div class="loading-status">正在准备作品影像、交互预览与制作流程信息。</div>
-            <div class="loading-bars" aria-hidden="true">
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
+    <div class="loading-screen editorial-loader" id="loadingScreen" role="status" aria-live="polite">
+        <div class="loader-frame">
+            <div class="loader-topline">
+                <span>AJan / AI Moving Image</span>
+                <span>Frame 0001</span>
             </div>
-            <div class="loading-text">Portfolio Experience</div>
+            <div class="loader-title">Poetfolio</div>
+            <div class="loader-bottomline">
+                <span>Loading Reel</span>
+                <div class="loader-progress" aria-hidden="true"><span></span></div>
+                <span>2026</span>
+            </div>
         </div>
     </div>
     
@@ -3044,6 +3938,8 @@
                 animateCursor();
                 
                 const moveCursor = (e) => {
+                    cursor.classList.add('active');
+                    cursorDot.classList.add('active');
                     mouseX = e.clientX;
                     mouseY = e.clientY;
                     isMoving = true;
@@ -3078,19 +3974,12 @@
         // COMPONENTS
         // ============================================
         
-        // Enhanced Navbar with Mobile Optimization
+        // Editorial navbar with focused portfolio navigation.
         function Navbar() {
             const [isMobileOpen, setIsMobileOpen] = useState(false);
             const [isMobile, setIsMobile] = useState(false);
             const [scrolled, setScrolled] = useState(false);
             const [visible, setVisible] = useState(true);
-            const [lastScrollY, setLastScrollY] = useState(0);
-            const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
-            
-            useEffect(() => {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-            }, [theme]);
             
             useEffect(() => {
                 const checkScreenSize = () => {
@@ -3139,7 +4028,7 @@
             const navItems = ['Projects', 'About', 'Contact'];
             const navLinks = {
                 'Projects': '#projects',
-                'About': '#about',
+                'About': '#profile',
                 'Contact': '#contact'
             };
             
@@ -3149,8 +4038,8 @@
                     initial={{ y: -100 }}
                     animate={{ y: visible ? 0 : -100 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-xl ${
-                        scrolled ? 'bg-black/30 shadow-2xl py-4' : 'bg-transparent py-6'
+                    className={`editorial-nav fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-xl ${
+                        scrolled ? 'bg-black/55 py-4' : 'bg-transparent py-6'
                     }`}
                 >
                     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 flex justify-between items-center">
@@ -3158,15 +4047,15 @@
                             href="#"
                             whileHover={!isMobile ? { scale: 1.05 } : {}}
                             whileTap={{ scale: 0.95 }}
-                            className="font-display text-xl md:text-2xl lg:text-3xl font-bold gradient-text hoverable min-h-12 flex items-center px-2"
+                            className="nav-wordmark hoverable min-h-12 flex items-center px-2 text-2xl md:text-3xl font-bold"
                         >
-                            AIGC
+                            Poetfolio
                         </motion.a>
                         
                         {isMobile ? (
                             <motion.button
                                 onClick={() => setIsMobileOpen(!isMobileOpen)}
-                                className="p-2 hover:bg-white/10 rounded-lg transition-colors min-h-12 min-w-12 flex items-center justify-center"
+                                className="p-2 hover:bg-white/10 transition-colors min-h-12 min-w-12 flex items-center justify-center"
                                 whileTap={{ scale: 0.9 }}
                                 aria-label="Toggle menu"
                                 aria-expanded={isMobileOpen}
@@ -3189,33 +4078,17 @@
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.1 * i + 0.3 }}
                                         whileHover={{ y: -2 }}
-                                        className="relative font-body text-sm lg:text-base font-medium text-slate-400 hover:text-white transition-colors hoverable group min-h-12 flex items-center px-2"
+                                        className="nav-link-editorial relative hoverable group min-h-12 flex items-center px-2"
                                     >
                                         {item}
                                         <motion.div
-                                            className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-accent-blue to-accent-purple"
+                                            className="absolute -bottom-2 left-0 h-px bg-cyan-200/80"
                                             initial={{ width: 0 }}
                                             whileHover={{ width: '100%' }}
                                             transition={{ duration: 0.3 }}
                                         />
                                     </motion.a>
                                 ))}
-                                <button 
-                                    onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-                                    className="theme-toggle"
-                                    aria-label={theme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'}
-                                    title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                                >
-                                    {theme === 'dark' ? (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                                        </svg>
-                                    ) : (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                                        </svg>
-                                    )}
-                                </button>
                             </div>
                         )}
                     </div>
@@ -3226,15 +4099,15 @@
                             initial={{ opacity: 0, y: -20 }}
                             animate={isMobileOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
                             transition={{ duration: 0.2 }}
-                            className={`absolute top-full left-0 right-0 glass-strong border-t border-slate-800 overflow-hidden ${isMobileOpen ? 'block' : 'pointer-events-none'}`}
+                            className={`absolute top-full left-0 right-0 bg-black/90 border-t border-white/10 overflow-hidden ${isMobileOpen ? 'block' : 'pointer-events-none'}`}
                         >
-                            <div className="flex flex-col divide-y divide-slate-800">
+                            <div className="flex flex-col divide-y divide-white/10">
                                 {navItems.map((item) => (
                                     <motion.a
                                         key={item}
                                         href={navLinks[item]}
                                         onClick={() => setIsMobileOpen(false)}
-                                        className="px-6 py-4 min-h-12 flex items-center font-body text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                                        className="px-6 py-4 min-h-12 flex items-center nav-link-editorial hover:bg-white/5 transition-all"
                                         whileTap={{ scale: 0.98 }}
                                     >
                                         {item}
@@ -3438,28 +4311,31 @@
             );
         }
 
-        // Editorial opening hero focused on the portfolio title.
+        // Film-index opening hero focused on the work.
         function HeroSection() {
+            const heroWorks = FALLBACK_PROJECTS.slice(0, 4);
+
             return (
-                <section className="portfolio-hero" aria-label="Poetfolio">
-                    <div className="portfolio-hero-grid" aria-hidden="true"></div>
+                <section className="editorial-hero" aria-label="Poetfolio">
+                    <div className="hero-film-edge left" aria-hidden="true"></div>
+                    <div className="hero-film-edge right" aria-hidden="true"></div>
                     <div className="film-grain" aria-hidden="true"></div>
 
-                    <div className="portfolio-hero-inner">
+                    <div className="editorial-hero-inner">
                         <motion.div
                             initial={{ opacity: 0, y: 28 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="portfolio-hero-meta"
+                            className="hero-ledger"
                         >
-                            <span>AIGC Moving Image Portfolio</span>
+                            <span>AJan / AI Moving Image</span>
                         </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 52, filter: 'blur(18px)' }}
                             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                             transition={{ delay: 0.18, duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
-                            className="portfolio-hero-title"
+                            className="editorial-hero-title"
                         >
                             Poetfolio
                         </motion.h1>
@@ -3468,76 +4344,303 @@
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.42, duration: 0.8 }}
-                            className="portfolio-hero-lower"
+                            className="editorial-hero-lower"
                         >
-                            <p className="portfolio-hero-subtitle">
-                                AI 真人短剧、品牌影像与视觉叙事作品集。以作品画面、镜头节奏和交付质量作为第一表达。
+                            <p className="hero-statement">
+                                一个围绕 <strong>AI 影像工作流</strong>、角色一致性与镜头叙事构建的作品集。首页只做一件事：让作品先进入视线。
                             </p>
-                            <div className="hero-actions">
-                                <button className="hero-action primary" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
-                                    Intro
-                                </button>
-                                <button className="hero-action" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
-                                    Works
-                                </button>
+                            <div className="hero-reel-index" aria-label="Selected work index">
+                                {heroWorks.map((work, index) => (
+                                    <button key={work.id} onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
+                                        <span className="idx">{String(index + 1).padStart(2, '0')}</span>
+                                        <span className="name">{work.title}</span>
+                                        <span className="cue">Play</span>
+                                    </button>
+                                ))}
                             </div>
                         </motion.div>
                     </div>
 
-                    <button className="hero-scroll-cue" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
-                        Scroll
+                    <button className="editorial-scroll-cue" onClick={() => document.getElementById("profile")?.scrollIntoView({ behavior: "smooth" })}>
+                        Enter
                     </button>
                 </section>
             );
         }
 
         function ProfileIntroSection() {
-            const profileTags = ['AI Film Workflow', 'Character Consistency', 'Cinematic Delivery'];
+            const profileTags = [
+                { title: 'AI Film Workflow', text: '从脚本拆解、角色资产到镜头生成，建立可复用制作链路。' },
+                { title: 'Character Consistency', text: '围绕人物、表演和场景连续性控制画面可信度。' },
+                { title: 'Cinematic Delivery', text: '以成片交付为目标，兼顾镜头节奏、剪辑包装和发布场景。' }
+            ];
 
             return (
-                <section id="profile" aria-label="Creator Introduction" className="profile-intro-section section-smooth py-16 md:py-24 px-6 relative overflow-hidden">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="grid lg:grid-cols-[minmax(0,1fr)_18rem] gap-10 lg:gap-16 items-end">
+                <section id="profile" aria-label="Creator Introduction" className="editorial-profile">
+                    <div className="editorial-profile-inner">
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7 }}
+                            className="profile-nameplate"
+                        >
+                            <div className="section-tag">Creator / Statement</div>
+                            <h2>AJan</h2>
+                            <p>
+                                AI 影视制作人。用 workflow 把角色、镜头、叙事和模型调度组织成可交付的影像作品。
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 36, scale: 0.96 }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.75, delay: 0.08 }}
+                            className="profile-photo-plate"
+                        >
+                            <img src="profile-photo.png" alt="AJan profile portrait" loading="lazy" />
+                        </motion.div>
+
+                        <motion.ul
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.14 }}
+                            className="profile-capability"
+                        >
+                            {profileTags.map((tag, index) => (
+                                <li key={tag.title}>
+                                    <span className="num">{String(index + 1).padStart(2, '0')}</span>
+                                    <span>
+                                        <strong>{tag.title}</strong>
+                                        <span>{tag.text}</span>
+                                    </span>
+                                </li>
+                            ))}
+                        </motion.ul>
+                    </div>
+                </section>
+            );
+        }
+
+        function ReelTransition() {
+            return (
+                <div className="portfolio-transition-band">
+                    <div className="portfolio-transition-text">Selected moving-image works / Scroll</div>
+                </div>
+            );
+        }
+
+        function ReelProjectsSection({ projects, projectsLoading, onVideoClick }) {
+            return (
+                <section id="projects" aria-label="Featured Projects" className="portfolio-reel-section">
+                    <div className="portfolio-reel-inner">
+                        <div className="reel-header">
                             <motion.div
-                                initial={{ opacity: 0, y: 40 }}
+                                initial={{ opacity: 0, y: 48 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.7 }}
+                                transition={{ duration: 0.8 }}
                             >
-                                <div className="profile-intro-eyebrow mb-7">Creator Profile</div>
-                                <h2 className="profile-intro-quote">
-                                    AJan，AI 影视制作人。用 <strong>Workflow</strong> 把角色、镜头与叙事组织成可交付的影像作品。
-                                </h2>
-
-                                <div className="profile-proof-grid mt-10">
-                                    {profileTags.map((tag, index) => (
-                                        <div className="profile-proof-item" key={tag}>
-                                            <div className="profile-proof-number">{String(index + 1).padStart(2, '0')}</div>
-                                            <div className="profile-proof-label">{tag}</div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <div className="section-tag mb-5">Portfolio Reel</div>
+                                <h2 className="reel-heading">Selected<br />Works</h2>
                             </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.92, y: 24 }}
-                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                            <motion.p
+                                initial={{ opacity: 0, y: 32 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.7, delay: 0.12 }}
-                                className="flex justify-center lg:justify-end"
+                                transition={{ duration: 0.75, delay: 0.12 }}
+                                className="reel-intro"
                             >
-                                <div className="profile-avatar-wrap">
-                                    <img
-                                        src="profile-photo.png"
-                                        alt="AJan profile portrait"
-                                        className="profile-avatar"
-                                        loading="lazy"
-                                    />
-                                </div>
-                            </motion.div>
+                                这里不再用说明文字替作品解释。每个项目只保留编号、片名和播放动作，让画面、节奏和完成度成为判断入口。
+                            </motion.p>
+                        </div>
+
+                        {projectsLoading ? (
+                            <div className="reel-loading">Loading selected works</div>
+                        ) : projects.length === 0 ? (
+                            <div className="reel-loading">No published works</div>
+                        ) : projects.map((project, index) => (
+                            <ReelProjectCard
+                                key={project.id}
+                                project={project}
+                                index={index}
+                                onVideoClick={onVideoClick}
+                            />
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+
+        function ReelProjectCard({ project, index, onVideoClick }) {
+            const ref = useRef(null);
+            const videoRef = useRef(null);
+            const isInView = useInView(ref, { once: true, margin: "-12%" });
+            const [isHovering, setIsHovering] = useState(false);
+            const [videoReady, setVideoReady] = useState(false);
+            const { effectiveType, isOnline } = useNetworkStatus();
+            const shouldPreview = project.isVideo && isOnline && effectiveType !== '2g' && effectiveType !== '3g';
+
+            useEffect(() => {
+                if (!videoRef.current || !shouldPreview) return;
+                if (isHovering && videoReady) {
+                    videoRef.current.play().catch(() => {});
+                } else {
+                    videoRef.current.pause();
+                    videoRef.current.currentTime = 0;
+                }
+            }, [isHovering, videoReady, shouldPreview]);
+
+            const openProject = useCallback((e) => {
+                e.preventDefault();
+                if (project.isVideo && onVideoClick) {
+                    onVideoClick(project);
+                } else if (project.link) {
+                    window.location.href = project.link;
+                }
+            }, [project, onVideoClick]);
+
+            return (
+                <motion.article
+                    ref={ref}
+                    className="reel-project"
+                    initial={{ opacity: 0, y: 72 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.85, delay: Math.min(index * 0.08, 0.32), ease: [0.16, 1, 0.3, 1] }}
+                >
+                    <div className="reel-project-meta">
+                        <div className="reel-project-number">{String(index + 1).padStart(2, '0')}</div>
+                        <div>Moving Image<br />Case</div>
+                    </div>
+
+                    <div className="reel-project-body">
+                        <button
+                            type="button"
+                            className="reel-project-frame hoverable"
+                            onClick={openProject}
+                            onMouseEnter={() => setIsHovering(true)}
+                            onMouseLeave={() => setIsHovering(false)}
+                            aria-label={`Play ${project.title}`}
+                        >
+                            {project.image && (
+                                <img src={project.image} alt={project.title} loading={index < 2 ? "eager" : "lazy"} />
+                            )}
+
+                            {shouldPreview && (
+                                <video
+                                    ref={videoRef}
+                                    src={project.videoUrl}
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="metadata"
+                                    onCanPlay={() => setVideoReady(true)}
+                                    onError={() => setVideoReady(false)}
+                                />
+                            )}
+
+                            <div className="reel-play-mark">
+                                <span>{isHovering ? 'Previewing' : 'Click to watch'}</span>
+                                <span>Play</span>
+                            </div>
+                        </button>
+
+                        <div className="reel-caption">
+                            <h3>{project.title}</h3>
+                            <div className="reel-caption-meta">
+                                <span>{project.duration || 'Reel'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </motion.article>
+            );
+        }
+
+        function MethodSection() {
+            const methods = [
+                {
+                    title: 'Narrative first',
+                    text: '先拆叙事节奏、角色关系和观看场景，再决定模型、镜头和视觉风格。'
+                },
+                {
+                    title: 'Reusable workflow',
+                    text: '用 ComfyUI、ControlNet、LoRA / IP-Adapter 与视频模型组合成可复用流程，减少一次性试错。'
+                },
+                {
+                    title: 'Shot discipline',
+                    text: '每个镜头都服务剪辑，关注景别、动作连续性、表演状态和最终成片节奏。'
+                },
+                {
+                    title: 'Delivery oriented',
+                    text: '从画面生成走到后期包装、字幕节奏、平台适配，让 AI 影像能进入真实项目交付。'
+                }
+            ];
+
+            return (
+                <section id="about" className="method-section" aria-label="Production Method">
+                    <div className="method-inner">
+                        <motion.div
+                            initial={{ opacity: 0, y: 42 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.75 }}
+                            className="method-title"
+                        >
+                            <div className="section-tag">Method / Capability</div>
+                            <h2>How the work is made.</h2>
+                        </motion.div>
+
+                        <div className="method-lines">
+                            {methods.map((method, index) => (
+                                <motion.div
+                                    key={method.title}
+                                    initial={{ opacity: 0, y: 36 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6, delay: index * 0.08 }}
+                                    className="method-line"
+                                >
+                                    <div className="num">{String(index + 1).padStart(2, '0')}</div>
+                                    <div>
+                                        <h3>{method.title}</h3>
+                                        <p>{method.text}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 </section>
+            );
+        }
+
+        function EditorialFooter() {
+            return (
+                <footer id="contact" className="editorial-footer">
+                    <div className="editorial-footer-inner">
+                        <motion.div
+                            initial={{ opacity: 0, y: 32 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7 }}
+                            className="footer-wordmark"
+                        >
+                            AJan<br />Poetfolio
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 32 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.1 }}
+                            className="footer-contact"
+                        >
+                            <span>Available for AI moving-image work</span>
+                            <a href="mailto:1248567324@qq.com">1248567324@qq.com</a>
+                            <span>© 2026</span>
+                        </motion.div>
+                    </div>
+                </footer>
             );
         }
         // 网络连接检测和性能优化
@@ -4455,285 +5558,10 @@
                     <Navbar />
                     <HeroSection />
                     <ProfileIntroSection />
-                    <div className="portfolio-transition-band">
-                        <div className="portfolio-transition-text">Scroll for selected moving-image works</div>
-                    </div>
-                    
-                    
-                    {/* Projects Section - Moved to Front as Main Focus */}
-                    <section id="projects" aria-label="Featured Projects" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-900">
-                        {/* Background Decorations */}
-                        <div className="absolute top-20 right-10 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(60px)'}} />
-                        <div className="absolute bottom-32 -left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(60px)'}} />
-                        
-                        <div className="max-w-7xl mx-auto relative z-10">
-                            <div className="portfolio-section-label">Selected works</div>
-                            <motion.div
-                                initial={{ opacity: 0, y: 60 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8 }}
-                                className="text-center mb-20 md:mb-32"
-                            >
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6 }}
-                                    className="inline-block mb-6"
-                                >
-                                    <motion.h2 
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.8 }}
-                                        className="font-display text-4xl md:text-5xl lg:text-6xl font-bold gradient-text mb-2"
-                                    >
-                                        Portfolio Reel
-                                    </motion.h2>
-                                    <motion.div 
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.8, delay: 0.1 }}
-                                        className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-cyan"
-                                    >
-                                        精选影像
-                                    </motion.div>
-                                </motion.div>
-                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    以作品画面作为第一语言，呈现 AI 影像从叙事设定到成片交付的不同方向。
-                                </p>
-                                <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    Hover to preview / Click to watch.
-                                </p>
-                            </motion.div>
-                            
-                            {projectsLoading ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="status" aria-live="polite">
-                                    {[1,2,3].map(i => (
-                                        <div key={i} className="skeleton-card">
-                                            <div className="skeleton skeleton-image"></div>
-                                            <div className="skeleton-content">
-                                                <div className="skeleton skeleton-line"></div>
-                                                <div className="skeleton skeleton-line medium"></div>
-                                                <div className="skeleton skeleton-line short"></div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : projects.length === 0 ? (
-                                <div className="text-center py-20">
-                                    <p className="text-slate-400 text-lg">暂无作品</p>
-                                    <p className="text-slate-500 text-sm mt-2">请通过管理后台添加作品集内容</p>
-                                </div>
-                            ) : projects.map((project, index) => (
-                                <motion.div key={project.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-                                    {index > 0 && <div className="gradient-divider" />}
-                                    <ProjectCard
-                                        project={project}
-                                        index={index}
-                                        reverse={index % 2 !== 0}
-                                        onVideoClick={openVideo}
-                                    />
-                                </motion.div>
-                            ))}
-                        </div>
-                    </section>
-                    
-                    <section id="about" className="section-smooth py-16 md:py-20 px-6 relative overflow-hidden bg-gradient-to-b from-slate-900/50 to-transparent">
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.1}} />
-                        
-                        <div className="max-w-7xl mx-auto relative z-10">
-                            <motion.div
-                                initial={{ opacity: 0, y: 40 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                                className="grid md:grid-cols-3 gap-8 items-start"
-                            >
-                                {/* About Text - Compact */}
-                                <motion.div 
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6 }}
-                                    className="md:col-span-1"
-                                >
-                                    <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 gradient-text">
-                                        About the Practice
-                                    </h2>
-                                    <p className="font-body text-base text-slate-300 leading-relaxed">
-                                        我把 AIGC 当作一套可设计的生产系统，而不是单点工具。项目从脚本拆解开始，经过角色资产、镜头生成、模型调度和后期整合，最终服务短剧、品牌影像和视觉叙事的实际发布。
-                                    </p>
-                                </motion.div>
-
-                                {/* Skills Section - Compact */}
-                                <motion.div 
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6 }}
-                                    className="md:col-span-2"
-                                >
-                                    <h3 className="font-display text-2xl font-bold mb-4 gradient-text">
-                                        Capability Stack
-                                    </h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                        {[
-                                            { category: 'Pipeline', skills: ['ComfyUI 节点系统', '批量生成与筛选', '资产版本管理'] },
-                                            { category: 'Character', skills: ['角色一致性', 'ControlNet', 'LoRA / IP-Adapter'] },
-                                            { category: 'Video Models', skills: ['Seedance 2.0', 'Google Veo3', 'Kling 2.0', 'Sora'] },
-                                            { category: 'Narrative', skills: ['脚本拆解', '分镜规划', 'Prompt 设计'] },
-                                            { category: 'Post Production', skills: ['剪辑包装', '字幕节奏', '调色与声音'] },
-                                            { category: 'Visualization', skills: ['SketchUp', 'V-Ray', '3ds Max', 'AI 增强'] }
-                                        ].map((group, i) => (
-                                            <motion.div 
-                                                key={i}
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                whileInView={{ opacity: 1, scale: 1 }}
-                                                viewport={{ once: true }}
-                                                transition={{ duration: 0.4, delay: i * 0.1 }}
-                                                className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 hover:border-accent-cyan/50 transition-all"
-                                            >
-                                                <div className="text-xs font-semibold text-accent-cyan mb-2">{group.category}</div>
-                                                <div className="text-xs text-slate-400 space-y-1">
-                                                    {group.skills.map(skill => <div key={skill}>- {skill}</div>)}
-                                                </div>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        </div>
-                    </section>
-                    
-                    <section id="features" className="section-smooth py-20 md:py-32 px-6 relative overflow-hidden bg-gradient-to-b from-transparent via-secondary/30 to-transparent">
-                        {/* Background Decorations */}
-                        <div className="absolute top-0 left-20 w-80 h-80 deco-blob" style={{background: 'radial-gradient(circle, #06B6D4, transparent)', filter: 'blur(60px)', opacity: 0.2}} />
-                        <div className="absolute bottom-0 right-32 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(60px)', opacity: 0.15}} />
-                        
-                        <div className="max-w-7xl mx-auto relative z-10">
-                            <motion.div
-                                initial={{ opacity: 0, y: 60 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className="text-center mb-20"
-                            >
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6 }}
-                                    className="inline-block mb-6"
-                                >
-                                    <motion.h2 
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.8 }}
-                                        className="font-display text-4xl md:text-5xl lg:text-6xl font-bold gradient-text mb-2"
-                                    >
-                                        Production Advantages
-                                    </motion.h2>
-                                    <motion.div 
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.8, delay: 0.1 }}
-                                        className="text-3xl md:text-4xl lg:text-5xl font-bold text-accent-purple"
-                                    >
-                                        制作优势
-                                    </motion.div>
-                                </motion.div>
-                                <p className="font-body text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-3">
-                                    不只展示“生成结果”，而是建立能反复交付的 AIGC 影像制作方法。
-                                </p>
-                                <p className="font-body text-sm md:text-base text-slate-500 max-w-2xl mx-auto">
-                                    策略拆解 | 角色控制 | 多模型调度 | 剪辑包装 | 发布适配
-                                </p>
-                            </motion.div>
-                            
-                            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {FEATURES_DATA.map((feature, index) => (
-                                    <FeatureCard key={feature.title} feature={feature} index={index} />
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <footer id="contact" className="py-16 md:py-20 px-6 border-t border-slate-800 relative overflow-hidden">
-                        {/* Decorative Background */}
-                        <div className="absolute inset-0 opacity-30">
-                            <div className="absolute top-0 left-1/4 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #3B82F6, transparent)', filter: 'blur(80px)'}} />
-                            <div className="absolute bottom-0 right-1/4 w-96 h-96 deco-blob" style={{background: 'radial-gradient(circle, #8B5CF6, transparent)', filter: 'blur(80px)'}} />
-                        </div>
-                        
-                        <div className="max-w-7xl mx-auto relative z-10">
-                            <motion.div
-                                initial={{ opacity: 0, y: 40 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-12"
-                            >
-                                <motion.div 
-                                    whileHover={{ scale: 1.05 }}
-                                    className="font-display text-2xl md:text-3xl lg:text-4xl font-bold gradient-text cursor-pointer"
-                                >
-                                    AIGC VISUAL
-                                </motion.div>
-                                
-                                <div className="flex flex-col items-center md:items-end gap-4 md:gap-6">
-                                    <motion.div
-                                        whileHover={{ scale: 1.05, x: 5 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className="flex items-center gap-2 w-full md:w-auto"
-                                    >
-                                        <motion.a
-                                            href="mailto:1248567324@qq.com"
-                                            className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 rounded-full glass-strong hover:glass border border-slate-700/50 hover:border-accent-cyan/50 transition-all duration-300 text-sm md:text-base justify-center md:justify-start w-full md:w-auto"
-                                        >
-                                            <motion.svg 
-                                                animate={{ rotate: [0, -10, 10, 0] }}
-                                                transition={{ duration: 2, repeat: Infinity }}
-                                                className="w-4 md:w-5 h-4 md:h-5 text-accent-cyan flex-shrink-0" 
-                                                fill="currentColor" 
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                            </motion.svg>
-                                            <span className="font-body font-medium text-white truncate">1248567324@qq.com</span>
-                                        </motion.a>
-                                    </motion.div>
-                                    
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                        className="font-body text-slate-400 text-sm md:text-base text-center md:text-right space-y-1"
-                                    >
-                                        <p className="text-slate-500">© 2026 AIGC Visual Studio</p>
-                                        <motion.p 
-                                            animate={{ opacity: [0.6, 1, 0.6] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                            className="text-xs text-accent-cyan"
-                                        >
-                                            Crafted with AI & Passion
-                                        </motion.p>
-                                    </motion.div>
-                                </div>
-                            </motion.div>
-                            
-                            {/* Decorative Footer Line */}
-                            <motion.div
-                                initial={{ scaleX: 0 }}
-                                whileInView={{ scaleX: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-blue/50 to-transparent origin-left"
-                            />
-                        </div>
-                    </footer>
+                    <ReelTransition />
+                    <ReelProjectsSection projects={projects} projectsLoading={projectsLoading} onVideoClick={openVideo} />
+                    <MethodSection />
+                    <EditorialFooter />
                     
                     {/* 视频放大播放弹窗 */}
                     {selectedVideo && (
