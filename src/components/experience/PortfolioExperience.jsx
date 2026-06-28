@@ -111,10 +111,10 @@ function HeroSection({ featuredProjects, onOpenProject }) {
             AIGC Creative Portfolio
           </motion.span>
           <motion.h1 variants={fadeUp}>
-            我的作品集，正在生长成一个多领域 AIGC 影像档案。
+            AIGC Moving Image Archive
           </motion.h1>
           <motion.p variants={fadeUp}>
-            汇集海外真人 AI 剧、3C 创意短片、AIGC 动画短片、品牌视觉和实验影像。这里不只展示结果，也展示把随机生成推进到可控交付的创作方法。
+            海外真人 AI 剧、3C 创意短片、动画短片与实验视觉。
           </motion.p>
 
           <motion.div className="hero-actions" variants={fadeUp}>
@@ -168,8 +168,8 @@ function ProfileSection() {
     <section className="profile-section page-section" id="profile" aria-label="个人简介">
       <SectionHeader
         kicker="Profile"
-        title="个人简介"
-        intro="我的核心工作是把 AIGC 创作中的不确定性，整理成更稳定的内容判断、视觉流程和交付系统。"
+        title="AJan"
+        intro="AIGC 影像创作者。关注角色、镜头、节奏和交付。"
       />
 
       <div className="profile-layout">
@@ -224,7 +224,7 @@ function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpe
       <SectionHeader
         kicker="Selected Work"
         title="作品"
-        intro="作品会逐步扩展为多领域 AIGC 内容库。当前先保留真实视频资产，并为 3C、动画、品牌和实验视觉预留清晰分类。"
+        intro="以作品为主轴，按内容方向浏览。"
       />
 
       <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
@@ -306,20 +306,23 @@ function ProjectCard({ project, onOpen }) {
             aria-hidden="true"
           />
         )}
-        <span className="media-badge">{project.video ? 'Play' : 'View'}</span>
+        <span className="media-badge">{project.video ? project.duration : 'Still'}</span>
+        <div className="project-overlay">
+          <span>{project.type}</span>
+          <h3>{project.titleEn}</h3>
+          <strong>{project.titleZh}</strong>
+        </div>
       </button>
 
       <div className="project-copy">
         <div className="project-meta">
           <span>{project.id}</span>
-          <span>{project.type}</span>
-          <span>{project.duration}</span>
+          <span>{project.year}</span>
+          <span>{project.role}</span>
         </div>
-        <h3>{project.titleEn}</h3>
-        <strong>{project.titleZh}</strong>
         <p>{project.introEn}</p>
         <div className="tag-row">
-          {project.tags.map(tag => <span key={tag}>{tag}</span>)}
+          {project.tags.slice(0, 2).map(tag => <span key={tag}>{tag}</span>)}
         </div>
       </div>
     </motion.article>
@@ -331,8 +334,8 @@ function SkillsSection() {
     <section className="skills-section page-section" id="skills" aria-label="技能展示">
       <SectionHeader
         kicker="Capability"
-        title="技能展示"
-        intro="技能不按软件清单堆叠，而按真实项目链路组织：创意判断、AI 生产、后期交付和商业包装。"
+        title="技能"
+        intro="围绕真实项目链路组织能力。"
       />
 
       <motion.div
@@ -362,8 +365,8 @@ function ContactSection() {
       <div className="contact-panel">
         <SectionHeader
           kicker="Contact"
-          title="联系我"
-          intro="适合需要 AIGC 影像方案、短剧视觉测试、3C 创意短片或动画短片原型的项目合作。"
+          title="联系"
+          intro="AIGC 影像、短剧视觉、产品短片与动画原型合作。"
         />
 
         <div className="contact-grid">
@@ -448,7 +451,6 @@ function ProjectModal({ project, isMuted, onClose, onMuteChange }) {
               <h2>{project.titleEn}</h2>
               <strong>{project.titleZh}</strong>
               <p>{project.introEn}</p>
-              <p>{project.introZh}</p>
 
               <div className="modal-detail-grid">
                 <DetailBlock title="Challenge" text={project.challenge} />
