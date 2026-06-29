@@ -384,6 +384,11 @@ function HeroIntroSection() {
       onPointerMove={handlePointerMove}
     >
       <div className="hero-paper-grid" data-parallax="background" aria-hidden="true" />
+      <div className="hero-kinetic-strip" aria-hidden="true">
+        <span>AIGC DESIGN PORTFOLIO</span>
+        <span>AIGC DESIGN PORTFOLIO</span>
+        <span>AIGC DESIGN PORTFOLIO</span>
+      </div>
       <div className="hero-doodle-field" data-parallax="foreground" aria-hidden="true">
         <span className="hero-doodle is-loop" />
         <span className="hero-doodle is-strike" />
@@ -436,7 +441,7 @@ function VectorPortfolioTitle({ rows }) {
       </span>
       <span className="hero-word-stack" aria-hidden="true">
         {wordRows.map((row, index) => (
-          <span className="hero-title-line" key={row}>
+          <span className="hero-title-line" key={row} data-word={row} style={{ '--line-index': index }}>
             <span className="hero-title-word" style={{ '--line-index': index }}>{row}</span>
           </span>
         ))}
@@ -620,7 +625,7 @@ function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
         <SectionHeader
           kicker="Selected Work"
           title="AIGC Reels"
-          intro="五支已完成的 AIGC 短剧样片，用真实画面验证钩子、人物关系、镜头连续性和平台播放节奏。"
+          intro="Five finished AI drama reels shaped as delivery-ready tests for hooks, character continuity, shot rhythm and platform pacing."
         />
         <WorkStats projects={videoProjects} />
       </div>
@@ -787,15 +792,20 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
       </p>
 
       <div className="carousel-copy">
-        <span className="section-kicker">Showreel Loop</span>
-        <h3>
-          <WordArtText text={activeProject.titleEn} />
-        </h3>
-        <p>{activeProject.introZh}</p>
-        <div className="carousel-meta">
-          <span>{activeProject.id}</span>
-          <span>{activeProject.type}</span>
-          <span>{activeProject.year}</span>
+        <div>
+          <span className="section-kicker">Showreel Loop</span>
+          <h3>
+            <WordArtText text={activeProject.titleEn} />
+          </h3>
+        </div>
+        <div className="carousel-copy-detail">
+          <p>{activeProject.introEn}</p>
+          <div className="carousel-meta">
+            <span>{activeProject.id}</span>
+            <span>{activeProject.type}</span>
+            <span>{activeProject.duration}</span>
+            <span>{activeProject.year}</span>
+          </div>
         </div>
       </div>
 
@@ -810,6 +820,7 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
           if (info.offset.x > 64) moveCarousel(-1)
         }}
       >
+        <div className="carousel-stage-light" aria-hidden="true" />
         {carouselProjects.map((project, projectIndex) => {
           const offset = getLoopOffset(projectIndex, activeIndex, carouselLength)
           const isActive = offset === 0
@@ -821,16 +832,16 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
               key={project.slug}
               type="button"
               className={isActive ? 'carousel-card is-active' : 'carousel-card'}
-              data-animate="card"
               style={{ '--slot': offset }}
               initial={false}
               animate={{
-                opacity: isVisible ? (isActive ? 1 : Math.max(0.22, 0.6 - distance * 0.15)) : 0,
-                x: `calc(${offset} * min(24vw, 16rem))`,
-                y: distance * 8,
-                scale: isActive ? 1 : 0.88 - Math.min(distance, 2) * 0.045,
-                rotateY: offset * -5,
-                zIndex: 20 - distance,
+                opacity: isVisible ? (isActive ? 1 : Math.max(0.28, 0.62 - distance * 0.16)) : 0,
+                x: `calc(-50% + (${offset} * min(28vw, 21rem)))`,
+                y: `calc(-50% + ${isActive ? 0 : distance * 22}px)`,
+                scale: isActive ? 1 : 0.68 - Math.min(distance, 2) * 0.055,
+                rotateY: offset * -8,
+                rotateZ: isActive ? 0 : offset * -1.4,
+                zIndex: 30 - distance,
                 pointerEvents: isVisible ? 'auto' : 'none',
               }}
               transition={carouselSpring}
@@ -864,8 +875,9 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
               <div className="carousel-card-copy">
                 <span>{project.type}</span>
                 <h4>
-                  {project.titleZh}
+                  {project.titleEn}
                 </h4>
+                {isActive && <p>{project.introEn}</p>}
                 <div className="carousel-card-meta">
                   <small>{project.hook}</small>
                   <small>{project.duration}</small>
