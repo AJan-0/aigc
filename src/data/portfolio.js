@@ -200,6 +200,6 @@ export const executionStandards = [
 ]
 
 export const contact = {
-  email: 'hello@poetfolio.art',
+  email: '1248567324@qq.com',
   availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '角色一致性工作流', '短剧预告包装'],
 }
