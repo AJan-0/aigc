@@ -291,61 +291,74 @@ function HeroIntroSection() {
 function ProfileSection() {
   return (
     <section className="profile-section page-section" id="profile" aria-label="个人简介">
-      <SectionHeader
-        kicker="Profile"
-        title="AJan"
-        intro="AIGC 影像创作者。关注角色、镜头、节奏和交付。"
-      />
+      <motion.div
+        className="profile-stage"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.22 }}
+        variants={stagger}
+      >
+        <motion.span className="section-kicker profile-kicker" variants={fadeUp}>
+          About me
+        </motion.span>
 
-      <div className="profile-layout">
-        <motion.div
-          className="profile-portrait"
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.7 }}
-        >
-          <img
-            src={profilePhoto}
-            alt={profile.name}
-            width="900"
-            height="1363"
-            loading="lazy"
-            decoding="async"
-          />
+        <motion.div className="profile-hero" variants={fadeUp}>
+          <motion.span
+            className="profile-giant-word"
+            aria-hidden="true"
+            initial={{ opacity: 0, y: 110, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            About
+          </motion.span>
+
+          <motion.div
+            className="profile-portrait"
+            initial={{ opacity: 0, y: 70, scale: 0.94 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.34 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+          >
+            <img
+              src={profilePhoto}
+              alt={profile.name}
+              width="900"
+              height="1363"
+              loading="lazy"
+              decoding="async"
+            />
+          </motion.div>
         </motion.div>
 
-        <motion.div
-          className="profile-body"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={stagger}
-        >
-          <motion.span className="section-kicker" variants={fadeUp}>{profile.title}</motion.span>
-          <motion.h2 variants={fadeUp}>{profile.name}</motion.h2>
-          <TextReveal text={profile.headline} className="profile-headline" />
-          {profile.bio.map(paragraph => (
-            <motion.p key={paragraph} variants={fadeUp}>{paragraph}</motion.p>
-          ))}
-        </motion.div>
+        <div className="profile-content">
+          <motion.div className="profile-body" variants={fadeUp}>
+            <span className="section-kicker">{profile.title}</span>
+            <TextReveal text={profile.headline} className="profile-headline" />
+          </motion.div>
 
-        <motion.div
-          className="principle-list"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={stagger}
-        >
-          {profile.principles.map((item, index) => (
-            <motion.article key={item.label} variants={fadeUp}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <strong>{item.label}</strong>
-              <p>{item.text}</p>
-            </motion.article>
-          ))}
-        </motion.div>
-      </div>
+          <motion.div className="profile-bio-grid" variants={stagger}>
+            {profile.bio.map(paragraph => (
+              <motion.p key={paragraph} variants={fadeUp}>{paragraph}</motion.p>
+            ))}
+          </motion.div>
+
+          <motion.div className="principle-list" variants={stagger}>
+            {profile.principles.map((item, index) => (
+              <motion.article key={item.label} variants={fadeUp}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{item.label}</strong>
+                <p>{item.text}</p>
+              </motion.article>
+            ))}
+          </motion.div>
+
+          <motion.p className="profile-signature" variants={fadeUp}>
+            {profile.signature}
+          </motion.p>
+        </div>
+      </motion.div>
     </section>
   )
 }
@@ -357,7 +370,7 @@ function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
         <SectionHeader
           kicker="Selected Work"
           title="Video Archive"
-          intro="Five finished AIGC video reels, organized as an editorial index instead of repeated placeholder cards."
+          intro="Five finished AIGC reels. Each one tests a hook, a visual system and a delivery format."
         />
         <WorkStats projects={videoProjects} />
       </div>
@@ -515,7 +528,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
         <h3>
           <WordArtText text={activeProject.titleEn} />
         </h3>
-        <p>{activeProject.introEn}</p>
+        <p>{activeProject.value}</p>
         <div className="carousel-meta">
           <span>{activeProject.id}</span>
           <span>{activeProject.type}</span>
@@ -584,9 +597,12 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
               <div className="carousel-card-copy">
                 <span>{project.type}</span>
                 <h4>
-                  <WordArtText text={project.titleEn} />
+                  {project.titleEn}
                 </h4>
-                <small>{project.duration}</small>
+                <div className="carousel-card-meta">
+                  <small>{project.hook}</small>
+                  <small>{project.duration}</small>
+                </div>
               </div>
             </motion.button>
           )
@@ -716,14 +732,26 @@ function ContactSection() {
         className="contact-panel"
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.34 }}
-        variants={fadeUp}
+        viewport={{ once: true, amount: 0.24 }}
+        variants={stagger}
       >
-        <span className="section-kicker">Contact</span>
-        <a href={`mailto:${contact.email}`} className="contact-mail">
-          {contact.email}
-        </a>
-        <p>AIGC video briefs, short-drama visual direction and finished reel collaborations.</p>
+        <motion.span className="contact-glow-word" aria-hidden="true" variants={fadeUp}>
+          Brief
+        </motion.span>
+        <motion.div className="contact-copy" variants={fadeUp}>
+          <span className="section-kicker">Contact</span>
+          <h2>Start with a story hook.</h2>
+          <p>For AIGC short-drama concepts, character-continuity tests and finished vertical video packaging.</p>
+        </motion.div>
+        <motion.a href={`mailto:${contact.email}`} className="contact-mail" variants={fadeUp}>
+          <span>Email me</span>
+          <strong>{contact.email}</strong>
+        </motion.a>
+        <motion.div className="contact-value-list" variants={stagger}>
+          <motion.span variants={fadeUp}>Finished reels</motion.span>
+          <motion.span variants={fadeUp}>AI drama visual direction</motion.span>
+          <motion.span variants={fadeUp}>Delivery-ready packaging</motion.span>
+        </motion.div>
       </motion.div>
     </section>
   )

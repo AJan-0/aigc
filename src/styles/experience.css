@@ -697,19 +697,69 @@ body {
   margin-bottom: 0;
 }
 
-.profile-layout {
+.profile-section {
+  overflow: hidden;
+}
+
+.profile-stage {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(13rem, 19.5rem) minmax(0, 1fr) minmax(16rem, 0.56fr);
-  gap: clamp(1.2rem, 2.5vw, 2.5rem);
-  align-items: start;
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  min-height: min(94svh, 56rem);
+  align-content: center;
+  padding-block: clamp(1rem, 3vw, 2rem);
+}
+
+.profile-stage::before {
+  content: '';
+  position: absolute;
+  inset: 6% 4% auto;
+  height: 48%;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(103,232,249,0.13), transparent 31%),
+    linear-gradient(180deg, transparent, rgba(7,7,7,0.96) 76%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.profile-kicker {
+  justify-self: center;
+}
+
+.profile-hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(18rem, 42vw, 29rem);
+}
+
+.profile-giant-word {
+  position: absolute;
+  z-index: 0;
+  color: transparent;
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 13.5rem;
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: 0;
+  background: linear-gradient(180deg, #ffffff 14%, rgba(247,239,226,0.44) 68%, rgba(247,239,226,0) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-transform: none;
+  text-shadow: 0 26px 90px rgba(0,0,0,0.62);
+  white-space: nowrap;
 }
 
 .profile-portrait {
+  position: relative;
+  z-index: 1;
+  width: min(31vw, 17rem);
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
-  background: var(--surface-soft);
-  box-shadow: var(--shadow-soft), var(--inner-line);
+  border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(7,7,7,0));
+  mask-image: linear-gradient(to bottom, #000 0 72%, transparent 98%);
+  filter: drop-shadow(0 34px 58px rgba(0,0,0,0.68));
 }
 
 .profile-portrait img {
@@ -718,57 +768,91 @@ body {
   height: auto;
   aspect-ratio: auto;
   object-fit: contain;
-  filter: grayscale(0.16) contrast(1.04);
+  filter: grayscale(0.18) contrast(1.06);
 }
 
-.profile-body h2 {
-  margin: 0.75rem 0 1rem;
-  color: var(--text-main);
-  font-family: Syne, Manrope, sans-serif;
-  font-size: clamp(2.4rem, 6vw, 5.2rem);
-  line-height: 0.9;
-  letter-spacing: 0;
+.profile-content {
+  width: min(100%, 880px);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.6rem);
 }
 
-.profile-body p {
-  margin: 0 0 1rem;
-  color: var(--text-soft);
-  line-height: 1.62;
+.profile-body {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  text-align: center;
 }
 
 .profile-body .profile-headline {
+  max-width: 48rem;
   color: var(--text-main);
-  font-size: clamp(1.04rem, 1.45vw, 1.32rem);
+  font-size: 1.28rem;
   line-height: 1.48;
+}
+
+.profile-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 4vw, 3.4rem);
+  align-items: start;
+}
+
+.profile-bio-grid p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1.72;
 }
 
 .principle-list {
   display: grid;
-  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.3rem;
 }
 
 .principle-list article {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.42rem;
+  min-height: 8.1rem;
   padding: 0.9rem;
+  border: 1px solid rgba(246,239,225,0.09);
   border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.035);
+  box-shadow: var(--inner-line);
 }
 
 .principle-list span {
-  color: var(--accent-gold);
+  color: var(--accent-cyan);
   font-family: Syne, Manrope, sans-serif;
   font-weight: 800;
 }
 
 .principle-list strong {
   color: var(--text-main);
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .principle-list p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.45;
+}
+
+.profile-signature {
+  justify-self: center;
+  margin: 0.8rem 0 0;
+  color: var(--text-main);
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transform: rotate(-4deg);
 }
 
 .project-carousel {
@@ -838,8 +922,8 @@ body {
   max-width: 20rem;
   margin: 0;
   color: var(--text-soft);
-  font-size: 0.94rem;
-  line-height: 1.56;
+  font-size: 1rem;
+  line-height: 1.45;
 }
 
 .carousel-meta {
@@ -997,7 +1081,8 @@ body {
   position: relative;
   z-index: 5;
   display: grid;
-  gap: 0.45rem;
+  gap: 0.48rem;
+  min-width: 0;
 }
 
 .carousel-card-copy > span {
@@ -1012,16 +1097,30 @@ body {
   margin: 0;
   color: var(--text-main);
   font-family: Syne, Manrope, sans-serif;
-  font-size: clamp(1.48rem, 2.7vw, 2.55rem);
-  line-height: 0.92;
+  font-size: 2.1rem;
+  line-height: 0.95;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
-.carousel-card-copy small {
+.carousel-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.carousel-card-meta small + small {
+  color: var(--accent-cyan);
+  border-color: rgba(103,232,249,0.28);
+}
+
+.carousel-card-meta small {
   width: fit-content;
   min-height: 1.85rem;
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   padding: 0 0.58rem;
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: var(--radius-xs);
@@ -1029,8 +1128,9 @@ body {
   background: rgba(0,0,0,0.38);
   font-size: 0.76rem;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: normal;
 }
 
 .carousel-controls {
@@ -1355,38 +1455,154 @@ body {
 
 .contact-section {
   padding-top: clamp(2.4rem, 6vw, 4.8rem);
-  padding-bottom: clamp(2.5rem, 7vw, 5rem);
+  padding-bottom: clamp(3rem, 8vw, 6rem);
 }
 
 .contact-panel {
+  position: relative;
   display: grid;
-  gap: 0.8rem;
-  justify-items: start;
-  padding: clamp(1rem, 3vw, 2.2rem) 0;
-  border-top: 1px solid var(--line);
+  grid-template-columns: minmax(0, 0.82fr) minmax(18rem, 0.48fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  align-items: end;
+  min-height: clamp(24rem, 42vw, 32rem);
+  padding: clamp(1.1rem, 4vw, 3.2rem);
+  overflow: hidden;
+  border: 1px solid rgba(246,239,225,0.11);
   border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 85% 20%, rgba(103,232,249,0.13), transparent 28%),
+    linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.026));
+  box-shadow: var(--inner-line), var(--shadow-soft);
+}
+
+.contact-panel::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(255,86,56,0.09), transparent 28%, rgba(103,232,249,0.08)),
+    repeating-linear-gradient(90deg, rgba(247,239,226,0.06) 0 1px, transparent 1px 6.5rem);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.contact-panel::after {
+  content: '';
+  position: absolute;
+  right: -10%;
+  bottom: -24%;
+  width: 42rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(103,232,249,0.12);
+  border-radius: 999px;
+  opacity: 0.46;
+  pointer-events: none;
+}
+
+.contact-glow-word {
+  position: absolute;
+  left: clamp(1rem, 4vw, 3.2rem);
+  top: clamp(0.9rem, 3vw, 2.6rem);
+  z-index: 0;
+  color: transparent;
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 9rem;
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(247,239,226,0.16);
+}
+
+.contact-copy,
+.contact-mail,
+.contact-value-list {
+  position: relative;
+  z-index: 1;
+}
+
+.contact-copy {
+  display: grid;
+  gap: 0.82rem;
+  align-self: end;
+}
+
+.contact-copy h2 {
+  max-width: 9ch;
+  margin: 0;
+  color: var(--text-main);
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 5.4rem;
+  line-height: 0.88;
+  letter-spacing: 0;
+}
+
+.contact-copy p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1.58;
 }
 
 .contact-mail {
+  display: grid;
+  gap: 0.5rem;
+  align-self: end;
+  padding: 1rem;
+  border: 1px solid rgba(246,239,225,0.14);
+  border-radius: var(--radius-md);
   color: var(--text-main);
-  font-family: Syne, Manrope, sans-serif;
-  font-size: 3rem;
-  line-height: 0.95;
-  letter-spacing: 0;
+  background: rgba(7,7,7,0.46);
   text-decoration: none;
+  box-shadow: var(--inner-line);
+}
+
+.contact-mail span {
+  color: var(--accent-cyan);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.contact-mail strong {
+  font-family: Syne, Manrope, sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0;
   overflow-wrap: anywhere;
 }
 
-.contact-mail:hover {
-  color: var(--accent-cyan);
+.contact-mail:hover,
+.contact-mail:focus-visible {
+  border-color: rgba(103,232,249,0.42);
+  background: rgba(103,232,249,0.075);
+  transform: translateY(-0.2rem);
 }
 
-.contact-panel p {
-  max-width: 34rem;
-  margin: 0;
+.contact-value-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.48rem;
+  align-self: end;
+}
+
+.contact-value-list span {
+  min-height: 1.95rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.72rem;
+  border: 1px solid rgba(246,239,225,0.12);
+  border-radius: 999px;
   color: var(--text-muted);
-  font-size: 0.96rem;
-  line-height: 1.6;
+  background: rgba(255,255,255,0.035);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .modal-layer {
@@ -1647,8 +1863,20 @@ body {
 
 @media (max-width: 1160px) {
   .hero-inner,
-  .profile-layout {
+  .profile-bio-grid {
     grid-template-columns: 1fr;
+  }
+
+  .profile-stage {
+    min-height: auto;
+  }
+
+  .profile-giant-word {
+    font-size: 10.5rem;
+  }
+
+  .profile-portrait {
+    width: min(42vw, 17rem);
   }
 
   .hero-methods {
@@ -1697,6 +1925,10 @@ body {
     width: clamp(13.5rem, 34vw, 18.5rem);
   }
 
+  .carousel-card-copy h4 {
+    font-size: 2rem;
+  }
+
   .work-index,
   .standards-layout {
     grid-template-columns: 1fr;
@@ -1714,6 +1946,15 @@ body {
   .project-modal {
     grid-template-columns: 1fr;
     overflow: auto;
+  }
+
+  .contact-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-copy h2 {
+    max-width: 11ch;
+    font-size: 4.2rem;
   }
 
   .modal-media video,
@@ -1804,7 +2045,7 @@ body {
 
   .hero-copy p,
   .section-header p,
-  .profile-body p {
+  .profile-bio-grid p {
     font-size: 0.92rem;
     line-height: 1.58;
   }
@@ -1858,14 +2099,62 @@ body {
   }
 
   .section-header h2,
-  .profile-body h2 {
+  .profile-giant-word {
     font-size: clamp(2.35rem, 13vw, 3.8rem);
     line-height: 0.95;
   }
 
+  .profile-section {
+    padding-top: 3.1rem;
+  }
+
+  .profile-stage {
+    gap: 1rem;
+    min-height: auto;
+    padding-block: 0.4rem;
+  }
+
+  .profile-hero {
+    min-height: 14rem;
+  }
+
+  .profile-giant-word {
+    font-size: 4.9rem;
+  }
+
   .profile-portrait {
-    width: min(100%, 15rem);
+    width: min(54vw, 11.5rem);
     justify-self: center;
+  }
+
+  .profile-body {
+    text-align: left;
+    justify-items: start;
+  }
+
+  .profile-body .profile-headline {
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+
+  .profile-bio-grid {
+    gap: 0.85rem;
+  }
+
+  .principle-list {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .principle-list article {
+    min-height: auto;
+    padding: 0.78rem;
+  }
+
+  .profile-signature {
+    justify-self: start;
+    font-size: 1.65rem;
+    margin-top: 0.3rem;
   }
 
   .work-stats {
@@ -1909,7 +2198,7 @@ body {
   }
 
   .carousel-stage {
-    min-height: min(92vw, 24rem);
+    min-height: 27rem;
     margin-left: -1rem;
     margin-right: -1rem;
   }
@@ -1920,16 +2209,32 @@ body {
   }
 
   .carousel-card {
-    width: min(56vw, 14.5rem);
+    width: min(54vw, 13.2rem);
     padding: 0.78rem;
   }
 
   .carousel-card-copy h4 {
-    font-size: 1.75rem;
+    font-size: 1.32rem;
+    line-height: 1.02;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 
   .carousel-card-copy > span {
     font-size: 0.64rem;
+  }
+
+  .carousel-card-meta {
+    gap: 0.3rem;
+  }
+
+  .carousel-card-meta small {
+    min-height: 1.55rem;
+    padding: 0 0.46rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
   }
 
   .carousel-controls {
@@ -2007,7 +2312,40 @@ body {
   }
 
   .contact-mail {
-    font-size: 2rem;
+    padding: 0.82rem;
+  }
+
+  .contact-panel {
+    min-height: 25rem;
+    padding: 1rem;
+  }
+
+  .contact-glow-word {
+    font-size: 4.25rem;
+  }
+
+  .contact-copy {
+    padding-top: 3.4rem;
+  }
+
+  .contact-copy h2 {
+    max-width: 100%;
+    font-size: 2.75rem;
+    line-height: 0.92;
+  }
+
+  .contact-copy p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .contact-mail strong {
+    font-size: 1.35rem;
+  }
+
+  .contact-value-list span {
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
   }
 
   .modal-layer {
