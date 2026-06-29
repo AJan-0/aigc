@@ -27,27 +27,13 @@ const stagger = {
   show: { transition: { staggerChildren: 0.06 } },
 }
 
-const heroMethods = [
-  {
-    step: '01',
-    title: 'Hook first',
-    text: 'Open with the emotional turn, not a generic mood board.',
-  },
-  {
-    step: '02',
-    title: 'Character DNA',
-    text: 'Keep face, costume, light and relation cues consistent across shots.',
-  },
-  {
-    step: '03',
-    title: 'Shot rhythm',
-    text: 'Build short-form pacing through cut points, silence and reveal timing.',
-  },
-  {
-    step: '04',
-    title: 'Delivery frame',
-    text: 'Finish every piece around platform format, runtime and playback clarity.',
-  },
+const directorTitleLines = ['AIGC', 'SHORT DRAMA', 'DIRECTED BY AJAN']
+
+const directorStatusItems = [
+  'AI Director',
+  'Editing Room',
+  '5 Finished Reels',
+  'Vertical Drama System',
 ]
 
 const heroMarqueeItems = [
@@ -197,9 +183,12 @@ function HeroIntroSection() {
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
-  const fieldY = useTransform(scrollYProgress, [0, 1], ['0rem', '2.6rem'])
-  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '1.5rem'])
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.68])
+  const coreY = useTransform(scrollYProgress, [0, 1], ['0rem', '5.5rem'])
+  const coreScale = useTransform(scrollYProgress, [0, 1], [1, 0.82])
+  const titleY = useTransform(scrollYProgress, [0, 1], ['0rem', '-2.2rem'])
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.72], [1, 0.22])
+  const bridgeOpacity = useTransform(scrollYProgress, [0.42, 1], [0, 1])
+  const bridgeY = useTransform(scrollYProgress, [0.35, 1], ['3.5rem', '-0.2rem'])
 
   const handlePointerMove = event => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -217,64 +206,60 @@ function HeroIntroSection() {
       aria-label="AIGC moving image intro"
       onPointerMove={handlePointerMove}
     >
-      <motion.div className="hero-type-field" aria-hidden="true" style={{ y: shouldReduceMotion ? 0 : fieldY }}>
-        <span>AI</span>
-        <span>Moving Image</span>
-        <span>Short Drama</span>
-        <span>Delivery System</span>
-      </motion.div>
       <div className="hero-depth-lines" aria-hidden="true" />
+      <div className="hero-scanline-field" aria-hidden="true" />
+      <motion.div
+        className="hero-webgl-core"
+        aria-hidden="true"
+        style={{
+          y: shouldReduceMotion ? 0 : coreY,
+          scale: shouldReduceMotion ? 1 : coreScale,
+        }}
+      >
+        <LensCoreCanvas reduceMotion={shouldReduceMotion} />
+      </motion.div>
 
-      <div className="hero-inner">
-        <motion.div
-          className="hero-copy"
-          style={{
-            y: shouldReduceMotion ? 0 : copyY,
-            opacity: copyOpacity,
-          }}
-          initial="hidden"
-          animate="show"
-          variants={stagger}
-        >
-          <motion.div className="hero-topline" variants={fadeUp}>
-            <span className="section-kicker">AIGC Creative Portfolio</span>
-            <span>2026 / Finished video archive</span>
-          </motion.div>
-          <KineticTitle lines={['AI', 'Moving', 'Image', 'System']} />
-          <TextReveal
-            text="A focused AIGC video portfolio: short-drama hooks, character continuity, shot rhythm and delivery-ready reels."
-            className="hero-lede"
-          />
-
-          <motion.div className="hero-actions" variants={fadeUp}>
-            <MagneticButton type="button" className="is-primary" onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}>
-              Watch archive
-            </MagneticButton>
-            <MagneticButton type="button" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              Start a brief
-            </MagneticButton>
-          </motion.div>
+      <motion.div
+        className="hero-director-room"
+        style={{
+          y: shouldReduceMotion ? 0 : titleY,
+          opacity: titleOpacity,
+        }}
+        initial="hidden"
+        animate="show"
+        variants={stagger}
+      >
+        <motion.div className="hero-topline" variants={fadeUp}>
+          <span className="section-kicker">AI Director Editing Room</span>
+          <span>2026 / Finished reels only</span>
         </motion.div>
 
-        <motion.div
-          className="hero-methods"
-          initial={{ opacity: 0, x: 28 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
-          aria-label="AIGC production method"
-        >
-          <span className="section-kicker">Method lines</span>
-          {heroMethods.map(item => (
-            <article className="hero-method-row" key={item.step}>
-              <span>{item.step}</span>
-              <strong>{item.title}</strong>
-              <p>{item.text}</p>
-            </article>
+        <DirectorTitle lines={directorTitleLines} />
+
+        <motion.p className="hero-director-note" variants={fadeUp}>
+          Short-drama hooks, character continuity and delivery-ready AIGC reels, built like a director's cut instead of a mood board.
+        </motion.p>
+
+        <motion.div className="director-status-row" variants={stagger}>
+          {directorStatusItems.map(item => (
+            <motion.span variants={fadeUp} key={item}>{item}</motion.span>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
 
       <KineticMarquee items={heroMarqueeItems} />
+
+      <motion.div
+        className="hero-about-bridge"
+        aria-hidden="true"
+        style={{
+          opacity: bridgeOpacity,
+          y: shouldReduceMotion ? 0 : bridgeY,
+        }}
+      >
+        <span>DIRECTOR</span>
+        <span>ABOUT</span>
+      </motion.div>
 
       <button
         className="hero-scroll-cue"
@@ -304,20 +289,20 @@ function ProfileSection() {
           <motion.span
             className="profile-giant-word"
             aria-hidden="true"
-            initial={{ opacity: 0, y: 118, scaleY: 1.12, filter: 'blur(16px)' }}
-            whileInView={{ opacity: 1, y: 0, scaleY: 1, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 118, scaleY: 1.18, filter: 'blur(18px)', clipPath: 'inset(0 0 100% 0)' }}
+            whileInView={{ opacity: 1, y: 0, scaleY: 1, filter: 'blur(0px)', clipPath: 'inset(0 0 0% 0)' }}
             viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.25, ease: [0.16, 1, 0.3, 1] }}
           >
             About
           </motion.span>
 
           <motion.div
             className="profile-portrait"
-            initial={{ opacity: 0, y: 82, scale: 0.92, filter: 'blur(10px)' }}
-            whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 126, scale: 0.88, filter: 'blur(18px) brightness(0.42)', clipPath: 'inset(42% 0 0 0)' }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px) brightness(1)', clipPath: 'inset(0% 0 0 0)' }}
             viewport={{ once: true, amount: 0.34 }}
-            transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            transition={{ duration: 1.18, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
           >
             <img
               src={profileCutout}
@@ -895,6 +880,217 @@ function KineticTitle({ lines }) {
   )
 }
 
+function DirectorTitle({ lines }) {
+  const label = lines.join(' ')
+
+  return (
+    <h1 className="director-title" aria-label={label}>
+      {lines.map((line, lineIndex) => (
+        <span
+          className="director-title-line"
+          key={line}
+          aria-hidden="true"
+          data-word={line}
+          style={{ '--line-index': lineIndex, '--line-length': line.length }}
+        >
+          {line.split('').map((letter, letterIndex) => (
+            <span
+              className={letter === ' ' ? 'director-title-letter is-space' : 'director-title-letter'}
+              key={`${line}-${letter}-${letterIndex}`}
+              style={{ '--letter-index': letterIndex, '--line-index': lineIndex }}
+            >
+              {letter === ' ' ? ' ' : letter}
+            </span>
+          ))}
+        </span>
+      ))}
+    </h1>
+  )
+}
+
+function LensCoreCanvas({ reduceMotion }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return undefined
+
+    let cleanupScene = () => {}
+    let isDisposed = false
+
+    import('three').then(THREE => {
+      if (isDisposed) return
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      })
+      renderer.setClearColor(0x000000, 0)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75))
+
+      const scene = new THREE.Scene()
+      const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100)
+      camera.position.set(0, 0, 8.6)
+
+      const group = new THREE.Group()
+      scene.add(group)
+
+      const glassMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x151515,
+        metalness: 0.18,
+        roughness: 0.18,
+        transmission: 0.62,
+        thickness: 1.1,
+        ior: 1.9,
+        transparent: true,
+        opacity: 0.9,
+        clearcoat: 1,
+        clearcoatRoughness: 0.12,
+      })
+      const ringMaterial = new THREE.MeshStandardMaterial({
+        color: 0xf4efe3,
+        metalness: 0.72,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.64,
+      })
+      const redMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff543e,
+        transparent: true,
+        opacity: 0.86,
+      })
+      const cyanMaterial = new THREE.MeshBasicMaterial({
+        color: 0x67e8f9,
+        transparent: true,
+        opacity: 0.7,
+      })
+
+      const lensGeometry = new THREE.IcosahedronGeometry(2.18, 3)
+      const lens = new THREE.Mesh(lensGeometry, glassMaterial)
+      group.add(lens)
+
+      const rings = [
+        { radius: 2.52, tube: 0.018, rotate: [Math.PI / 2, 0, 0] },
+        { radius: 2.94, tube: 0.01, rotate: [Math.PI / 2.2, 0.42, 0.18] },
+        { radius: 3.28, tube: 0.008, rotate: [Math.PI / 2.45, -0.38, -0.32] },
+      ].map(item => {
+        const mesh = new THREE.Mesh(new THREE.TorusGeometry(item.radius, item.tube, 16, 180), ringMaterial.clone())
+        mesh.rotation.set(...item.rotate)
+        group.add(mesh)
+        return mesh
+      })
+
+      const iris = new THREE.Group()
+      const bladeGeometry = new THREE.PlaneGeometry(0.34, 2.65)
+      for (let index = 0; index < 9; index += 1) {
+        const blade = new THREE.Mesh(bladeGeometry, index % 2 ? cyanMaterial.clone() : redMaterial.clone())
+        blade.position.y = 1.08
+        blade.rotation.z = (index / 9) * Math.PI * 2
+        blade.material.opacity = index % 2 ? 0.24 : 0.36
+        iris.add(blade)
+      }
+      group.add(iris)
+
+      const shards = Array.from({ length: 38 }, (_, index) => {
+        const material = index % 3 === 0 ? redMaterial.clone() : cyanMaterial.clone()
+        material.opacity = index % 3 === 0 ? 0.45 : 0.3
+        const shard = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.018, 0.52 + (index % 4) * 0.12), material)
+        const angle = (index / 38) * Math.PI * 2
+        const radius = 3.15 + (index % 6) * 0.24
+        shard.position.set(Math.cos(angle) * radius, Math.sin(angle * 1.7) * 1.35, Math.sin(angle) * radius * 0.18)
+        shard.rotation.set(angle * 0.22, angle, angle * 0.38)
+        group.add(shard)
+        return shard
+      })
+
+      const keyLight = new THREE.PointLight(0x67e8f9, 32, 18)
+      keyLight.position.set(-3.4, 2.7, 4)
+      scene.add(keyLight)
+
+      const warmLight = new THREE.PointLight(0xff543e, 22, 18)
+      warmLight.position.set(3.6, -2.2, 4.2)
+      scene.add(warmLight)
+      scene.add(new THREE.AmbientLight(0xf4efe3, 1.2))
+
+      const pointer = { x: 0, y: 0 }
+      const target = { x: 0, y: 0 }
+      let frameId = 0
+      const clock = new THREE.Clock()
+
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect()
+        const width = Math.max(1, Math.floor(rect.width))
+        const height = Math.max(1, Math.floor(rect.height))
+        renderer.setSize(width, height, false)
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
+      }
+
+      const handlePointerMove = event => {
+        const rect = canvas.getBoundingClientRect()
+        target.x = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+        target.y = ((event.clientY - rect.top) / rect.height - 0.5) * -2
+      }
+
+      const animate = () => {
+        const elapsed = clock.getElapsedTime()
+        pointer.x += (target.x - pointer.x) * 0.08
+        pointer.y += (target.y - pointer.y) * 0.08
+        group.rotation.y = pointer.x * 0.34 + elapsed * (reduceMotion ? 0.015 : 0.07)
+        group.rotation.x = pointer.y * 0.22 + Math.sin(elapsed * 0.6) * 0.05
+        lens.rotation.z = elapsed * (reduceMotion ? 0.02 : 0.18)
+        iris.rotation.z = -elapsed * (reduceMotion ? 0.025 : 0.28)
+        rings.forEach((ring, index) => {
+          ring.rotation.z = elapsed * (0.05 + index * 0.035)
+          ring.material.opacity = 0.42 + Math.sin(elapsed * 1.3 + index) * 0.16
+        })
+        shards.forEach((shard, index) => {
+          shard.rotation.y += reduceMotion ? 0.001 : 0.004 + (index % 5) * 0.0008
+          shard.position.z = Math.sin(elapsed * 0.8 + index) * 0.42
+        })
+        renderer.render(scene, camera)
+        frameId = window.requestAnimationFrame(animate)
+      }
+
+      resize()
+      canvas.addEventListener('pointermove', handlePointerMove)
+      window.addEventListener('resize', resize)
+      animate()
+
+      cleanupScene = () => {
+        window.cancelAnimationFrame(frameId)
+        canvas.removeEventListener('pointermove', handlePointerMove)
+        window.removeEventListener('resize', resize)
+        renderer.dispose()
+        glassMaterial.dispose()
+        ringMaterial.dispose()
+        redMaterial.dispose()
+        cyanMaterial.dispose()
+        lensGeometry.dispose()
+        rings.forEach(ring => {
+          ring.geometry.dispose()
+          ring.material.dispose()
+        })
+        iris.children.forEach(blade => blade.material.dispose())
+        bladeGeometry.dispose()
+        shards.forEach(shard => {
+          shard.geometry.dispose()
+          shard.material.dispose()
+        })
+      }
+    })
+
+    return () => {
+      isDisposed = true
+      cleanupScene()
+    }
+  }, [reduceMotion])
+
+  return <canvas ref={canvasRef} className="lens-core-canvas" />
+}
+
 function WordArtText({ text }) {
   return (
     <span className="word-art">
@@ -932,42 +1128,6 @@ function TextReveal({ text, className = '' }) {
         </motion.span>
       ))}
     </motion.p>
-  )
-}
-
-function MagneticButton({ children, className = '', ...props }) {
-  const buttonRef = useRef(null)
-
-  const handlePointerMove = event => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
-    const moveX = (x - rect.width / 2) * 0.12
-    const moveY = (y - rect.height / 2) * 0.18
-
-    buttonRef.current?.style.setProperty('--magnet-x', `${moveX}px`)
-    buttonRef.current?.style.setProperty('--magnet-y', `${moveY}px`)
-    buttonRef.current?.style.setProperty('--magnet-glow-x', `${(x / rect.width) * 100}%`)
-    buttonRef.current?.style.setProperty('--magnet-glow-y', `${(y / rect.height) * 100}%`)
-  }
-
-  const resetPointer = () => {
-    buttonRef.current?.style.setProperty('--magnet-x', '0px')
-    buttonRef.current?.style.setProperty('--magnet-y', '0px')
-    buttonRef.current?.style.setProperty('--magnet-glow-x', '50%')
-    buttonRef.current?.style.setProperty('--magnet-glow-y', '50%')
-  }
-
-  return (
-    <button
-      ref={buttonRef}
-      className={`magnetic-button ${className}`}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={resetPointer}
-      {...props}
-    >
-      <span>{children}</span>
-    </button>
   )
 }
 
