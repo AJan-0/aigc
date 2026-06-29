@@ -7,7 +7,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import profilePhoto from '../../../profile-photo.png'
+import profilePhoto from '../../../profile-photo-optimized.jpg'
 import {
   categories,
   contact,
@@ -200,7 +200,7 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           scale: shouldReduceMotion ? 1.04 : backdropScale,
         }}
       >
-        <img src={leadProject.cover} alt="" />
+        <img src={leadProject.cover} alt="" fetchpriority="high" decoding="async" />
       </motion.div>
       <div className="hero-depth-lines" aria-hidden="true" />
 
@@ -257,7 +257,13 @@ function HeroSection({ featuredProjects, onOpenProject }) {
                 onClick={() => onOpenProject(project)}
                 aria-label={`查看精选作品 ${project.titleEn}`}
               >
-                <img src={project.cover} alt={project.titleZh} />
+                <img
+                  src={project.cover}
+                  alt={project.titleEn}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={index === 0 ? 'high' : 'auto'}
+                  decoding="async"
+                />
                 <span>{project.id}</span>
                 <strong>{project.titleEn}</strong>
                 <small>{project.type}</small>
@@ -322,7 +328,14 @@ function ProfileSection() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.7 }}
         >
-          <img src={profilePhoto} alt={profile.name} loading="lazy" />
+          <img
+            src={profilePhoto}
+            alt={profile.name}
+            width="900"
+            height="1363"
+            loading="lazy"
+            decoding="async"
+          />
         </motion.div>
 
         <motion.div
@@ -378,21 +391,18 @@ function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpe
 
 function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [direction, setDirection] = useState(1)
   const [isPaused, setIsPaused] = useState(false)
   const shouldReduceMotion = useReducedMotion()
   const carouselLength = carouselProjects.length
 
   useEffect(() => {
     setActiveIndex(0)
-    setDirection(1)
   }, [carouselProjects])
 
   useEffect(() => {
     if (shouldReduceMotion || isPaused || carouselLength <= 1) return undefined
 
     const timer = window.setInterval(() => {
-      setDirection(1)
       setActiveIndex(index => wrapIndex(index + 1, carouselLength))
     }, 5200)
 
@@ -401,7 +411,6 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
 
   const moveCarousel = offset => {
     if (carouselLength <= 1) return
-    setDirection(offset > 0 ? 1 : -1)
     setActiveIndex(index => wrapIndex(index + offset, carouselLength))
   }
 
@@ -421,7 +430,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
       moveCarousel(-1)
     }
 
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && event.target === event.currentTarget) {
       event.preventDefault()
       onOpenProject(carouselProjects[activeIndex])
     }
@@ -456,6 +465,10 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
       aria-roledescription="carousel"
       aria-label="作品轮播"
     >
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {`Project ${activeIndex + 1} of ${carouselLength}: ${activeProject.titleEn}`}
+      </p>
+
       <div className="carousel-copy">
         <span className="section-kicker">Showreel Loop</span>
         <h3>
@@ -505,12 +518,19 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
                 onClick={() => (isActive ? onOpenProject(project) : jumpToOffset(offset))}
                 aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
                 aria-hidden={!isVisible}
+                aria-current={isActive ? 'true' : undefined}
                 tabIndex={isVisible ? 0 : -1}
               >
-                <img src={project.cover} alt={project.titleEn} loading={isActive ? 'eager' : 'lazy'} />
+                <img
+                  src={project.cover}
+                  alt={project.titleEn}
+                  loading={isActive ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
                 {isActive && project.video && (
                   <video
                     src={project.video}
+                    poster={project.cover}
                     muted
                     autoPlay
                     loop
@@ -562,11 +582,9 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
             key={project.slug}
             type="button"
             className={index === activeIndex ? 'is-active' : ''}
-            onClick={() => {
-              setDirection(index > activeIndex ? 1 : -1)
-              setActiveIndex(index)
-            }}
+            onClick={() => setActiveIndex(index)}
             aria-label={`Show ${project.titleEn}`}
+            aria-current={index === activeIndex ? 'true' : undefined}
           />
         ))}
       </div>
@@ -586,119 +604,57 @@ function getLoopOffset(index, activeIndex, length) {
 }
 
 function CategoryFilter({ activeCategory, onChange }) {
-  return (
-    <div className="category-filter" role="tablist" aria-label="作品分类">
-      {categories.map(category => (
-        <button
-          key={category.id}
-          type="button"
-          role="tab"
-          aria-selected={activeCategory === category.id}
-          className={activeCategory === category.id ? 'is-active' : ''}
-          style={{ '--accent': category.accent }}
-          onClick={() => onChange(category.id)}
-        >
-          <span>{category.label}</span>
-          <small>{category.labelZh}</small>
-        </button>
-      ))}
-    </div>
-  )
-}
+  const activeIndex = Math.max(0, categories.findIndex(category => category.id === activeCategory))
 
-function ProjectCard({ project, onOpen }) {
-  const [isPreviewing, setIsPreviewing] = useState(false)
-  const videoRef = useRef(null)
-  const cardRef = useRef(null)
+  const selectCategory = (index, container) => {
+    const nextCategory = categories[index]
+    if (!nextCategory) return
+    onChange(nextCategory.id)
+    container?.querySelectorAll('button')[index]?.focus()
+  }
 
-  useEffect(() => {
-    if (!videoRef.current) return
-    if (isPreviewing) {
-      videoRef.current.play().catch(() => {})
+  const handleKeyDown = event => {
+    const lastIndex = categories.length - 1
+    let nextIndex = activeIndex
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextIndex = wrapIndex(activeIndex + 1, categories.length)
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextIndex = wrapIndex(activeIndex - 1, categories.length)
+    } else if (event.key === 'Home') {
+      nextIndex = 0
+    } else if (event.key === 'End') {
+      nextIndex = lastIndex
     } else {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
+      return
     }
-  }, [isPreviewing])
 
-  const startPreview = () => {
-    const canPreview = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches
-    if (canPreview) setIsPreviewing(true)
-  }
-
-  const handlePointerMove = event => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = ((event.clientX - rect.left) / rect.width) * 100
-    const y = ((event.clientY - rect.top) / rect.height) * 100
-    const tiltX = ((x - 50) / 50) * 4
-    const tiltY = ((50 - y) / 50) * 5
-    cardRef.current?.style.setProperty('--spotlight-x', `${x}%`)
-    cardRef.current?.style.setProperty('--spotlight-y', `${y}%`)
-    cardRef.current?.style.setProperty('--tilt-x', `${tiltX}deg`)
-    cardRef.current?.style.setProperty('--tilt-y', `${tiltY}deg`)
-  }
-
-  const resetMotion = () => {
-    setIsPreviewing(false)
-    cardRef.current?.style.setProperty('--tilt-x', '0deg')
-    cardRef.current?.style.setProperty('--tilt-y', '0deg')
-    cardRef.current?.style.setProperty('--spotlight-x', '50%')
-    cardRef.current?.style.setProperty('--spotlight-y', '35%')
+    event.preventDefault()
+    selectCategory(nextIndex, event.currentTarget)
   }
 
   return (
-    <motion.article
-      ref={cardRef}
-      layout
-      className={project.featured ? 'project-card is-featured' : 'project-card'}
-      initial={{ opacity: 0, y: 24, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 18, scale: 0.98 }}
-      transition={{ duration: 0.32 }}
-    >
-      <button
-        type="button"
-        className="project-media"
-        onClick={() => onOpen(project)}
-        onMouseEnter={startPreview}
-        onMouseLeave={resetMotion}
-        onPointerLeave={resetMotion}
-        onFocus={startPreview}
-        onBlur={() => setIsPreviewing(false)}
-        onPointerMove={handlePointerMove}
-        aria-label={`查看作品 ${project.titleEn}`}
-      >
-        <img src={project.cover} alt={project.titleEn} loading="lazy" />
-        {project.video && isPreviewing && (
-          <video
-            ref={videoRef}
-            src={project.video}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        )}
-        <span className="media-badge">{project.video ? project.duration : 'Still'}</span>
-        <div className="project-overlay">
-          <span>{project.type}</span>
-          <h3><WordArtText text={project.titleEn} /></h3>
-        </div>
-      </button>
+    <div className="category-filter" role="tablist" aria-label="作品分类" onKeyDown={handleKeyDown}>
+      {categories.map(category => {
+        const isActive = activeCategory === category.id
 
-      <div className="project-copy">
-        <div className="project-meta">
-          <span>{project.id}</span>
-          <span>{project.year}</span>
-          <span>{project.role}</span>
-        </div>
-        <p>{project.introEn}</p>
-        <div className="tag-row">
-          {project.tags.slice(0, 2).map(tag => <span key={tag}>{tag}</span>)}
-        </div>
-      </div>
-    </motion.article>
+        return (
+          <button
+            key={category.id}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            className={isActive ? 'is-active' : ''}
+            tabIndex={isActive ? 0 : -1}
+            style={{ '--accent': category.accent }}
+            onClick={() => onChange(category.id)}
+          >
+            <span>{category.label}</span>
+            <small>{category.labelZh}</small>
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
