@@ -28,6 +28,13 @@ const stagger = {
   show: { transition: { staggerChildren: 0.08 } },
 }
 
+const carouselSpring = {
+  type: 'spring',
+  stiffness: 170,
+  damping: 28,
+  mass: 0.88,
+}
+
 export default function PortfolioExperience() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
@@ -102,10 +109,12 @@ function useActiveSection(ids) {
 
     updateActiveSection()
     window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('portfolio:navigation', requestUpdate)
     window.addEventListener('resize', requestUpdate)
 
     return () => {
       window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('portfolio:navigation', requestUpdate)
       window.removeEventListener('resize', requestUpdate)
       if (animationFrame) window.cancelAnimationFrame(animationFrame)
     }
@@ -120,6 +129,7 @@ function SiteHeader({ activeSection }) {
   const handleNavigate = id => {
     setIsOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    window.setTimeout(() => window.dispatchEvent(new Event('portfolio:navigation')), 120)
   }
 
   return (
@@ -353,13 +363,14 @@ function ProfileSection() {
 function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpenProject }) {
   return (
     <section className="work-section page-section" id="work" aria-label="作品">
-      <SectionHeader
-        kicker="Selected Work"
-        title="作品"
-        intro="以作品为主轴，按内容方向浏览。"
-      />
-
-      <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
+      <div className="work-heading-row">
+        <SectionHeader
+          kicker="Selected Work"
+          title="作品"
+          intro="以作品为主轴，按内容方向浏览。"
+        />
+        <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
+      </div>
       <ProjectCarousel projects={filteredProjects} onOpenProject={onOpenProject} />
     </section>
   )
@@ -426,7 +437,6 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
   }
 
   const activeProject = carouselProjects[activeIndex]
-  const offsets = carouselLength === 1 ? [0] : carouselLength === 2 ? [-1, 0, 1] : [-2, -1, 0, 1, 2]
   const progress = ((activeIndex + 1) / carouselLength) * 100
 
   return (
@@ -469,41 +479,33 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
           if (info.offset.x > 54) moveCarousel(-1)
         }}
       >
-        <AnimatePresence initial={false} custom={direction}>
-          {offsets.map(offset => {
-            const projectIndex = wrapIndex(activeIndex + offset, carouselLength)
-            const project = carouselProjects[projectIndex]
+        {carouselProjects.map((project, projectIndex) => {
+            const offset = getLoopOffset(projectIndex, activeIndex, carouselLength)
             const isActive = offset === 0
+            const distance = Math.abs(offset)
+            const isVisible = distance <= 2
 
             return (
               <motion.button
-                key={`${project.slug}-${offset}-${activeIndex}`}
+                key={project.slug}
                 type="button"
                 className={isActive ? 'carousel-card is-active' : 'carousel-card'}
                 style={{ '--slot': offset }}
-                custom={direction}
-                initial={{
-                  opacity: 0,
-                  x: `${(offset + direction) * 19}%`,
-                  scale: isActive ? 0.92 : 0.72,
-                  rotateY: offset * -12,
-                }}
+                initial={false}
                 animate={{
-                  opacity: isActive ? 1 : Math.max(0.26, 0.6 - Math.abs(offset) * 0.15),
+                  opacity: isVisible ? (isActive ? 1 : Math.max(0.22, 0.6 - distance * 0.15)) : 0,
                   x: `calc(${offset} * min(27vw, 18rem))`,
-                  y: Math.abs(offset) * 18,
-                  scale: isActive ? 1 : 0.78 - Math.min(Math.abs(offset), 2) * 0.08,
+                  y: distance * 16,
+                  scale: isActive ? 1 : 0.8 - Math.min(distance, 2) * 0.08,
                   rotateY: offset * -12,
-                  zIndex: 10 - Math.abs(offset),
+                  zIndex: 20 - distance,
+                  pointerEvents: isVisible ? 'auto' : 'none',
                 }}
-                exit={{
-                  opacity: 0,
-                  x: `${(offset - direction) * 23}%`,
-                  scale: 0.68,
-                }}
-                transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
+                transition={carouselSpring}
                 onClick={() => (isActive ? onOpenProject(project) : jumpToOffset(offset))}
                 aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
+                aria-hidden={!isVisible}
+                tabIndex={isVisible ? 0 : -1}
               >
                 <img src={project.cover} alt={project.titleEn} loading={isActive ? 'eager' : 'lazy'} />
                 {isActive && project.video && (
@@ -528,7 +530,6 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
               </motion.button>
             )
           })}
-        </AnimatePresence>
       </motion.div>
 
       <div className="carousel-controls">
@@ -575,6 +576,13 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
 
 function wrapIndex(index, length) {
   return ((index % length) + length) % length
+}
+
+function getLoopOffset(index, activeIndex, length) {
+  let offset = index - activeIndex
+  if (offset > length / 2) offset -= length
+  if (offset < -length / 2) offset += length
+  return offset
 }
 
 function CategoryFilter({ activeCategory, onChange }) {

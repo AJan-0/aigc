@@ -649,13 +649,13 @@ body {
   position: relative;
   width: min(100%, 1500px);
   margin: 0 auto;
-  padding: clamp(3.8rem, 7.6vw, 6.8rem) clamp(1rem, 4vw, 4rem);
+  padding: clamp(3.2rem, 6.3vw, 5.6rem) clamp(1rem, 4vw, 4rem);
   border-top: 1px solid var(--line);
 }
 
 .section-header {
   max-width: 52rem;
-  margin-bottom: clamp(1.7rem, 4vw, 3.1rem);
+  margin-bottom: clamp(1.2rem, 2.7vw, 2.2rem);
 }
 
 .section-header h2 {
@@ -673,6 +673,18 @@ body {
   color: var(--text-soft);
   font-size: 0.98rem;
   line-height: 1.65;
+}
+
+.work-heading-row {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.75fr) minmax(24rem, 1fr);
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: clamp(1rem, 2vw, 1.6rem);
+}
+
+.work-heading-row .section-header {
+  margin-bottom: 0;
 }
 
 .profile-layout {
@@ -750,7 +762,8 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
-  margin-bottom: 1rem;
+  justify-content: flex-end;
+  margin-bottom: 0;
 }
 
 .project-carousel {
@@ -759,12 +772,11 @@ body {
   grid-template-columns: minmax(15rem, 0.32fr) minmax(0, 1fr);
   grid-template-areas:
     'copy stage'
-    'controls stage'
-    'dots stage';
+    'controls stage';
   gap: 0.9rem clamp(1rem, 3vw, 2rem);
   align-items: center;
-  min-height: clamp(26rem, 48vw, 38rem);
-  margin-bottom: 1.05rem;
+  min-height: clamp(25rem, 45vw, 36rem);
+  margin-bottom: 0.4rem;
   outline: none;
 }
 
@@ -788,7 +800,7 @@ body {
 }
 
 .carousel-copy h3 {
-  margin: 0.75rem 0 0.9rem;
+  margin: 0.65rem 0 0.72rem;
   color: var(--text-main);
   font-family: Syne, Manrope, sans-serif;
   font-size: clamp(2.25rem, 5.1vw, 5.4rem);
@@ -808,7 +820,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
-  margin-top: 1rem;
+  margin-top: 0.82rem;
 }
 
 .carousel-meta span {
@@ -832,7 +844,7 @@ body {
 .carousel-stage {
   grid-area: stage;
   position: relative;
-  min-height: clamp(25rem, 44vw, 36rem);
+  min-height: clamp(24rem, 42vw, 34rem);
   overflow: hidden;
   perspective: 1400px;
   transform-style: preserve-3d;
@@ -869,7 +881,7 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(13rem, 21vw, 18rem);
+  width: clamp(13rem, 20vw, 17.4rem);
   aspect-ratio: 9 / 16;
   display: grid;
   align-content: end;
@@ -996,7 +1008,7 @@ body {
   grid-template-columns: 2.8rem minmax(5rem, 1fr) 2.8rem;
   gap: 0.75rem;
   align-items: center;
-  align-self: start;
+  align-self: end;
 }
 
 .carousel-arrow {
@@ -1036,11 +1048,10 @@ body {
 }
 
 .carousel-dots {
-  grid-area: dots;
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
-  align-self: start;
+  margin-top: 0.8rem;
 }
 
 .carousel-dots button {
@@ -1667,9 +1678,17 @@ body {
     grid-template-areas:
       'copy'
       'stage'
-      'controls'
-      'dots';
+      'controls';
     min-height: auto;
+  }
+
+  .work-heading-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .category-filter {
+    justify-content: flex-start;
   }
 
   .carousel-copy {
@@ -1856,7 +1875,7 @@ body {
   }
 
   .page-section {
-    padding: 3rem 1rem;
+    padding: 2.65rem 1rem;
   }
 
   .section-header h2,
@@ -1889,23 +1908,28 @@ body {
   }
 
   .project-carousel {
-    gap: 0.75rem;
+    gap: 0.58rem;
     margin-left: -1rem;
     margin-right: -1rem;
     padding: 0 1rem;
   }
 
   .carousel-copy h3 {
-    font-size: clamp(2rem, 10.5vw, 3.5rem);
-    margin-bottom: 0.65rem;
+    font-size: clamp(1.95rem, 9.8vw, 3.25rem);
+    margin: 0.55rem 0 0.52rem;
   }
 
   .carousel-copy p {
     font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .carousel-meta {
+    margin-top: 0.68rem;
   }
 
   .carousel-stage {
-    min-height: min(114vw, 31rem);
+    min-height: min(108vw, 29rem);
     margin-left: -1rem;
     margin-right: -1rem;
   }
@@ -1916,8 +1940,8 @@ body {
   }
 
   .carousel-card {
-    width: min(67vw, 17.6rem);
-    padding: 0.82rem;
+    width: min(63vw, 16.8rem);
+    padding: 0.78rem;
   }
 
   .carousel-card-copy h4 {
@@ -1931,6 +1955,7 @@ body {
   .carousel-controls {
     grid-template-columns: 2.6rem minmax(4rem, 1fr) 2.6rem;
     gap: 0.65rem;
+    margin-top: -0.1rem;
   }
 
   .carousel-arrow {
@@ -1941,7 +1966,8 @@ body {
   .carousel-dots {
     overflow-x: auto;
     flex-wrap: nowrap;
-    padding-bottom: 0.15rem;
+    margin-top: 0.58rem;
+    padding-bottom: 0.12rem;
     scrollbar-width: none;
   }
 
