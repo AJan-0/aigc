@@ -1,9 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import '@fontsource/space-grotesk/700.css'
-import '@fontsource/inter/400.css'
-import '@fontsource/inter/700.css'
-import '@fontsource/noto-sans-sc/400.css'
-import '@fontsource/jetbrains-mono/700.css'
 import {
   AnimatePresence,
   motion,
@@ -203,6 +198,14 @@ function usePortfolioGsap(pageRef) {
           duration: 0.92,
           stagger: 0.08,
         }, '-=0.26')
+        .from(gsap.utils.toArray('.vector-pop-detail', page), {
+          scale: 0.2,
+          opacity: 0,
+          transformOrigin: '50% 50%',
+          duration: 0.58,
+          stagger: 0.045,
+          ease: 'back.out(2.1)',
+        }, '-=0.34')
         .to(gsap.utils.toArray('.hero-title-word', page), {
           yPercent: 0,
           opacity: 1,
@@ -444,68 +447,77 @@ function VectorPortfolioTitle({ rows }) {
 
 function AigcVectorLogo() {
   return (
-    <svg className="aigc-vector-logo" viewBox="0 0 900 278" role="img" aria-label="AIGC">
+    <svg className="aigc-vector-logo" viewBox="0 0 1040 310" role="img" aria-label="AIGC">
       <defs>
         <linearGradient id="aigc-red" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ff392b" />
-          <stop offset="58%" stopColor="#ff1f19" />
-          <stop offset="100%" stopColor="#9e0a07" />
+          <stop offset="0%" stopColor="#ff6a54" />
+          <stop offset="46%" stopColor="#ff2621" />
+          <stop offset="100%" stopColor="#bd0908" />
         </linearGradient>
         <linearGradient id="aigc-purple" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#a86cff" />
-          <stop offset="60%" stopColor="#6e32e8" />
-          <stop offset="100%" stopColor="#2b106c" />
+          <stop offset="0%" stopColor="#bc8dff" />
+          <stop offset="54%" stopColor="#7a35ee" />
+          <stop offset="100%" stopColor="#3f1397" />
         </linearGradient>
         <linearGradient id="aigc-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffdf43" />
-          <stop offset="60%" stopColor="#ffb000" />
-          <stop offset="100%" stopColor="#936000" />
+          <stop offset="0%" stopColor="#ffd94b" />
+          <stop offset="54%" stopColor="#ffb20b" />
+          <stop offset="100%" stopColor="#d18100" />
         </linearGradient>
         <linearGradient id="aigc-pink" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ff72db" />
-          <stop offset="62%" stopColor="#f044bd" />
-          <stop offset="100%" stopColor="#8d1b6a" />
+          <stop offset="0%" stopColor="#ff82e4" />
+          <stop offset="58%" stopColor="#f146c6" />
+          <stop offset="100%" stopColor="#c02794" />
         </linearGradient>
-        <filter id="soft-vector-shadow" x="-10%" y="-18%" width="120%" height="138%">
-          <feDropShadow dx="0" dy="9" stdDeviation="6" floodColor="#000000" floodOpacity="0.36" />
+        <filter id="soft-vector-shadow" x="-14%" y="-22%" width="128%" height="150%">
+          <feDropShadow dx="0" dy="12" stdDeviation="7" floodColor="#000000" floodOpacity="0.42" />
         </filter>
       </defs>
 
       <g className="vector-letter vector-letter-a" filter="url(#soft-vector-shadow)">
-        <path d="M57 242C89 150 117 80 154 31c11-14 35-13 46 1 39 51 69 124 97 210h-64l-18-55h-83l-18 55H57Z" fill="url(#aigc-red)" stroke="#fff" strokeWidth="9" strokeLinejoin="round" />
-        <path d="M151 138h45l-21-66-24 66Z" fill="#080808" stroke="#fff" strokeWidth="7" strokeLinejoin="round" />
-        <path d="M109 73c25-24 62-33 95-17" fill="none" stroke="#fff" strokeWidth="14" strokeLinecap="round" opacity="0.86" />
-        <path d="M93 120c-10 22-16 45-18 68" fill="none" stroke="#fff" strokeWidth="11" strokeLinecap="round" opacity="0.78" />
+        <path d="M40 250C54 135 98 42 176 35c69-6 108 83 138 215h-72l-14-58h-89l-20 58H40Z" fill="url(#aigc-red)" stroke="#fff" strokeWidth="10" strokeLinejoin="round" />
+        <path d="M155 139c7-32 21-61 31-61 11 0 20 31 27 61 3 14-5 24-19 24h-23c-14 0-19-9-16-24Z" fill="#070707" stroke="#fff" strokeWidth="8" strokeLinejoin="round" />
+        <path className="vector-pop-detail" d="M78 54l-29-26M104 42l-5-36M135 44l18-28" fill="none" stroke="#fff" strokeWidth="8" strokeLinecap="round" />
+        <path className="vector-pop-detail" d="M83 104c28-31 82-45 121-19" fill="none" stroke="#fff" strokeWidth="13" strokeLinecap="round" opacity="0.9" />
+        <path className="vector-pop-detail" d="M67 143c-9 28-13 58-9 85" fill="none" stroke="#fff" strokeWidth="12" strokeLinecap="round" opacity="0.82" />
+        <path className="vector-pop-detail" d="M49 241c-16 12-30 7-33-10M55 51c-17-12-18-27-3-43" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity="0.85" />
       </g>
 
       <g className="vector-letter vector-letter-i" filter="url(#soft-vector-shadow)">
-        <path d="M327 42h126v45h-34v111h39v45H319v-45h39V87h-31V42Z" fill="url(#aigc-purple)" stroke="#fff" strokeWidth="9" strokeLinejoin="round" />
-        <path d="M346 60h88" stroke="#d9c5ff" strokeWidth="9" strokeLinecap="round" opacity="0.5" />
-        <path d="M378 90v101" stroke="#32106e" strokeWidth="12" opacity="0.34" />
+        <path d="M335 62l126-16 34 26-4 179H328l4-50 33-5 2-92-34 2 2-44Z" fill="url(#aigc-purple)" stroke="#fff" strokeWidth="10" strokeLinejoin="round" />
+        <path d="M361 79l87-10" stroke="#dcc9ff" strokeWidth="11" strokeLinecap="round" opacity="0.52" />
+        <path d="M408 92l-3 101" stroke="#3a0f8c" strokeWidth="14" opacity="0.34" />
+        <path d="M459 46c-17-21 28-25 12-45-11-14-32-2-27 15" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
       </g>
 
       <g className="vector-letter vector-letter-g" filter="url(#soft-vector-shadow)">
-        <path d="M508 69c32-31 99-41 151-13 24 13 42 31 52 56l-55 25c-10-22-31-34-65-34-46 0-76 29-76 70 0 45 31 73 80 73 30 0 53-9 66-27v-24h-69v-48h131v116h-47l-8-28c-20 22-48 34-85 34-81 0-137-53-137-129 0-31 11-56 32-71Z" fill="url(#aigc-gold)" stroke="#fff" strokeWidth="9" strokeLinejoin="round" />
-        <circle cx="653" cy="75" r="12" fill="#fff" stroke="#141414" strokeWidth="5" />
-        <path d="M648 70l10 10M658 70l-10 10" stroke="#141414" strokeWidth="4" strokeLinecap="round" />
-        <circle cx="693" cy="229" r="12" fill="#fff" stroke="#141414" strokeWidth="5" />
-        <path d="M688 224l10 10M698 224l-10 10" stroke="#141414" strokeWidth="4" strokeLinecap="round" />
+        <path d="M548 44h118l6 38h46v47h-42c11 21 10 57-5 79-18 27-50 42-91 42-75 0-128-44-128-108 0-34 16-61 42-82h54V44Zm28 80c-23 0-38 14-38 34 0 21 17 35 43 35 16 0 30-5 39-15v-16h-49v-38h5Z" fill="url(#aigc-gold)" stroke="#fff" strokeWidth="10" strokeLinejoin="round" />
+        <circle className="vector-pop-detail" cx="666" cy="94" r="10" fill="#fff" stroke="#141414" strokeWidth="4" />
+        <path className="vector-pop-detail" d="M661 89l10 10M671 89l-10 10" stroke="#141414" strokeWidth="3.5" strokeLinecap="round" />
+        <circle className="vector-pop-detail" cx="626" cy="226" r="10" fill="#fff" stroke="#141414" strokeWidth="4" />
+        <path className="vector-pop-detail" d="M621 221l10 10M631 221l-10 10" stroke="#141414" strokeWidth="3.5" strokeLinecap="round" />
+        <circle className="vector-pop-detail" cx="714" cy="219" r="10" fill="#fff" stroke="#141414" strokeWidth="4" />
+        <path className="vector-pop-detail" d="M709 214l10 10M719 214l-10 10" stroke="#141414" strokeWidth="3.5" strokeLinecap="round" />
+        <path className="vector-pop-detail" d="M706 63h30M715 75h22M679 251c20 18 42 16 58-8M520 247c-1 27 11 45 33 53" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
       </g>
 
       <g className="vector-letter vector-letter-c" filter="url(#soft-vector-shadow)">
-        <path d="M780 83c41-56 121-57 164-11 24 26 33 63 20 98-14 38-50 60-94 60-34 0-63-14-81-40l46-35c8 12 20 19 34 19 21 0 36-16 36-37s-15-38-38-38c-23 0-39 14-49 41l-55-25c4-12 10-23 17-32Z" fill="url(#aigc-pink)" stroke="#fff" strokeWidth="9" strokeLinejoin="round" transform="translate(-92 4)" />
-        <circle cx="747" cy="98" r="14" fill="#fff" stroke="#111" strokeWidth="5" />
-        <circle cx="785" cy="98" r="14" fill="#fff" stroke="#111" strokeWidth="5" />
-        <circle cx="750" cy="100" r="5" fill="#111" />
-        <circle cx="788" cy="100" r="5" fill="#111" />
-        <path d="M749 156c22 19 52 19 75 0" fill="none" stroke="#111" strokeWidth="7" strokeLinecap="round" />
-        <path d="M711 66c-3-18 4-31 18-40M748 56c-1-16 7-26 22-31M789 58c4-15 15-23 31-23" fill="none" stroke="#fff" strokeWidth="8" strokeLinecap="round" />
+        <path d="M925 78C884 31 810 38 773 91C733 148 766 220 835 238C885 251 932 229 955 191" fill="none" stroke="#fff" strokeWidth="98" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M925 78C884 31 810 38 773 91C733 148 766 220 835 238C885 251 932 229 955 191" fill="none" stroke="url(#aigc-pink)" strokeWidth="78" strokeLinecap="round" strokeLinejoin="round" />
+        <ellipse cx="859" cy="145" rx="58" ry="42" fill="#070707" />
+        <path className="vector-pop-detail" d="M825 112c22-22 68-21 91 1" fill="none" stroke="#111" strokeWidth="9" strokeLinecap="round" opacity="0.5" />
+        <circle className="vector-pop-detail" cx="842" cy="101" r="15" fill="#fff" stroke="#111" strokeWidth="5" />
+        <circle className="vector-pop-detail" cx="881" cy="103" r="15" fill="#fff" stroke="#111" strokeWidth="5" />
+        <circle className="vector-pop-detail" cx="845" cy="103" r="5" fill="#111" />
+        <circle className="vector-pop-detail" cx="884" cy="105" r="5" fill="#111" />
+        <path className="vector-pop-detail" d="M827 134c6 10 16 17 29 20 18 4 38-1 54-13" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" />
+        <path className="vector-pop-detail" d="M823 73c-4-18 4-32 19-41M858 60c0-16 10-27 27-31M901 64c7-15 21-22 38-18" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" />
+        <path className="vector-pop-detail" d="M777 124c-8 4-17 4-25-1M792 150c-10 5-20 5-28-1M812 96c-5-7-10-13-16-17" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round" opacity="0.65" />
       </g>
 
-      <g className="vector-doodles" fill="none" stroke="#fff" strokeWidth="8" strokeLinecap="round" aria-hidden="true">
-        <path d="M62 23l-28-25M92 11l-4-37M124 16l16-27" />
-        <path d="M353 20c-22-21 29-24 10-43-12-12-31 0-24 16" />
-        <path d="M626 8l-6-35M655 20l17-29M681 38l34-11" />
+      <g className="vector-doodles vector-pop-detail" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" aria-hidden="true">
+        <path d="M644 21l-7-35M674 28l16-30M699 48l35-9" />
+        <path d="M757 230l-10 42M776 231l5 38M798 226l20 31" />
       </g>
     </svg>
   )
@@ -569,6 +581,21 @@ function ProfileSection() {
           ))}
         </motion.div>
 
+        <motion.div className="profile-principles" data-card-group variants={stagger}>
+          {profile.principles.map(principle => (
+            <motion.article
+              key={principle.label}
+              data-animate="card"
+              variants={fadeUp}
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span>{principle.label}</span>
+              <p>{principle.text}</p>
+            </motion.article>
+          ))}
+        </motion.div>
+
         <motion.p
           className="profile-signature"
           variants={fadeUp}
@@ -585,18 +612,30 @@ function ProfileSection() {
 }
 
 function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
+  const [activeWorkIndex, setActiveWorkIndex] = useState(0)
+
   return (
     <section className="work-section page-section" id="work" aria-label="Video archive">
       <div className="work-heading-row">
         <SectionHeader
           kicker="Selected Work"
-          title="Video Archive"
-          intro="Five finished AIGC reels. Each one tests a hook, a visual system and a delivery format."
+          title="AIGC Reels"
+          intro="五支已完成的 AIGC 短剧样片，用真实画面验证钩子、人物关系、镜头连续性和平台播放节奏。"
         />
         <WorkStats projects={videoProjects} />
       </div>
-      <ProjectCarousel projects={videoProjects} onOpenProject={onOpenProject} />
-      <WorkIndex projects={videoProjects} onOpenProject={onOpenProject} />
+      <ProjectCarousel
+        projects={videoProjects}
+        activeIndex={activeWorkIndex}
+        onActiveIndexChange={setActiveWorkIndex}
+        onOpenProject={onOpenProject}
+      />
+      <WorkIndex
+        projects={videoProjects}
+        activeIndex={activeWorkIndex}
+        onSelectIndex={setActiveWorkIndex}
+        onOpenProject={onOpenProject}
+      />
     </section>
   )
 }
@@ -622,13 +661,13 @@ function WorkStats({ projects: visibleProjects }) {
       </span>
       <span data-animate="card">
         <strong>{projectTypes}</strong>
-        <small>Story types</small>
+        <small>Story systems</small>
       </span>
     </div>
   )
 }
 
-function WorkIndex({ projects: indexedProjects, onOpenProject }) {
+function WorkIndex({ projects: indexedProjects, activeIndex, onSelectIndex, onOpenProject }) {
   const reelLabel = indexedProjects.length === 1
     ? 'One finished reel'
     : `${indexedProjects.length} finished reels`
@@ -643,7 +682,7 @@ function WorkIndex({ projects: indexedProjects, onOpenProject }) {
     >
       <motion.div className="work-index-copy" variants={fadeUp}>
         <span className="section-kicker">Video Index</span>
-        <h3>{reelLabel}, one delivery system.</h3>
+        <h3>{reelLabel}. Built for delivery.</h3>
       </motion.div>
 
       <div className="work-index-list" data-card-group aria-label="Finished video list">
@@ -651,17 +690,20 @@ function WorkIndex({ projects: indexedProjects, onOpenProject }) {
           <motion.button
             key={project.slug}
             type="button"
-            className="work-index-row"
+            className={index === activeIndex ? 'work-index-row is-active' : 'work-index-row'}
             data-animate="card"
             variants={fadeUp}
+            onPointerEnter={() => onSelectIndex(index)}
+            onFocus={() => onSelectIndex(index)}
             onClick={() => onOpenProject(project)}
           >
             <span className="work-index-number">{String(index + 1).padStart(2, '0')}</span>
             <span className="work-index-title">
-              <strong>{project.titleEn}</strong>
-              <small>{project.type}</small>
+              <strong>{project.titleZh}</strong>
+              <small>{project.titleEn}</small>
             </span>
             <span className="work-index-meta">
+              <small>{project.type}</small>
               <small>{project.duration}</small>
               <small>{project.year}</small>
             </span>
@@ -672,29 +714,28 @@ function WorkIndex({ projects: indexedProjects, onOpenProject }) {
   )
 }
 
-function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
-  const [activeIndex, setActiveIndex] = useState(0)
+function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveIndexChange, onOpenProject }) {
   const [isPaused, setIsPaused] = useState(false)
   const shouldReduceMotion = useReducedMotion()
   const carouselLength = carouselProjects.length
 
   useEffect(() => {
-    setActiveIndex(0)
-  }, [carouselProjects])
+    onActiveIndexChange(0)
+  }, [carouselProjects, onActiveIndexChange])
 
   useEffect(() => {
     if (shouldReduceMotion || isPaused || carouselLength <= 1) return undefined
 
     const timer = window.setInterval(() => {
-      setActiveIndex(index => wrapIndex(index + 1, carouselLength))
+      onActiveIndexChange(index => wrapIndex(index + 1, carouselLength))
     }, 5200)
 
     return () => window.clearInterval(timer)
-  }, [carouselLength, isPaused, shouldReduceMotion])
+  }, [carouselLength, isPaused, onActiveIndexChange, shouldReduceMotion])
 
   const moveCarousel = offset => {
     if (carouselLength <= 1) return
-    setActiveIndex(index => wrapIndex(index + offset, carouselLength))
+    onActiveIndexChange(index => wrapIndex(index + offset, carouselLength))
   }
 
   const jumpToOffset = offset => {
@@ -747,10 +788,10 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
 
       <div className="carousel-copy">
         <span className="section-kicker">Showreel Loop</span>
-        <h3 data-split-lines>
+        <h3>
           <WordArtText text={activeProject.titleEn} />
         </h3>
-        <p data-split-lines>{activeProject.value}</p>
+        <p>{activeProject.introZh}</p>
         <div className="carousel-meta">
           <span>{activeProject.id}</span>
           <span>{activeProject.type}</span>
@@ -785,7 +826,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
               initial={false}
               animate={{
                 opacity: isVisible ? (isActive ? 1 : Math.max(0.22, 0.6 - distance * 0.15)) : 0,
-                x: `calc(${offset} * min(22vw, 14rem))`,
+                x: `calc(${offset} * min(24vw, 16rem))`,
                 y: distance * 8,
                 scale: isActive ? 1 : 0.88 - Math.min(distance, 2) * 0.045,
                 rotateY: offset * -5,
@@ -793,6 +834,8 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
                 pointerEvents: isVisible ? 'auto' : 'none',
               }}
               transition={carouselSpring}
+              onPointerEnter={() => !isActive && onActiveIndexChange(projectIndex)}
+              onFocus={() => !isActive && onActiveIndexChange(projectIndex)}
               onClick={() => (isActive ? onOpenProject(project) : jumpToOffset(offset))}
               aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
               aria-hidden={!isVisible}
@@ -821,7 +864,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
               <div className="carousel-card-copy">
                 <span>{project.type}</span>
                 <h4>
-                  {project.titleEn}
+                  {project.titleZh}
                 </h4>
                 <div className="carousel-card-meta">
                   <small>{project.hook}</small>
@@ -863,7 +906,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
             key={project.slug}
             type="button"
             className={index === activeIndex ? 'is-active' : ''}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => onActiveIndexChange(index)}
             aria-label={`Show ${project.titleEn}`}
             aria-current={index === activeIndex ? 'true' : undefined}
           />
@@ -1128,8 +1171,7 @@ function KineticTitle({ lines }) {
 
 function WordArtText({ text }) {
   return (
-    <span className="word-art">
-      <span className="word-art-readable">{text}</span>
+    <span className="word-art" aria-label={text}>
       {text.split(' ').map((word, wordIndex) => (
         <span className="word-art-word" aria-hidden="true" key={`${word}-${wordIndex}`}>
           {word.split('').map((letter, letterIndex) => (
