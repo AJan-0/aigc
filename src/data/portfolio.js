@@ -22,6 +22,10 @@ export const profile = {
   name: 'AJan',
   title: 'AIGC Video Director / AI Short-Drama Workflow Designer',
   headline: 'I turn AI-generated shots into finished short-drama reels with clear hooks, consistent characters and platform-ready pacing.',
+  aboutColumns: [
+    '我是 AJan，专注 AIGC 短剧与商业预告影像。我的工作不是堆生成画面，而是把钩子、角色连续性、镜头节奏和后期包装整理成能被观看、能被判断、能被交付的成片流程。',
+    '适合需要快速验证海外短剧题材、品牌视觉样片和竖屏内容方向的团队。用更低试错成本，提前看到故事气质、人物关系和平台播放节奏是否成立。',
+  ],
   bio: [
     '我的工作不是堆素材，而是把剧本钩子、角色一致性、镜头节奏和后期包装连成一条可交付流程。',
     '适合需要快速验证短剧概念、海外题材预告、AIGC 视觉方案和成片包装的团队。',

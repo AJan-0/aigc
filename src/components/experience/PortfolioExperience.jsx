@@ -7,7 +7,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import profilePhoto from '../../../profile-photo-optimized.jpg'
+import profileCutout from '../../../profile-photo-cutout.webp'
 import {
   contact,
   executionStandards,
@@ -298,66 +298,61 @@ function ProfileSection() {
         viewport={{ once: true, amount: 0.22 }}
         variants={stagger}
       >
-        <motion.span className="section-kicker profile-kicker" variants={fadeUp}>
-          About me
-        </motion.span>
+        <h2 className="sr-only">About {profile.name}</h2>
 
         <motion.div className="profile-hero" variants={fadeUp}>
           <motion.span
             className="profile-giant-word"
             aria-hidden="true"
-            initial={{ opacity: 0, y: 110, filter: 'blur(12px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 118, scaleY: 1.12, filter: 'blur(16px)' }}
+            whileInView={{ opacity: 1, y: 0, scaleY: 1, filter: 'blur(0px)' }}
             viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
           >
             About
           </motion.span>
 
           <motion.div
             className="profile-portrait"
-            initial={{ opacity: 0, y: 70, scale: 0.94 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 82, scale: 0.92, filter: 'blur(10px)' }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
             viewport={{ once: true, amount: 0.34 }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+            transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           >
             <img
-              src={profilePhoto}
+              src={profileCutout}
               alt={profile.name}
-              width="900"
-              height="1363"
+              width="780"
+              height="1033"
               loading="lazy"
               decoding="async"
             />
           </motion.div>
         </motion.div>
 
-        <div className="profile-content">
-          <motion.div className="profile-body" variants={fadeUp}>
-            <span className="section-kicker">{profile.title}</span>
-            <TextReveal text={profile.headline} className="profile-headline" />
-          </motion.div>
+        <motion.div className="profile-copy-grid" variants={stagger}>
+          {profile.aboutColumns.map(paragraph => (
+            <motion.p
+              key={paragraph}
+              variants={fadeUp}
+              whileHover={{ y: -3, color: 'rgba(247,239,226,0.98)' }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {paragraph}
+            </motion.p>
+          ))}
+        </motion.div>
 
-          <motion.div className="profile-bio-grid" variants={stagger}>
-            {profile.bio.map(paragraph => (
-              <motion.p key={paragraph} variants={fadeUp}>{paragraph}</motion.p>
-            ))}
-          </motion.div>
-
-          <motion.div className="principle-list" variants={stagger}>
-            {profile.principles.map((item, index) => (
-              <motion.article key={item.label} variants={fadeUp}>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <strong>{item.label}</strong>
-                <p>{item.text}</p>
-              </motion.article>
-            ))}
-          </motion.div>
-
-          <motion.p className="profile-signature" variants={fadeUp}>
-            {profile.signature}
-          </motion.p>
-        </div>
+        <motion.p
+          className="profile-signature"
+          variants={fadeUp}
+          initial={{ opacity: 0, y: 18, rotate: -9 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -5 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        >
+          {profile.signature}
+        </motion.p>
       </motion.div>
     </section>
   )

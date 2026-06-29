@@ -514,7 +514,6 @@ body {
 }
 
 .hero-methods,
-.principle-list article,
 .skill-matrix article,
 .contact-panel,
 .modal-detail-grid section {
@@ -698,161 +697,146 @@ body {
 }
 
 .profile-section {
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
   overflow: hidden;
+  padding: clamp(4rem, 5.6vw, 5rem) clamp(1.25rem, 5vw, 5rem) clamp(3.8rem, 6vw, 5.4rem);
+  border-top: 0;
+  background: #151515;
+  isolation: isolate;
+}
+
+.profile-section::before {
+  display: none;
+}
+
+.profile-section::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 0;
+  height: 24%;
+  background: linear-gradient(180deg, transparent, #050505 92%);
+  pointer-events: none;
 }
 
 .profile-stage {
   position: relative;
+  z-index: 1;
+  width: min(100%, 1020px);
+  min-height: calc(100svh - clamp(8.8rem, 15vw, 13.5rem));
   display: grid;
-  gap: clamp(1.4rem, 3vw, 2.6rem);
-  min-height: min(94svh, 56rem);
   align-content: center;
-  padding-block: clamp(1rem, 3vw, 2rem);
+  justify-items: center;
+  gap: clamp(1.4rem, 3vw, 2.55rem);
+  margin: 0 auto;
+  padding-block: 0;
 }
 
 .profile-stage::before {
   content: '';
   position: absolute;
-  inset: 6% 4% auto;
-  height: 48%;
+  left: 50%;
+  top: 4%;
   z-index: -1;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(103,232,249,0.13), transparent 31%),
-    linear-gradient(180deg, transparent, rgba(7,7,7,0.96) 76%);
-  opacity: 0.8;
+  width: min(48rem, 86vw);
+  height: min(36rem, 62vw);
+  background: radial-gradient(ellipse at 50% 44%, rgba(255,255,255,0.07), rgba(255,255,255,0.018) 42%, transparent 70%);
+  transform: translateX(-50%);
   pointer-events: none;
-}
-
-.profile-kicker {
-  justify-self: center;
 }
 
 .profile-hero {
   position: relative;
+  width: 100%;
+  min-height: clamp(24rem, 39vw, 31.5rem);
   display: grid;
   place-items: center;
-  min-height: clamp(18rem, 42vw, 29rem);
+}
+
+.profile-hero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.35rem;
+  z-index: 3;
+  width: min(40rem, 74vw);
+  height: clamp(6.5rem, 11vw, 9rem);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.88), transparent 66%),
+    linear-gradient(180deg, transparent, #151515 72%);
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .profile-giant-word {
   position: absolute;
-  z-index: 0;
+  z-index: 1;
   color: transparent;
-  font-family: Syne, Manrope, sans-serif;
-  font-size: 13.5rem;
+  font-family: Manrope, Inter, sans-serif;
+  font-size: clamp(7.6rem, 17vw, 15.3rem);
   font-weight: 800;
-  line-height: 0.82;
+  line-height: 0.78;
   letter-spacing: 0;
-  background: linear-gradient(180deg, #ffffff 14%, rgba(247,239,226,0.44) 68%, rgba(247,239,226,0) 100%);
+  background: linear-gradient(180deg, #ffffff 4%, #f5f5f5 38%, #8b8b8b 100%);
   background-clip: text;
   -webkit-background-clip: text;
   text-transform: none;
-  text-shadow: 0 26px 90px rgba(0,0,0,0.62);
+  transform-origin: 50% 74%;
   white-space: nowrap;
 }
 
 .profile-portrait {
   position: relative;
-  z-index: 1;
-  width: min(31vw, 17rem);
-  overflow: hidden;
-  border-radius: 999px 999px var(--radius-lg) var(--radius-lg);
-  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(7,7,7,0));
-  mask-image: linear-gradient(to bottom, #000 0 72%, transparent 98%);
-  filter: drop-shadow(0 34px 58px rgba(0,0,0,0.68));
+  z-index: 2;
+  width: clamp(14.5rem, 22vw, 19rem);
+  overflow: visible;
+  background: transparent;
+  border-radius: 0;
+  filter: drop-shadow(0 2.8rem 5rem rgba(0,0,0,0.68));
+  mask-image: linear-gradient(to bottom, #000 0 70%, rgba(0,0,0,0.9) 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 70%, rgba(0,0,0,0.9) 82%, transparent 100%);
 }
 
 .profile-portrait img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: auto;
   object-fit: contain;
-  filter: grayscale(0.18) contrast(1.06);
+  filter: brightness(1.05) contrast(1.08) saturate(0.82);
 }
 
-.profile-content {
-  width: min(100%, 880px);
-  margin: 0 auto;
+.profile-copy-grid {
+  width: min(100%, 850px);
   display: grid;
-  gap: clamp(1rem, 2.4vw, 1.6rem);
+  grid-template-columns: repeat(2, minmax(0, 22.5rem));
+  justify-content: center;
+  gap: clamp(2.2rem, 4.6vw, 4.1rem);
+  margin-top: clamp(0.2rem, 1.1vw, 1rem);
 }
 
-.profile-body {
-  display: grid;
-  justify-items: center;
-  gap: 0.7rem;
-  text-align: center;
-}
-
-.profile-body .profile-headline {
-  max-width: 48rem;
-  color: var(--text-main);
-  font-size: 1.28rem;
-  line-height: 1.48;
-}
-
-.profile-bio-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1rem, 4vw, 3.4rem);
-  align-items: start;
-}
-
-.profile-bio-grid p {
+.profile-copy-grid p {
   margin: 0;
-  color: var(--text-soft);
-  font-size: 1rem;
-  line-height: 1.72;
-}
-
-.principle-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.7rem;
-  margin-top: 0.3rem;
-}
-
-.principle-list article {
-  display: grid;
-  gap: 0.42rem;
-  min-height: 8.1rem;
-  padding: 0.9rem;
-  border: 1px solid rgba(246,239,225,0.09);
-  border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.035);
-  box-shadow: var(--inner-line);
-}
-
-.principle-list span {
-  color: var(--accent-cyan);
-  font-family: Syne, Manrope, sans-serif;
-  font-weight: 800;
-}
-
-.principle-list strong {
-  color: var(--text-main);
-  font-family: Syne, Manrope, sans-serif;
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-.principle-list p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.45;
+  color: rgba(247,239,226,0.78);
+  font-size: clamp(0.98rem, 1.08vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-wrap: pretty;
+  transition: color 0.28s ease, transform 0.28s var(--ease-out);
 }
 
 .profile-signature {
   justify-self: center;
-  margin: 0.8rem 0 0;
-  color: var(--text-main);
-  font-family: Syne, Manrope, sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  transform: rotate(-4deg);
+  margin: clamp(0.7rem, 2vw, 1.55rem) 0 0;
+  color: #ffffff;
+  font-family: 'Segoe Script', 'Bradley Hand ITC', 'Brush Script MT', cursive;
+  font-size: clamp(2rem, 3.7vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 0.9rem 2.5rem rgba(0,0,0,0.52);
 }
 
 .project-carousel {
@@ -1862,21 +1846,20 @@ body {
 }
 
 @media (max-width: 1160px) {
-  .hero-inner,
-  .profile-bio-grid {
+  .hero-inner {
     grid-template-columns: 1fr;
   }
 
   .profile-stage {
-    min-height: auto;
+    min-height: calc(100svh - 9rem);
   }
 
   .profile-giant-word {
-    font-size: 10.5rem;
+    font-size: clamp(6.8rem, 18vw, 11.5rem);
   }
 
   .profile-portrait {
-    width: min(42vw, 17rem);
+    width: clamp(14.5rem, 32vw, 18.5rem);
   }
 
   .hero-methods {
@@ -2044,8 +2027,7 @@ body {
   }
 
   .hero-copy p,
-  .section-header p,
-  .profile-bio-grid p {
+  .section-header p {
     font-size: 0.92rem;
     line-height: 1.58;
   }
@@ -2098,63 +2080,50 @@ body {
     right: 1rem;
   }
 
-  .section-header h2,
-  .profile-giant-word {
+  .section-header h2 {
     font-size: clamp(2.35rem, 13vw, 3.8rem);
     line-height: 0.95;
   }
 
   .profile-section {
-    padding-top: 3.1rem;
+    min-height: auto;
+    padding: 4.9rem 1rem 4.4rem;
   }
 
   .profile-stage {
-    gap: 1rem;
     min-height: auto;
-    padding-block: 0.4rem;
+    gap: 1.2rem;
   }
 
   .profile-hero {
-    min-height: 14rem;
+    min-height: clamp(17rem, 66vw, 22rem);
   }
 
   .profile-giant-word {
-    font-size: 4.9rem;
+    font-size: clamp(4.9rem, 23vw, 7.4rem);
+    line-height: 0.8;
   }
 
   .profile-portrait {
-    width: min(54vw, 11.5rem);
-    justify-self: center;
+    width: clamp(11.8rem, 52vw, 15rem);
   }
 
-  .profile-body {
-    text-align: left;
-    justify-items: start;
-  }
-
-  .profile-body .profile-headline {
-    font-size: 1.02rem;
-    line-height: 1.5;
-  }
-
-  .profile-bio-grid {
-    gap: 0.85rem;
-  }
-
-  .principle-list {
+  .profile-copy-grid {
     grid-template-columns: 1fr;
-    gap: 0.55rem;
+    gap: 0.88rem;
+    width: min(100%, 24rem);
+    margin-top: 0.2rem;
   }
 
-  .principle-list article {
-    min-height: auto;
-    padding: 0.78rem;
+  .profile-copy-grid p {
+    font-size: 0.92rem;
+    line-height: 1.62;
   }
 
   .profile-signature {
-    justify-self: start;
-    font-size: 1.65rem;
-    margin-top: 0.3rem;
+    justify-self: center;
+    font-size: 2rem;
+    margin-top: 0.55rem;
   }
 
   .work-stats {
