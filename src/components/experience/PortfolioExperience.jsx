@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -31,7 +31,8 @@ const stagger = {
   show: { transition: { staggerChildren: 0.06 } },
 }
 
-const playfulTitleRows = ['AIGC', 'Design', 'Portfolio']
+const heroTitleRows = ['AIGC', 'AI Film', 'Director']
+const heroMarqueeItems = ['AJAN', 'AIGC', 'AI SHORT DRAMA', 'VERTICAL REELS', 'CINEMATIC HOOKS']
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -284,6 +285,84 @@ function usePortfolioGsap(pageRef) {
           scrub: true,
         },
       })
+
+      gsap.to(gsap.utils.toArray('.vector-letter-a', page), {
+        xPercent: -26,
+        yPercent: -18,
+        rotate: -10,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      gsap.to(gsap.utils.toArray('.vector-letter-i', page), {
+        xPercent: -8,
+        yPercent: -28,
+        rotate: 7,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      gsap.to(gsap.utils.toArray('.vector-letter-g', page), {
+        xPercent: 8,
+        yPercent: -24,
+        rotate: -6,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      gsap.to(gsap.utils.toArray('.vector-letter-c', page), {
+        xPercent: 24,
+        yPercent: -16,
+        rotate: 11,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      gsap.to(gsap.utils.toArray('.hero-title-letter', page), {
+        x: index => ((index % 5) - 2) * 18,
+        y: index => (index % 2 === 0 ? 72 : -48),
+        rotate: index => ((index % 7) - 3) * 3,
+        opacity: 0.26,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      gsap.to(gsap.utils.toArray('.hero-stage-label, .hero-side-note', page), {
+        y: -56,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero-section',
+          start: 'top top',
+          end: '60% top',
+          scrub: true,
+        },
+      })
     }, page)
 
     return () => {
@@ -392,9 +471,11 @@ function HeroIntroSection() {
     >
       <div className="hero-paper-grid" data-parallax="background" aria-hidden="true" />
       <div className="hero-kinetic-strip" aria-hidden="true">
-        <span>AIGC DESIGN PORTFOLIO</span>
-        <span>AIGC DESIGN PORTFOLIO</span>
-        <span>AIGC DESIGN PORTFOLIO</span>
+        {[0, 1, 2].map(loop => (
+          <span key={loop}>
+            {heroMarqueeItems.map(item => <b key={`${loop}-${item}`}>{item}</b>)}
+          </span>
+        ))}
       </div>
       <div className="hero-doodle-field" data-parallax="foreground" aria-hidden="true">
         <span className="hero-doodle is-loop" />
@@ -415,7 +496,16 @@ function HeroIntroSection() {
         animate="show"
         variants={stagger}
       >
-        <VectorPortfolioTitle rows={playfulTitleRows} />
+        <span className="hero-stage-label">motion reel / ai cinema / story hooks</span>
+        <VectorPortfolioTitle rows={heroTitleRows} />
+        <div className="hero-side-note hero-side-note-left" aria-hidden="true">
+          <span>01</span>
+          <strong>Generated footage</strong>
+        </div>
+        <div className="hero-side-note hero-side-note-right" aria-hidden="true">
+          <span>05 reels</span>
+          <strong>Edited into rhythm</strong>
+        </div>
       </motion.div>
 
       <button
@@ -652,7 +742,7 @@ function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
         />
         <WorkStats projects={videoProjects} />
       </div>
-      <ProjectCarousel
+      <WorkShowcase
         projects={videoProjects}
         activeIndex={activeWorkIndex}
         onActiveIndexChange={setActiveWorkIndex}
@@ -689,75 +779,47 @@ function WorkStats({ projects: visibleProjects }) {
   )
 }
 
-function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveIndexChange, onOpenProject }) {
-  const carouselLength = carouselProjects.length
-  const [motionKey, setMotionKey] = useState(0)
+function WorkShowcase({ projects: showcaseProjects, activeIndex, onActiveIndexChange, onOpenProject }) {
+  const showcaseLength = showcaseProjects.length
 
   useEffect(() => {
     onActiveIndexChange(0)
-  }, [carouselProjects, onActiveIndexChange])
+  }, [showcaseProjects, onActiveIndexChange])
 
-  const moveCarousel = useCallback(offset => {
-    if (carouselLength <= 1) return
-    onActiveIndexChange(index => {
-      const nextIndex = wrapIndex(index + offset, carouselLength)
-      if (nextIndex !== index) setMotionKey(key => key + 1)
-      return nextIndex
-    })
-  }, [carouselLength, onActiveIndexChange])
+  const moveProject = useCallback(offset => {
+    if (showcaseLength <= 1) return
+    onActiveIndexChange(index => wrapIndex(index + offset, showcaseLength))
+  }, [onActiveIndexChange, showcaseLength])
 
-  const jumpToOffset = useCallback(offset => {
-    if (offset === 0 || carouselLength <= 1) return
-    moveCarousel(offset)
-  }, [carouselLength, moveCarousel])
-
-  const handleKeyDown = useCallback(event => {
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      moveCarousel(1)
-    }
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      moveCarousel(-1)
-    }
-
-    if (event.key === 'Enter' && event.target === event.currentTarget) {
-      event.preventDefault()
-      onOpenProject(carouselProjects[activeIndex])
-    }
-  }, [activeIndex, carouselProjects, moveCarousel, onOpenProject])
-
-  const handleDotSelect = useCallback(index => {
-    onActiveIndexChange(previousIndex => {
-      if (previousIndex === index) return previousIndex
-      setMotionKey(key => key + 1)
-      return index
-    })
+  const selectProject = useCallback(index => {
+    onActiveIndexChange(index)
   }, [onActiveIndexChange])
 
-  const carouselCards = useMemo(() => carouselProjects.map((project, projectIndex) => {
-    const offset = getLoopOffset(projectIndex, activeIndex, carouselLength)
-    const distance = Math.abs(offset)
-
-    return {
-      project,
-      projectIndex,
-      offset,
-      distance,
-      isActive: offset === 0,
-      isVisible: distance <= 2,
+  const handleKeyDown = useCallback(event => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      moveProject(1)
     }
-  }), [activeIndex, carouselLength, carouselProjects])
 
-  if (!carouselLength) return null
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      moveProject(-1)
+    }
 
-  const activeProject = carouselProjects[activeIndex]
-  const progress = ((activeIndex + 1) / carouselLength) * 100
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onOpenProject(showcaseProjects[activeIndex])
+    }
+  }, [activeIndex, moveProject, onOpenProject, showcaseProjects])
+
+  if (!showcaseLength) return null
+
+  const activeProject = showcaseProjects[activeIndex]
+  const progress = ((activeIndex + 1) / showcaseLength) * 100
 
   return (
     <motion.div
-      className="project-carousel"
+      className="work-showcase"
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.16 }}
@@ -765,146 +827,98 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"
-      aria-roledescription="carousel"
-      aria-label="Finished video carousel"
-      data-motion-key={motionKey}
+      aria-label="Selected AIGC reel work"
     >
       <p className="sr-only" aria-live="polite" aria-atomic="true">
-        {`Project ${activeIndex + 1} of ${carouselLength}: ${activeProject.titleEn}`}
+        {`Project ${activeIndex + 1} of ${showcaseLength}: ${activeProject.titleEn}`}
       </p>
 
-      <div className="carousel-copy">
-        <div>
-          <span className="section-kicker">Showreel Loop</span>
-          <h3 key={`title-${activeProject.slug}`}>
-            <WordArtText text={activeProject.titleEn} />
-          </h3>
-        </div>
-        <div className="carousel-copy-detail" key={`detail-${activeProject.slug}`}>
-          <p>{activeProject.introEn}</p>
-          <div className="carousel-meta">
+      <div className="work-preview-frame" aria-hidden="true">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeProject.slug}
+            className="work-preview-media"
+            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -14, scale: 0.985 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img src={activeProject.cover} alt="" loading="eager" decoding="async" />
             <span>{activeProject.id}</span>
-            <span>{activeProject.type}</span>
-            <span>{activeProject.duration}</span>
-            <span>{activeProject.year}</span>
-          </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="work-list" role="listbox" aria-label="AIGC reel list">
+        {showcaseProjects.map((project, index) => (
+          <button
+            type="button"
+            key={project.slug}
+            className={index === activeIndex ? 'work-list-row is-active' : 'work-list-row'}
+            onMouseEnter={() => selectProject(index)}
+            onFocus={() => selectProject(index)}
+            onClick={() => onOpenProject(project)}
+            role="option"
+            aria-selected={index === activeIndex}
+          >
+            <span className="work-row-index">{project.id}</span>
+            <span className="work-row-title">{project.titleEn}</span>
+            <span className="work-row-meta">{project.type} / {project.duration}</span>
+            <span className="work-row-arrow" aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+
+      <div className="work-preview-copy">
+        <span className="section-kicker">Active Reel</span>
+        <h3>{activeProject.titleEn}</h3>
+        <p>{activeProject.introEn}</p>
+        <div className="work-preview-meta">
+          <span>{activeProject.hook}</span>
+          <span>{activeProject.year}</span>
+          <span>{activeProject.role}</span>
         </div>
       </div>
 
       <motion.div
-        className="carousel-stage"
-        data-card-group
-        drag={carouselLength > 1 ? 'x' : false}
+        className="mobile-work-slider"
+        drag={showcaseLength > 1 ? 'x' : false}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.08}
         onDragEnd={(_, info) => {
-          if (info.offset.x < -64) moveCarousel(1)
-          if (info.offset.x > 64) moveCarousel(-1)
+          if (info.offset.x < -54) moveProject(1)
+          if (info.offset.x > 54) moveProject(-1)
         }}
       >
-        <div className="carousel-stage-light" aria-hidden="true" />
-        <span className="carousel-motion-flash" key={`flash-${motionKey}`} aria-hidden="true" />
-        {carouselCards.map(card => (
-          <CarouselCard
-            key={card.project.slug}
-            {...card}
-            onFocus={handleDotSelect}
-            onOpenProject={onOpenProject}
-            onJump={jumpToOffset}
-          />
-        ))}
+        <AnimatePresence mode="wait">
+          <motion.button
+            key={activeProject.slug}
+            type="button"
+            className="mobile-work-card"
+            onClick={() => onOpenProject(activeProject)}
+            initial={{ opacity: 0, x: 28, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -22, scale: 0.99 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img src={activeProject.cover} alt={activeProject.titleEn} loading="eager" decoding="async" />
+            <span>{activeProject.id}</span>
+            <strong>{activeProject.titleEn}</strong>
+            <small>{activeProject.type} / {activeProject.duration}</small>
+          </motion.button>
+        </AnimatePresence>
       </motion.div>
 
-      <div className="carousel-controls">
-        <button
-          type="button"
-          className="carousel-arrow"
-          onClick={() => moveCarousel(-1)}
-          disabled={carouselLength <= 1}
-          aria-label="Previous project"
-        />
-        <div className="carousel-progress" aria-hidden="true">
+      <div className="work-showcase-controls">
+        <button type="button" onClick={() => moveProject(-1)} aria-label="Previous project" />
+        <div className="work-showcase-progress" aria-hidden="true">
           <span style={{ width: `${progress}%` }} />
         </div>
-        <button
-          type="button"
-          className="carousel-arrow"
-          onClick={() => moveCarousel(1)}
-          disabled={carouselLength <= 1}
-          aria-label="Next project"
-        />
-      </div>
-
-      <div className="carousel-dots" aria-label="Project shortcuts">
-        {carouselProjects.map((project, index) => (
-          <button
-            key={project.slug}
-            type="button"
-            className={index === activeIndex ? 'is-active' : ''}
-            onClick={() => handleDotSelect(index)}
-            aria-label={`Show ${project.titleEn}`}
-            aria-current={index === activeIndex ? 'true' : undefined}
-          />
-        ))}
+        <button type="button" onClick={() => moveProject(1)} aria-label="Next project" />
       </div>
     </motion.div>
   )
 }
-
-const CarouselCard = memo(function CarouselCard({
-  project,
-  projectIndex,
-  offset,
-  distance,
-  isActive,
-  isVisible,
-  onFocus,
-  onOpenProject,
-  onJump,
-}) {
-  const slotScale = isActive ? 1 : 0.64 - Math.min(distance, 2) * 0.055
-  const slotOpacity = isVisible ? (isActive ? 1 : Math.max(0.24, 0.62 - distance * 0.15)) : 0
-
-  return (
-    <button
-      type="button"
-      className={isActive ? 'carousel-card is-active' : 'carousel-card'}
-      data-slot={offset}
-      style={{
-        '--slot-distance': distance,
-        '--slot-scale': slotScale,
-        '--slot-opacity': slotOpacity,
-        '--slot-z': 30 - distance,
-        '--slot-y': isActive ? '0px' : `${distance * 22}px`,
-        '--slot-rotate-y': `${offset * -8}deg`,
-        '--slot-rotate-z': isActive ? '0deg' : `${offset * -1.4}deg`,
-      }}
-      onFocus={() => !isActive && onFocus(projectIndex)}
-      onClick={() => (isActive ? onOpenProject(project) : onJump(offset))}
-      aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
-      aria-hidden={!isVisible}
-      aria-current={isActive ? 'true' : undefined}
-      tabIndex={isVisible ? 0 : -1}
-    >
-      <img
-        src={project.cover}
-        alt={project.titleEn}
-        loading={isActive ? 'eager' : 'lazy'}
-        decoding="async"
-      />
-      <span className="carousel-card-index">{project.id}</span>
-      <div className="carousel-card-copy">
-        <span>{project.type}</span>
-        <h4>{project.titleEn}</h4>
-        {isActive && <p>{project.introEn}</p>}
-        <div className="carousel-card-meta">
-          <small>{project.hook}</small>
-          <small>{project.duration}</small>
-        </div>
-      </div>
-    </button>
-  )
-})
 
 function wrapIndex(index, length) {
   return ((index % length) + length) % length
@@ -985,27 +999,32 @@ function SkillsSection() {
 }
 
 function ContactSection() {
+  const [mailName, mailDomain = ''] = contact.email.split('@')
+  const [domainName = mailDomain, ...domainSuffixParts] = mailDomain.split('.')
+  const domainSuffix = domainSuffixParts.length ? `.${domainSuffixParts.join('.')}` : ''
+
   return (
     <section className="contact-section page-section" id="contact" aria-label="Contact">
       <motion.div
-        className="contact-panel"
+        className="contact-scene"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.24 }}
         variants={stagger}
       >
-        <motion.span className="contact-glow-word" aria-hidden="true" variants={fadeUp}>
-          Brief
-        </motion.span>
         <motion.div className="contact-copy" variants={fadeUp}>
           <span className="section-kicker">Contact</span>
           <h2 data-split-lines>Start with a story hook.</h2>
-          <p data-split-lines>For AIGC short-drama concepts, character-continuity tests and finished vertical video packaging.</p>
         </motion.div>
-        <motion.a href={`mailto:${contact.email}`} className="contact-mail" variants={fadeUp}>
-          <span>Email me</span>
-          <strong>{contact.email}</strong>
+        <motion.a href={`mailto:${contact.email}`} className="contact-giant-mail" variants={fadeUp}>
+          <span>{mailName}</span>
+          <span className="contact-at">@</span>
+          <span>{domainName}</span>
+          <span className="contact-domain">{domainSuffix}</span>
         </motion.a>
+        <motion.p className="contact-note" variants={fadeUp} data-split-lines>
+          For AIGC short-drama concepts, character-continuity tests and finished vertical video packaging.
+        </motion.p>
         <motion.div className="contact-value-list" data-card-group variants={stagger}>
           <motion.span data-animate="card" variants={fadeUp}>Finished reels</motion.span>
           <motion.span data-animate="card" variants={fadeUp}>AI drama visual direction</motion.span>
