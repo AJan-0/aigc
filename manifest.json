@@ -1,7 +1,7 @@
 {
   "name": "AJan AIGC Portfolio",
   "short_name": "AJan AIGC",
-  "description": "AI moving-image portfolio across drama, product film, animation and visual experiments.",
+  "description": "Published AIGC video portfolio focused on AI drama, character continuity and moving-image delivery.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070707",

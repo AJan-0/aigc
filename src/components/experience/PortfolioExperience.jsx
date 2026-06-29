@@ -9,7 +9,6 @@ import {
 } from 'framer-motion'
 import profilePhoto from '../../../profile-photo-optimized.jpg'
 import {
-  categories,
   contact,
   executionStandards,
   navigation,
@@ -19,24 +18,23 @@ import {
 } from '../../data/portfolio'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 26 },
+  hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0 },
 }
 
 const stagger = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.06 } },
 }
 
 const carouselSpring = {
   type: 'spring',
-  stiffness: 170,
-  damping: 28,
-  mass: 0.88,
+  stiffness: 145,
+  damping: 32,
+  mass: 0.92,
 }
 
 export default function PortfolioExperience() {
-  const [activeCategory, setActiveCategory] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
   const [isMuted, setIsMuted] = useState(true)
   const sectionIds = useMemo(() => navigation.map(item => item.id), [])
@@ -48,11 +46,8 @@ export default function PortfolioExperience() {
     restDelta: 0.001,
   })
 
-  const featuredProjects = useMemo(() => projects.filter(project => project.featured), [])
-  const filteredProjects = useMemo(() => {
-    if (activeCategory === 'all') return projects
-    return projects.filter(project => project.category === activeCategory)
-  }, [activeCategory])
+  const videoProjects = useMemo(() => projects.filter(project => Boolean(project.video)), [])
+  const featuredProjects = useMemo(() => videoProjects.filter(project => project.featured), [videoProjects])
 
   return (
     <main className="portfolio-page">
@@ -61,9 +56,7 @@ export default function PortfolioExperience() {
       <HeroSection featuredProjects={featuredProjects} onOpenProject={setSelectedProject} />
       <ProfileSection />
       <WorkSection
-        activeCategory={activeCategory}
-        filteredProjects={filteredProjects}
-        onCategoryChange={setActiveCategory}
+        projects={videoProjects}
         onOpenProject={setSelectedProject}
       />
       <StandardsSection />
@@ -175,19 +168,19 @@ function HeroSection({ featuredProjects, onOpenProject }) {
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
-  const backdropY = useTransform(scrollYProgress, [0, 1], ['0%', '16%'])
-  const backdropScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16])
-  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '7rem'])
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.72], [1, 0.28])
-  const galleryY = useTransform(scrollYProgress, [0, 1], ['0rem', '-4.5rem'])
-  const galleryRotate = useTransform(scrollYProgress, [0, 1], [0, -5])
+  const backdropY = useTransform(scrollYProgress, [0, 1], ['0%', '7%'])
+  const backdropScale = useTransform(scrollYProgress, [0, 1], [1.035, 1.09])
+  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '3rem'])
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.58])
+  const galleryY = useTransform(scrollYProgress, [0, 1], ['0rem', '-1.75rem'])
+  const galleryRotate = useTransform(scrollYProgress, [0, 1], [0, -1.5])
   const marqueeItems = [
+    'Published Video Work',
     'AI Drama',
-    '3C Film',
-    'AIGC Animation',
-    'Brand Visual',
-    'Experimental Space',
+    'Character Continuity',
     'Short-form Story',
+    'Vertical Reel',
+    'Delivery Ready',
   ]
 
   return (
@@ -200,7 +193,7 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           scale: shouldReduceMotion ? 1.04 : backdropScale,
         }}
       >
-        <img src={leadProject.cover} alt="" fetchpriority="high" decoding="async" />
+        <img src={leadProject.cover} alt="" fetchPriority="high" decoding="async" />
       </motion.div>
       <div className="hero-depth-lines" aria-hidden="true" />
 
@@ -220,7 +213,7 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           </motion.span>
           <InteractiveTitle text="AIGC Moving Image Archive" />
           <TextReveal
-            text="海外真人 AI 剧、3C 创意短片、动画短片与实验视觉。"
+            text="只展示已完成视频的 AIGC 真人短剧与移动影像样本。"
             className="hero-lede"
           />
 
@@ -261,7 +254,7 @@ function HeroSection({ featuredProjects, onOpenProject }) {
                   src={project.cover}
                   alt={project.titleEn}
                   loading={index === 0 ? 'eager' : 'lazy'}
-                  fetchpriority={index === 0 ? 'high' : 'auto'}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
                   decoding="async"
                 />
                 <span>{project.id}</span>
@@ -282,20 +275,6 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           </div>
         </motion.div>
       </div>
-
-      <motion.div
-        className="category-strip"
-        aria-label="内容方向"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.38 }}
-      >
-        {categories.filter(category => category.id !== 'all').map(category => (
-          <span key={category.id} style={{ '--accent': category.accent }}>
-            {category.labelZh}
-          </span>
-        ))}
-      </motion.div>
 
       <KineticMarquee items={marqueeItems} />
 
@@ -373,19 +352,85 @@ function ProfileSection() {
   )
 }
 
-function WorkSection({ activeCategory, filteredProjects, onCategoryChange, onOpenProject }) {
+function WorkSection({ projects: videoProjects, onOpenProject }) {
   return (
     <section className="work-section page-section" id="work" aria-label="作品">
       <div className="work-heading-row">
         <SectionHeader
           kicker="Selected Work"
           title="作品"
-          intro="以作品为主轴，按内容方向浏览。"
+          intro="保留已经有视频成片的项目，其他方向先从页面中撤下。"
         />
-        <CategoryFilter activeCategory={activeCategory} onChange={onCategoryChange} />
+        <WorkStats projects={videoProjects} />
       </div>
-      <ProjectCarousel projects={filteredProjects} onOpenProject={onOpenProject} />
+      <ProjectCarousel projects={videoProjects} onOpenProject={onOpenProject} />
+      <WorkIndex projects={videoProjects} onOpenProject={onOpenProject} />
     </section>
+  )
+}
+
+function WorkStats({ projects: visibleProjects }) {
+  const totalDurationSeconds = visibleProjects.reduce((total, project) => {
+    const [minutes, seconds] = project.duration.split(':').map(Number)
+    return total + (Number.isFinite(minutes) ? minutes * 60 : 0) + (Number.isFinite(seconds) ? seconds : 0)
+  }, 0)
+  const minutes = Math.floor(totalDurationSeconds / 60)
+  const seconds = String(totalDurationSeconds % 60).padStart(2, '0')
+
+  return (
+    <div className="work-stats" aria-label="公开视频统计">
+      <span>
+        <strong>{visibleProjects.length}</strong>
+        <small>Video works</small>
+      </span>
+      <span>
+        <strong>{minutes}:{seconds}</strong>
+        <small>Total runtime</small>
+      </span>
+    </div>
+  )
+}
+
+function WorkIndex({ projects: indexedProjects, onOpenProject }) {
+  const reelLabel = indexedProjects.length === 1
+    ? 'One finished reel'
+    : `${indexedProjects.length} finished reels`
+
+  return (
+    <motion.div
+      className="work-index"
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.18 }}
+      variants={stagger}
+    >
+      <motion.div className="work-index-copy" variants={fadeUp}>
+        <span className="section-kicker">Video Index</span>
+        <h3>{reelLabel}, one delivery system.</h3>
+      </motion.div>
+
+      <div className="work-index-list" aria-label="公开视频列表">
+        {indexedProjects.map((project, index) => (
+          <motion.button
+            key={project.slug}
+            type="button"
+            className="work-index-row"
+            variants={fadeUp}
+            onClick={() => onOpenProject(project)}
+          >
+            <span className="work-index-number">{String(index + 1).padStart(2, '0')}</span>
+            <span className="work-index-title">
+              <strong>{project.titleEn}</strong>
+              <small>{project.type}</small>
+            </span>
+            <span className="work-index-meta">
+              <small>{project.duration}</small>
+              <small>{project.year}</small>
+            </span>
+          </motion.button>
+        ))}
+      </div>
+    </motion.div>
   )
 }
 
@@ -404,7 +449,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
 
     const timer = window.setInterval(() => {
       setActiveIndex(index => wrapIndex(index + 1, carouselLength))
-    }, 5200)
+    }, 6200)
 
     return () => window.clearInterval(timer)
   }, [carouselLength, isPaused, shouldReduceMotion])
@@ -436,14 +481,7 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
     }
   }
 
-  if (!carouselLength) {
-    return (
-      <div className="carousel-empty">
-        <span className="section-kicker">No Work</span>
-        <p>There are no projects in this direction yet.</p>
-      </div>
-    )
-  }
+  if (!carouselLength) return null
 
   const activeProject = carouselProjects[activeIndex]
   const progress = ((activeIndex + 1) / carouselLength) * 100
@@ -451,10 +489,10 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
   return (
     <motion.div
       className="project-carousel"
-      initial={{ opacity: 0, y: 26 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
       onPointerEnter={() => setIsPaused(true)}
       onPointerLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
@@ -486,10 +524,10 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
         className="carousel-stage"
         drag={carouselLength > 1 ? 'x' : false}
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
+        dragElastic={0.08}
         onDragEnd={(_, info) => {
-          if (info.offset.x < -54) moveCarousel(1)
-          if (info.offset.x > 54) moveCarousel(-1)
+          if (info.offset.x < -64) moveCarousel(1)
+          if (info.offset.x > 64) moveCarousel(-1)
         }}
       >
         {carouselProjects.map((project, projectIndex) => {
@@ -507,10 +545,10 @@ function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
                 initial={false}
                 animate={{
                   opacity: isVisible ? (isActive ? 1 : Math.max(0.22, 0.6 - distance * 0.15)) : 0,
-                  x: `calc(${offset} * min(27vw, 18rem))`,
-                  y: distance * 16,
-                  scale: isActive ? 1 : 0.8 - Math.min(distance, 2) * 0.08,
-                  rotateY: offset * -12,
+                  x: `calc(${offset} * min(22vw, 14rem))`,
+                  y: distance * 8,
+                  scale: isActive ? 1 : 0.88 - Math.min(distance, 2) * 0.045,
+                  rotateY: offset * -6,
                   zIndex: 20 - distance,
                   pointerEvents: isVisible ? 'auto' : 'none',
                 }}
@@ -603,79 +641,37 @@ function getLoopOffset(index, activeIndex, length) {
   return offset
 }
 
-function CategoryFilter({ activeCategory, onChange }) {
-  const activeIndex = Math.max(0, categories.findIndex(category => category.id === activeCategory))
-
-  const selectCategory = (index, container) => {
-    const nextCategory = categories[index]
-    if (!nextCategory) return
-    onChange(nextCategory.id)
-    container?.querySelectorAll('button')[index]?.focus()
-  }
-
-  const handleKeyDown = event => {
-    const lastIndex = categories.length - 1
-    let nextIndex = activeIndex
-
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      nextIndex = wrapIndex(activeIndex + 1, categories.length)
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-      nextIndex = wrapIndex(activeIndex - 1, categories.length)
-    } else if (event.key === 'Home') {
-      nextIndex = 0
-    } else if (event.key === 'End') {
-      nextIndex = lastIndex
-    } else {
-      return
-    }
-
-    event.preventDefault()
-    selectCategory(nextIndex, event.currentTarget)
-  }
-
-  return (
-    <div className="category-filter" role="tablist" aria-label="作品分类" onKeyDown={handleKeyDown}>
-      {categories.map(category => {
-        const isActive = activeCategory === category.id
-
-        return (
-          <button
-            key={category.id}
-            type="button"
-            role="tab"
-            aria-selected={isActive}
-            className={isActive ? 'is-active' : ''}
-            tabIndex={isActive ? 0 : -1}
-            style={{ '--accent': category.accent }}
-            onClick={() => onChange(category.id)}
-          >
-            <span>{category.label}</span>
-            <small>{category.labelZh}</small>
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
 function StandardsSection() {
   return (
     <section className="standards-section page-section" aria-label="执行标准">
-      <motion.div
-        className="standards-row"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={stagger}
-      >
-        <span className="section-kicker">Execution Standard</span>
-        {executionStandards.map(item => (
-          <motion.article key={item.label} variants={fadeUp}>
-            <strong>{item.label}</strong>
-            <p>{item.text}</p>
-          </motion.article>
-        ))}
-      </motion.div>
+      <div className="standards-layout">
+        <motion.div
+          className="standards-copy"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={stagger}
+        >
+          <motion.span className="section-kicker" variants={fadeUp}>Execution Standard</motion.span>
+          <motion.h2 variants={fadeUp}>Frame, rhythm, delivery.</motion.h2>
+        </motion.div>
+
+        <motion.div
+          className="standards-list"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.24 }}
+          variants={stagger}
+        >
+          {executionStandards.map((item, index) => (
+            <motion.article key={item.label} className="standard-row" variants={fadeUp}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{item.label}</strong>
+              <p>{item.text}</p>
+            </motion.article>
+          ))}
+        </motion.div>
+      </div>
     </section>
   )
 }
@@ -717,7 +713,7 @@ function ContactSection() {
         <SectionHeader
           kicker="Contact"
           title="联系"
-          intro="AIGC 影像、短剧视觉、产品短片与动画原型合作。"
+          intro="AIGC 影像、AI 真人短剧视觉方案与短剧预告包装合作。"
         />
 
         <div className="contact-grid">
@@ -773,10 +769,10 @@ function ProjectModal({ project, isMuted, onClose, onMuteChange }) {
             aria-modal="true"
             aria-label={project.titleEn}
             tabIndex={-1}
-            initial={{ opacity: 0, y: 34, scale: 0.96 }}
+            initial={{ opacity: 0, y: 22, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.96 }}
-            transition={{ duration: 0.28 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
           >
             <button type="button" className="modal-close" onClick={onClose} aria-label="关闭">
               ×
@@ -897,10 +893,10 @@ function TextReveal({ text, className = '' }) {
         <motion.span
           key={`${word}-${index}`}
           className="text-reveal-word"
-          initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
+          initial={{ opacity: 0, y: 10, filter: 'blur(5px)' }}
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.48, delay: index * 0.035, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.38, delay: index * 0.024, ease: [0.16, 1, 0.3, 1] }}
         >
           {word}
         </motion.span>
@@ -963,10 +959,10 @@ function SectionHeader({ kicker, title, intro }) {
   return (
     <motion.div
       className="section-header"
-      initial={{ opacity: 0, y: 22 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.45 }}
-      transition={{ duration: 0.62 }}
+      transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
     >
       <span className="section-kicker">{kicker}</span>
       <h2>{title}</h2>

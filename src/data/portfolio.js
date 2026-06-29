@@ -9,9 +9,6 @@ import rebornVideo from '../../reborn.mp4'
 import rebornCover from '../../reborn_cover.jpg'
 import pickingVideo from '../../picking.mp4'
 import pickingCover from '../../picking_cover.jpg'
-import f1Cover from '../../bilibili-showcase.jpg'
-import animationCover from '../../animation-showcase.jpg'
-import architectureCover from '../../architecture-showcase.jpg'
 
 export const navigation = [
   { id: 'home', label: '首页' },
@@ -24,10 +21,10 @@ export const navigation = [
 export const profile = {
   name: 'AJan',
   title: 'AIGC 影像创作者 / AI Video Workflow Designer',
-  headline: 'AIGC moving-image work across drama, product film, animation and visual experiments.',
+  headline: 'Published AIGC video work focused on short-drama hooks, character continuity and finished moving-image delivery.',
   bio: [
     '用可控流程处理角色、镜头、节奏和交付。',
-    '持续整理不同类型的 AIGC 影像样本。',
+    '当前作品集只保留已经有视频成片的内容，后续方向成熟后再补充。',
   ],
   principles: [
     { label: 'Narrative', text: '先定情绪和钩子。' },
@@ -37,12 +34,8 @@ export const profile = {
 }
 
 export const categories = [
-  { id: 'all', label: 'All Work', labelZh: '全部作品', accent: '#f2d06b' },
+  { id: 'all', label: 'All Videos', labelZh: '公开视频', accent: '#f2d06b' },
   { id: 'ai-drama', label: 'AI Drama', labelZh: '海外真人 AI 剧', accent: '#ff6a3d' },
-  { id: '3c-film', label: '3C Film', labelZh: '3C 创意短片', accent: '#67e8f9' },
-  { id: 'animation', label: 'Animation', labelZh: 'AIGC 动画短片', accent: '#a7f3d0' },
-  { id: 'commercial', label: 'Commercial', labelZh: '品牌与商业视觉', accent: '#c4b5fd' },
-  { id: 'experimental', label: 'Experiment', labelZh: '实验视觉', accent: '#f9a8d4' },
 ]
 
 export const projects = [
@@ -174,86 +167,13 @@ export const projects = [
       { label: 'Style', value: 'Street' },
     ],
   },
-  {
-    id: '06',
-    slug: 'aigc-f1-promo',
-    category: '3c-film',
-    type: '3C / Brand Creative Film',
-    titleZh: 'AIGC F1 科技宣传片',
-    titleEn: 'AIGC F1 Promo Video',
-    introZh: '速度、科技感和品牌传播节奏。',
-    introEn: 'A speed-and-technology visual system for campaign storytelling.',
-    challenge: '3C 和科技产品内容需要兼顾产品质感、传播记忆点和短视频节奏。',
-    approach: '用速度线索、冷暖对比和快速剪辑建立技术感。',
-    outcome: '作为 3C 创意短片方向的视觉基准。',
-    cover: f1Cover,
-    duration: 'Campaign',
-    year: '2025',
-    role: 'Creative Visual Direction',
-    tools: ['AIGC Visuals', 'Motion Design', 'Editing'],
-    tags: ['3C 创意', '品牌片', '速度感'],
-    metrics: [
-      { label: 'Use', value: 'Campaign' },
-      { label: 'Format', value: 'Multi' },
-      { label: 'Focus', value: 'Tech' },
-    ],
-    featured: true,
-  },
-  {
-    id: '07',
-    slug: 'puan-animation-short',
-    category: 'animation',
-    type: 'AIGC Animation Short',
-    titleZh: 'PUAN 动画短片',
-    titleEn: 'PUAN Animation Short',
-    introZh: '风格化动画短片原型。',
-    introEn: 'A stylized animation prototype built with an AIGC image-to-motion pipeline.',
-    challenge: '动画短片需要统一风格、镜头节奏和角色动作，不能只是一组漂亮的关键帧。',
-    approach: '先定美术规则，再进入动画化和剪辑。',
-    outcome: '作为 AIGC 动画短片方向入口。',
-    cover: animationCover,
-    duration: 'Short',
-    year: '2025',
-    role: 'AIGC Animation Workflow',
-    tools: ['AIGC Image', 'Animation Pipeline', 'Editing'],
-    tags: ['动画短片', '风格化', '快速原型'],
-    metrics: [
-      { label: 'Type', value: 'Short' },
-      { label: 'Mode', value: 'Stylized' },
-      { label: 'Pipeline', value: 'AIGC' },
-    ],
-  },
-  {
-    id: '08',
-    slug: 'spatial-visual-archive',
-    category: 'experimental',
-    type: 'Spatial Visualization',
-    titleZh: '黄洞水库游客空间视觉',
-    titleEn: 'Huangdong Reservoir Visitor Space',
-    introZh: '空间、材质和场景叙事样本。',
-    introEn: 'A spatial visualization study on atmosphere, material and environmental storytelling.',
-    challenge: '空间视觉需要让人快速理解场地气质、游览动线和商业展示价值。',
-    approach: '以场景层次和光照关系组织视觉信息。',
-    outcome: '连接建筑可视化、品牌空间和概念设计。',
-    cover: architectureCover,
-    duration: 'Still Set',
-    year: '2025',
-    role: 'Spatial Visual Direction',
-    tools: ['Visualization', 'AIGC Concept', 'Presentation Design'],
-    tags: ['空间视觉', '商业提案', '实验视觉'],
-    metrics: [
-      { label: 'Use', value: 'Pitch' },
-      { label: 'Type', value: 'Space' },
-      { label: 'Output', value: 'Still' },
-    ],
-  },
 ]
 
 export const skillGroups = [
   {
     title: 'Creative Direction',
     summary: '选题、钩子、分镜和节奏。',
-    items: ['短剧钩子', '品牌叙事', '分镜节奏', '社媒包装'],
+    items: ['短剧钩子', '情绪开场', '分镜节奏', '社媒包装'],
   },
   {
     title: 'AI Production',
@@ -267,8 +187,8 @@ export const skillGroups = [
   },
   {
     title: 'Commercial Delivery',
-    summary: '按内容类型组织交付。',
-    items: ['AI 剧', '3C 短片', '动画短片', '品牌视觉'],
+    summary: '按成片和平台需求组织交付。',
+    items: ['AI 真人短剧', '竖屏预告', '英文短剧包装', '作品集精修'],
   },
 ]
 
@@ -281,5 +201,5 @@ export const executionStandards = [
 
 export const contact = {
   email: 'hello@poetfolio.art',
-  availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '3C / 品牌创意短片', 'AIGC 动画短片制作'],
+  availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '角色一致性工作流', '短剧预告包装'],
 }
