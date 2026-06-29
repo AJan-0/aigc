@@ -27,12 +27,37 @@ const stagger = {
   show: { transition: { staggerChildren: 0.06 } },
 }
 
-const carouselSpring = {
-  type: 'spring',
-  stiffness: 145,
-  damping: 32,
-  mass: 0.92,
-}
+const heroMethods = [
+  {
+    step: '01',
+    title: 'Hook first',
+    text: 'Open with the emotional turn, not a generic mood board.',
+  },
+  {
+    step: '02',
+    title: 'Character DNA',
+    text: 'Keep face, costume, light and relation cues consistent across shots.',
+  },
+  {
+    step: '03',
+    title: 'Shot rhythm',
+    text: 'Build short-form pacing through cut points, silence and reveal timing.',
+  },
+  {
+    step: '04',
+    title: 'Delivery frame',
+    text: 'Finish every piece around platform format, runtime and playback clarity.',
+  },
+]
+
+const heroMarqueeItems = [
+  'Watch intro',
+  'Scroll to discover',
+  'AIGC short drama',
+  'Character continuity',
+  'Playable archive',
+  'Finished reels only',
+]
 
 export default function PortfolioExperience() {
   const [selectedProject, setSelectedProject] = useState(null)
@@ -47,15 +72,14 @@ export default function PortfolioExperience() {
   })
 
   const videoProjects = useMemo(() => projects.filter(project => Boolean(project.video)), [])
-  const featuredProjects = useMemo(() => videoProjects.filter(project => project.featured), [videoProjects])
 
   return (
     <main className="portfolio-page">
       <motion.div className="scroll-progress" style={{ scaleX: progressScaleX }} aria-hidden="true" />
       <SiteHeader activeSection={activeSection} />
-      <HeroSection featuredProjects={featuredProjects} onOpenProject={setSelectedProject} />
+      <HeroIntroSection />
       <ProfileSection />
-      <WorkSection
+      <WorkArchiveSection
         projects={videoProjects}
         onOpenProject={setSelectedProject}
       />
@@ -159,41 +183,38 @@ function SiteHeader({ activeSection }) {
   )
 }
 
-function HeroSection({ featuredProjects, onOpenProject }) {
+function HeroIntroSection() {
   const sectionRef = useRef(null)
   const shouldReduceMotion = useReducedMotion()
-  const leadProject = featuredProjects[0] ?? projects[0]
-  const galleryProjects = featuredProjects.slice(0, 4)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
-  const backdropY = useTransform(scrollYProgress, [0, 1], ['0%', '7%'])
-  const backdropScale = useTransform(scrollYProgress, [0, 1], [1.035, 1.09])
-  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '3rem'])
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.58])
-  const galleryY = useTransform(scrollYProgress, [0, 1], ['0rem', '-1.75rem'])
-  const galleryRotate = useTransform(scrollYProgress, [0, 1], [0, -1.5])
-  const marqueeItems = [
-    'Published Video Work',
-    'AI Drama',
-    'Character Continuity',
-    'Short-form Story',
-    'Vertical Reel',
-    'Delivery Ready',
-  ]
+  const fieldY = useTransform(scrollYProgress, [0, 1], ['0rem', '2.6rem'])
+  const copyY = useTransform(scrollYProgress, [0, 1], ['0rem', '1.5rem'])
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.68])
+
+  const handlePointerMove = event => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width) * 100
+    const y = ((event.clientY - rect.top) / rect.height) * 100
+    event.currentTarget.style.setProperty('--hero-x', x + '%')
+    event.currentTarget.style.setProperty('--hero-y', y + '%')
+  }
 
   return (
-    <section ref={sectionRef} className="hero-section" id="home" aria-label="我的作品集">
-      <motion.div
-        className="hero-backdrop"
-        aria-hidden="true"
-        style={{
-          y: shouldReduceMotion ? 0 : backdropY,
-          scale: shouldReduceMotion ? 1.04 : backdropScale,
-        }}
-      >
-        <img src={leadProject.cover} alt="" fetchPriority="high" decoding="async" />
+    <section
+      ref={sectionRef}
+      className="hero-section"
+      id="home"
+      aria-label="AIGC moving image intro"
+      onPointerMove={handlePointerMove}
+    >
+      <motion.div className="hero-type-field" aria-hidden="true" style={{ y: shouldReduceMotion ? 0 : fieldY }}>
+        <span>AI</span>
+        <span>Moving Image</span>
+        <span>Short Drama</span>
+        <span>Delivery System</span>
       </motion.div>
       <div className="hero-depth-lines" aria-hidden="true" />
 
@@ -208,81 +229,51 @@ function HeroSection({ featuredProjects, onOpenProject }) {
           animate="show"
           variants={stagger}
         >
-          <motion.span className="section-kicker" variants={fadeUp}>
-            AIGC Creative Portfolio
-          </motion.span>
-          <InteractiveTitle text="AIGC Moving Image Archive" />
+          <motion.div className="hero-topline" variants={fadeUp}>
+            <span className="section-kicker">AIGC Creative Portfolio</span>
+            <span>2026 / Finished video archive</span>
+          </motion.div>
+          <KineticTitle lines={['AI', 'Moving', 'Image', 'System']} />
           <TextReveal
-            text="只展示已完成视频的 AIGC 真人短剧与移动影像样本。"
+            text="A focused AIGC video portfolio: short-drama hooks, character continuity, shot rhythm and delivery-ready reels."
             className="hero-lede"
           />
 
           <motion.div className="hero-actions" variants={fadeUp}>
             <MagneticButton type="button" className="is-primary" onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}>
-              查看作品
+              Watch archive
             </MagneticButton>
             <MagneticButton type="button" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              联系合作
+              Start a brief
             </MagneticButton>
           </motion.div>
         </motion.div>
 
         <motion.div
-          className="hero-showcase"
-          style={{
-            y: shouldReduceMotion ? 0 : galleryY,
-            rotateX: shouldReduceMotion ? 0 : galleryRotate,
-          }}
+          className="hero-methods"
           initial={{ opacity: 0, x: 28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
+          aria-label="AIGC production method"
         >
-          <div className="portfolio-gallery" aria-label="精选作品画廊">
-            {galleryProjects.map((project, index) => (
-              <button
-                key={project.id}
-                type="button"
-                className="gallery-card"
-                style={{
-                  '--offset': index,
-                  '--rotate': `${(index - 1) * 4}deg`,
-                }}
-                onClick={() => onOpenProject(project)}
-                aria-label={`查看精选作品 ${project.titleEn}`}
-              >
-                <img
-                  src={project.cover}
-                  alt={project.titleEn}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  decoding="async"
-                />
-                <span>{project.id}</span>
-                <strong>{project.titleEn}</strong>
-                <small>{project.type}</small>
-              </button>
-            ))}
-          </div>
-
-          <div className="hero-index" aria-label="精选作品索引">
-            {galleryProjects.map(project => (
-              <button key={project.id} type="button" onClick={() => onOpenProject(project)}>
-                <span>{project.id}</span>
-                <strong>{project.titleEn}</strong>
-                <small>{project.type}</small>
-              </button>
-            ))}
-          </div>
+          <span className="section-kicker">Method lines</span>
+          {heroMethods.map(item => (
+            <article className="hero-method-row" key={item.step}>
+              <span>{item.step}</span>
+              <strong>{item.title}</strong>
+              <p>{item.text}</p>
+            </article>
+          ))}
         </motion.div>
       </div>
 
-      <KineticMarquee items={marqueeItems} />
+      <KineticMarquee items={heroMarqueeItems} />
 
       <button
         className="hero-scroll-cue"
         type="button"
         onClick={() => document.getElementById('profile')?.scrollIntoView({ behavior: 'smooth' })}
-        aria-label="滚动到个人简介"
+        aria-label="Scroll to profile"
       >
         <span />
       </button>
@@ -352,19 +343,33 @@ function ProfileSection() {
   )
 }
 
-function WorkSection({ projects: videoProjects, onOpenProject }) {
+function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
+  const [activeSlug, setActiveSlug] = useState(videoProjects[0]?.slug ?? '')
+  const activeProject = videoProjects.find(project => project.slug === activeSlug) ?? videoProjects[0]
+
+  useEffect(() => {
+    setActiveSlug(videoProjects[0]?.slug ?? '')
+  }, [videoProjects])
+
+  if (!activeProject) return null
+
   return (
-    <section className="work-section page-section" id="work" aria-label="作品">
+    <section className="work-section page-section" id="work" aria-label="Video archive">
       <div className="work-heading-row">
         <SectionHeader
           kicker="Selected Work"
-          title="作品"
-          intro="保留已经有视频成片的项目，其他方向先从页面中撤下。"
+          title="Video Archive"
+          intro="Five finished AIGC video reels, organized as an editorial index instead of repeated placeholder cards."
         />
         <WorkStats projects={videoProjects} />
       </div>
-      <ProjectCarousel projects={videoProjects} onOpenProject={onOpenProject} />
-      <WorkIndex projects={videoProjects} onOpenProject={onOpenProject} />
+      <ArchiveShowcase
+        projects={videoProjects}
+        activeProject={activeProject}
+        activeSlug={activeProject.slug}
+        onActivate={setActiveSlug}
+        onOpenProject={onOpenProject}
+      />
     </section>
   )
 }
@@ -376,9 +381,10 @@ function WorkStats({ projects: visibleProjects }) {
   }, 0)
   const minutes = Math.floor(totalDurationSeconds / 60)
   const seconds = String(totalDurationSeconds % 60).padStart(2, '0')
+  const projectTypes = new Set(visibleProjects.map(project => project.type)).size
 
   return (
-    <div className="work-stats" aria-label="公开视频统计">
+    <div className="work-stats" aria-label="Video archive statistics">
       <span>
         <strong>{visibleProjects.length}</strong>
         <small>Video works</small>
@@ -387,258 +393,95 @@ function WorkStats({ projects: visibleProjects }) {
         <strong>{minutes}:{seconds}</strong>
         <small>Total runtime</small>
       </span>
+      <span>
+        <strong>{projectTypes}</strong>
+        <small>Story types</small>
+      </span>
     </div>
   )
 }
 
-function WorkIndex({ projects: indexedProjects, onOpenProject }) {
-  const reelLabel = indexedProjects.length === 1
-    ? 'One finished reel'
-    : `${indexedProjects.length} finished reels`
-
+function ArchiveShowcase({ projects: archiveProjects, activeProject, activeSlug, onActivate, onOpenProject }) {
   return (
     <motion.div
-      className="work-index"
+      className="archive-showcase"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.18 }}
       variants={stagger}
     >
-      <motion.div className="work-index-copy" variants={fadeUp}>
-        <span className="section-kicker">Video Index</span>
-        <h3>{reelLabel}, one delivery system.</h3>
-      </motion.div>
-
-      <div className="work-index-list" aria-label="公开视频列表">
-        {indexedProjects.map((project, index) => (
+      <motion.div className="archive-preview" variants={fadeUp}>
+        <AnimatePresence mode="wait">
           <motion.button
-            key={project.slug}
+            key={activeProject.slug}
             type="button"
-            className="work-index-row"
-            variants={fadeUp}
-            onClick={() => onOpenProject(project)}
+            className="archive-preview-media"
+            onClick={() => onOpenProject(activeProject)}
+            initial={{ opacity: 0, y: 14, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.99 }}
+            transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+            aria-label={'Open ' + activeProject.titleEn}
           >
-            <span className="work-index-number">{String(index + 1).padStart(2, '0')}</span>
-            <span className="work-index-title">
-              <strong>{project.titleEn}</strong>
-              <small>{project.type}</small>
-            </span>
-            <span className="work-index-meta">
-              <small>{project.duration}</small>
-              <small>{project.year}</small>
-            </span>
+            <img src={activeProject.cover} alt={activeProject.titleEn} loading="eager" decoding="async" />
+            <video
+              src={activeProject.video}
+              poster={activeProject.cover}
+              muted
+              autoPlay
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            />
+            <span>{activeProject.id}</span>
           </motion.button>
-        ))}
-      </div>
-    </motion.div>
-  )
-}
+        </AnimatePresence>
 
-function ProjectCarousel({ projects: carouselProjects, onOpenProject }) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
-  const shouldReduceMotion = useReducedMotion()
-  const carouselLength = carouselProjects.length
-
-  useEffect(() => {
-    setActiveIndex(0)
-  }, [carouselProjects])
-
-  useEffect(() => {
-    if (shouldReduceMotion || isPaused || carouselLength <= 1) return undefined
-
-    const timer = window.setInterval(() => {
-      setActiveIndex(index => wrapIndex(index + 1, carouselLength))
-    }, 6200)
-
-    return () => window.clearInterval(timer)
-  }, [carouselLength, isPaused, shouldReduceMotion])
-
-  const moveCarousel = offset => {
-    if (carouselLength <= 1) return
-    setActiveIndex(index => wrapIndex(index + offset, carouselLength))
-  }
-
-  const jumpToOffset = offset => {
-    if (offset === 0 || carouselLength <= 1) return
-    moveCarousel(offset)
-  }
-
-  const handleKeyDown = event => {
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      moveCarousel(1)
-    }
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      moveCarousel(-1)
-    }
-
-    if (event.key === 'Enter' && event.target === event.currentTarget) {
-      event.preventDefault()
-      onOpenProject(carouselProjects[activeIndex])
-    }
-  }
-
-  if (!carouselLength) return null
-
-  const activeProject = carouselProjects[activeIndex]
-  const progress = ((activeIndex + 1) / carouselLength) * 100
-
-  return (
-    <motion.div
-      className="project-carousel"
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.16 }}
-      transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
-      onPointerEnter={() => setIsPaused(true)}
-      onPointerLeave={() => setIsPaused(false)}
-      onFocusCapture={() => setIsPaused(true)}
-      onBlurCapture={() => setIsPaused(false)}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="region"
-      aria-roledescription="carousel"
-      aria-label="作品轮播"
-    >
-      <p className="sr-only" aria-live="polite" aria-atomic="true">
-        {`Project ${activeIndex + 1} of ${carouselLength}: ${activeProject.titleEn}`}
-      </p>
-
-      <div className="carousel-copy">
-        <span className="section-kicker">Showreel Loop</span>
-        <h3>
-          <WordArtText text={activeProject.titleEn} />
-        </h3>
-        <p>{activeProject.introEn}</p>
-        <div className="carousel-meta">
-          <span>{activeProject.id}</span>
-          <span>{activeProject.type}</span>
-          <span>{activeProject.year}</span>
+        <div className="archive-preview-copy">
+          <span className="section-kicker">Active reel</span>
+          <h3>
+            <WordArtText text={activeProject.titleEn} />
+          </h3>
+          <p>{activeProject.introEn}</p>
+          <div className="archive-preview-meta">
+            <span>{activeProject.type}</span>
+            <span>{activeProject.duration}</span>
+            <span>{activeProject.year}</span>
+          </div>
         </div>
-      </div>
-
-      <motion.div
-        className="carousel-stage"
-        drag={carouselLength > 1 ? 'x' : false}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.08}
-        onDragEnd={(_, info) => {
-          if (info.offset.x < -64) moveCarousel(1)
-          if (info.offset.x > 64) moveCarousel(-1)
-        }}
-      >
-        {carouselProjects.map((project, projectIndex) => {
-            const offset = getLoopOffset(projectIndex, activeIndex, carouselLength)
-            const isActive = offset === 0
-            const distance = Math.abs(offset)
-            const isVisible = distance <= 2
-
-            return (
-              <motion.button
-                key={project.slug}
-                type="button"
-                className={isActive ? 'carousel-card is-active' : 'carousel-card'}
-                style={{ '--slot': offset }}
-                initial={false}
-                animate={{
-                  opacity: isVisible ? (isActive ? 1 : Math.max(0.22, 0.6 - distance * 0.15)) : 0,
-                  x: `calc(${offset} * min(22vw, 14rem))`,
-                  y: distance * 8,
-                  scale: isActive ? 1 : 0.88 - Math.min(distance, 2) * 0.045,
-                  rotateY: offset * -6,
-                  zIndex: 20 - distance,
-                  pointerEvents: isVisible ? 'auto' : 'none',
-                }}
-                transition={carouselSpring}
-                onClick={() => (isActive ? onOpenProject(project) : jumpToOffset(offset))}
-                aria-label={isActive ? `Open ${project.titleEn}` : `Show ${project.titleEn}`}
-                aria-hidden={!isVisible}
-                aria-current={isActive ? 'true' : undefined}
-                tabIndex={isVisible ? 0 : -1}
-              >
-                <img
-                  src={project.cover}
-                  alt={project.titleEn}
-                  loading={isActive ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-                {isActive && project.video && (
-                  <video
-                    src={project.video}
-                    poster={project.cover}
-                    muted
-                    autoPlay
-                    loop
-                    playsInline
-                    preload="metadata"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="carousel-card-index">{project.id}</span>
-                <div className="carousel-card-copy">
-                  <span>{project.type}</span>
-                  <h4>
-                    <WordArtText text={project.titleEn} />
-                  </h4>
-                  <small>{project.duration}</small>
-                </div>
-              </motion.button>
-            )
-          })}
       </motion.div>
 
-      <div className="carousel-controls">
-        <button
-          type="button"
-          className="carousel-arrow"
-          onClick={() => moveCarousel(-1)}
-          disabled={carouselLength <= 1}
-          aria-label="Previous project"
-        >
-          ←
-        </button>
-        <div className="carousel-progress" aria-hidden="true">
-          <span style={{ width: `${progress}%` }} />
-        </div>
-        <button
-          type="button"
-          className="carousel-arrow"
-          onClick={() => moveCarousel(1)}
-          disabled={carouselLength <= 1}
-          aria-label="Next project"
-        >
-          →
-        </button>
-      </div>
+      <div className="archive-index" aria-label="Finished video list">
+        {archiveProjects.map((project, index) => {
+          const isActive = project.slug === activeSlug
 
-      <div className="carousel-dots" aria-label="作品快速切换">
-        {carouselProjects.map((project, index) => (
-          <button
-            key={project.slug}
-            type="button"
-            className={index === activeIndex ? 'is-active' : ''}
-            onClick={() => setActiveIndex(index)}
-            aria-label={`Show ${project.titleEn}`}
-            aria-current={index === activeIndex ? 'true' : undefined}
-          />
-        ))}
+          return (
+            <motion.button
+              key={project.slug}
+              type="button"
+              className={isActive ? 'archive-row is-active' : 'archive-row'}
+              variants={fadeUp}
+              onPointerEnter={() => onActivate(project.slug)}
+              onFocus={() => onActivate(project.slug)}
+              onClick={() => onOpenProject(project)}
+              aria-current={isActive ? 'true' : undefined}
+            >
+              <span className="archive-row-number">{String(index + 1).padStart(2, '0')}</span>
+              <span className="archive-row-title">
+                <strong>{project.titleEn}</strong>
+                <small>{project.introEn}</small>
+              </span>
+              <span className="archive-row-meta">
+                <small>{project.type}</small>
+                <small>{project.duration}</small>
+              </span>
+            </motion.button>
+          )
+        })}
       </div>
     </motion.div>
   )
-}
-
-function wrapIndex(index, length) {
-  return ((index % length) + length) % length
-}
-
-function getLoopOffset(index, activeIndex, length) {
-  let offset = index - activeIndex
-  if (offset > length / 2) offset -= length
-  if (offset < -length / 2) offset += length
-  return offset
 }
 
 function StandardsSection() {
@@ -842,23 +685,24 @@ function DetailBlock({ title, text }) {
   )
 }
 
-function InteractiveTitle({ text }) {
-  const words = text.split(' ')
+function KineticTitle({ lines }) {
+  const label = lines.join(' ')
 
   return (
-    <motion.h1 className="interactive-title" variants={fadeUp} aria-label={text}>
-      {words.map((word, wordIndex) => (
-        <span className="title-word" aria-hidden="true" key={`${word}-${wordIndex}`}>
-          {word.split('').map((letter, letterIndex) => (
-            <span
-              className="title-letter"
-              style={{ '--letter-index': letterIndex }}
-              key={`${word}-${letter}-${letterIndex}`}
-            >
-              {letter}
-            </span>
-          ))}
-          {wordIndex < words.length - 1 && <span className="title-space"> </span>}
+    <motion.h1 className="kinetic-title" variants={fadeUp} aria-label={label}>
+      {lines.map((line, lineIndex) => (
+        <span className="kinetic-title-line" key={line} aria-hidden="true" style={{ '--line-index': lineIndex }}>
+          <span>
+            {line.split('').map((letter, letterIndex) => (
+              <span
+                className="kinetic-title-letter"
+                style={{ '--letter-index': letterIndex }}
+                key={line + '-' + letter + '-' + letterIndex}
+              >
+                {letter}
+              </span>
+            ))}
+          </span>
         </span>
       ))}
     </motion.h1>
