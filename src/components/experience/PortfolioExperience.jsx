@@ -641,9 +641,6 @@ function ProfileSection() {
 
 function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
   const [activeWorkIndex, setActiveWorkIndex] = useState(0)
-  const handleSelectWork = useCallback(index => {
-    setActiveWorkIndex(previousIndex => (previousIndex === index ? previousIndex : index))
-  }, [])
 
   return (
     <section className="work-section page-section" id="work" aria-label="Video archive">
@@ -659,12 +656,6 @@ function WorkArchiveSection({ projects: videoProjects, onOpenProject }) {
         projects={videoProjects}
         activeIndex={activeWorkIndex}
         onActiveIndexChange={setActiveWorkIndex}
-        onOpenProject={onOpenProject}
-      />
-      <WorkIndex
-        projects={videoProjects}
-        activeIndex={activeWorkIndex}
-        onSelectIndex={handleSelectWork}
         onOpenProject={onOpenProject}
       />
     </section>
@@ -698,57 +689,9 @@ function WorkStats({ projects: visibleProjects }) {
   )
 }
 
-function WorkIndex({ projects: indexedProjects, activeIndex, onSelectIndex, onOpenProject }) {
-  const reelLabel = indexedProjects.length === 1
-    ? 'One finished reel'
-    : `${indexedProjects.length} finished reels`
-
-  return (
-    <motion.div
-      className="work-index"
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.18 }}
-      variants={stagger}
-    >
-      <motion.div className="work-index-copy" variants={fadeUp}>
-        <span className="section-kicker">Video Index</span>
-        <h3>{reelLabel}. Built for delivery.</h3>
-      </motion.div>
-
-      <div className="work-index-list" data-card-group aria-label="Finished video list">
-        {indexedProjects.map((project, index) => (
-          <motion.button
-            key={project.slug}
-            type="button"
-            className={index === activeIndex ? 'work-index-row is-active' : 'work-index-row'}
-            data-animate="card"
-            variants={fadeUp}
-            onFocus={() => onSelectIndex(index)}
-            onClick={() => {
-              onSelectIndex(index)
-              onOpenProject(project)
-            }}
-          >
-            <span className="work-index-number">{String(index + 1).padStart(2, '0')}</span>
-            <span className="work-index-title">
-              <strong>{project.titleZh}</strong>
-              <small>{project.titleEn}</small>
-            </span>
-            <span className="work-index-meta">
-              <small>{project.type}</small>
-              <small>{project.duration}</small>
-              <small>{project.year}</small>
-            </span>
-          </motion.button>
-        ))}
-      </div>
-    </motion.div>
-  )
-}
-
 function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveIndexChange, onOpenProject }) {
   const carouselLength = carouselProjects.length
+  const [motionKey, setMotionKey] = useState(0)
 
   useEffect(() => {
     onActiveIndexChange(0)
@@ -756,7 +699,11 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
 
   const moveCarousel = useCallback(offset => {
     if (carouselLength <= 1) return
-    onActiveIndexChange(index => wrapIndex(index + offset, carouselLength))
+    onActiveIndexChange(index => {
+      const nextIndex = wrapIndex(index + offset, carouselLength)
+      if (nextIndex !== index) setMotionKey(key => key + 1)
+      return nextIndex
+    })
   }, [carouselLength, onActiveIndexChange])
 
   const jumpToOffset = useCallback(offset => {
@@ -782,7 +729,11 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
   }, [activeIndex, carouselProjects, moveCarousel, onOpenProject])
 
   const handleDotSelect = useCallback(index => {
-    onActiveIndexChange(previousIndex => (previousIndex === index ? previousIndex : index))
+    onActiveIndexChange(previousIndex => {
+      if (previousIndex === index) return previousIndex
+      setMotionKey(key => key + 1)
+      return index
+    })
   }, [onActiveIndexChange])
 
   const carouselCards = useMemo(() => carouselProjects.map((project, projectIndex) => {
@@ -816,6 +767,7 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
       role="region"
       aria-roledescription="carousel"
       aria-label="Finished video carousel"
+      data-motion-key={motionKey}
     >
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {`Project ${activeIndex + 1} of ${carouselLength}: ${activeProject.titleEn}`}
@@ -824,11 +776,11 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
       <div className="carousel-copy">
         <div>
           <span className="section-kicker">Showreel Loop</span>
-          <h3>
+          <h3 key={`title-${activeProject.slug}`}>
             <WordArtText text={activeProject.titleEn} />
           </h3>
         </div>
-        <div className="carousel-copy-detail">
+        <div className="carousel-copy-detail" key={`detail-${activeProject.slug}`}>
           <p>{activeProject.introEn}</p>
           <div className="carousel-meta">
             <span>{activeProject.id}</span>
@@ -851,6 +803,7 @@ function ProjectCarousel({ projects: carouselProjects, activeIndex, onActiveInde
         }}
       >
         <div className="carousel-stage-light" aria-hidden="true" />
+        <span className="carousel-motion-flash" key={`flash-${motionKey}`} aria-hidden="true" />
         {carouselCards.map(card => (
           <CarouselCard
             key={card.project.slug}
@@ -909,8 +862,8 @@ const CarouselCard = memo(function CarouselCard({
   onOpenProject,
   onJump,
 }) {
-  const slotScale = isActive ? 1 : 0.7 - Math.min(distance, 2) * 0.055
-  const slotOpacity = isVisible ? (isActive ? 1 : Math.max(0.3, 0.66 - distance * 0.16)) : 0
+  const slotScale = isActive ? 1 : 0.64 - Math.min(distance, 2) * 0.055
+  const slotOpacity = isVisible ? (isActive ? 1 : Math.max(0.24, 0.62 - distance * 0.15)) : 0
 
   return (
     <button
