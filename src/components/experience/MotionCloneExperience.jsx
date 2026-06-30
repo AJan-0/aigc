@@ -13,7 +13,7 @@ import pickingVideo from '../../../picking.mp4'
 import pickingCover from '../../../picking_cover.jpg'
 
 const navItems = [
-  { id: 'home', label: 'home' },
+  { id: 'home', label: 'home', shortLabel: 'h' },
   { id: 'work', label: 'work', shortLabel: 'w' },
   { id: 'about', label: 'about', shortLabel: 'a' },
   { id: 'contact', label: 'contact', shortLabel: 'c' },
@@ -34,29 +34,29 @@ const contactEmail = '1248567324@qq.com'
 
 const heroTitleLines = [
   [
-    ['A', 'sticker mc-glyph-a'],
-    ['I', 'pencil mc-glyph-i'],
-    ['G', 'cube mc-glyph-g'],
-    ['C', 'neon mc-glyph-c'],
+    ['A', 'balloon balloon-red mc-glyph-a'],
+    ['I', 'balloon balloon-violet mc-glyph-i'],
+    ['G', 'balloon balloon-yellow mc-glyph-g'],
+    ['C', 'balloon balloon-pink mc-glyph-c'],
   ],
   [
-    ['D', 'slab mc-glyph-d'],
-    ['e', 'bubble mc-glyph-e'],
-    ['s', 'solid mc-glyph-ink mc-glyph-s'],
-    ['i', 'stroke mc-glyph-i-small'],
-    ['g', 'blob mc-glyph-g-small'],
+    ['D', 'solid word-white mc-glyph-d'],
+    ['e', 'solid word-white mc-glyph-e'],
+    ['s', 'solid word-white mc-glyph-s'],
+    ['i', 'solid word-white mc-glyph-i-small'],
+    ['g', 'solid word-white mc-glyph-g-small'],
     ['n', 'solid mc-glyph-n'],
   ],
   [
-    ['P', 'solid mc-glyph-p'],
-    ['o', 'face mc-glyph-o-face'],
-    ['r', 'solid mc-glyph-r'],
-    ['t', 'solid mc-glyph-t'],
-    ['f', 'outline mc-glyph-f'],
-    ['o', 'cube mc-glyph-o-cube'],
-    ['l', 'solid mc-glyph-l'],
-    ['i', 'stroke mc-glyph-i-tail'],
-    ['o', 'solid mc-glyph-o-last'],
+    ['P', 'solid word-white mc-glyph-p'],
+    ['o', 'solid word-white mc-glyph-o-face'],
+    ['r', 'solid word-white mc-glyph-r'],
+    ['t', 'solid word-white mc-glyph-t'],
+    ['f', 'solid word-white mc-glyph-f'],
+    ['o', 'solid word-white mc-glyph-o-cube'],
+    ['l', 'solid word-white mc-glyph-l'],
+    ['i', 'solid word-white mc-glyph-i-tail'],
+    ['o', 'solid word-white mc-glyph-o-last'],
   ],
 ]
 
@@ -356,10 +356,54 @@ function NavWord({ label, active }) {
 }
 
 function HeroMark() {
+  const [burstId, setBurstId] = useState(0)
+  const [isBursting, setIsBursting] = useState(false)
+  const lastBurstRef = useRef(0)
+
+  const triggerBurst = useCallback((force = false) => {
+    const now = window.performance?.now?.() ?? Date.now()
+    if (!force && now - lastBurstRef.current < 260) return
+
+    lastBurstRef.current = now
+    setIsBursting(true)
+    setBurstId(value => (value + 1) % 997)
+  }, [])
+
+  useEffect(() => {
+    if (!isBursting) return undefined
+
+    const timeoutId = window.setTimeout(() => {
+      setIsBursting(false)
+    }, 1260)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [burstId, isBursting])
+
+  const handlePointerEnter = event => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') triggerBurst(true)
+  }
+
+  const handlePointerMove = event => {
+    if (event.pointerType === 'mouse') triggerBurst(false)
+  }
+
+  const handleKeyDown = event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+
+    event.preventDefault()
+    triggerBurst(true)
+  }
+
   return (
     <div
-      className="mc-hero-mark"
+      className={isBursting ? `mc-hero-mark is-chaos-${burstId % 2 === 0 ? 'a' : 'b'}` : 'mc-hero-mark'}
       aria-label="AIGC Design Portfolio"
+      role="button"
+      tabIndex={0}
+      onClick={() => triggerBurst(true)}
+      onKeyDown={handleKeyDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
     >
       <h1 className="mc-hero-title" aria-label="AIGC Design Portfolio">
         {heroTitleLines.map((line, lineIndex) => (
@@ -388,6 +432,39 @@ function HeroMark() {
               const settleX = Math.round(phaseX * -0.16)
               const settleY = Math.round(phaseY * -0.16)
               const phaseScale = lineIndex === 0 ? 1.08 : lineIndex === 1 ? 1.035 : 1.025
+              const randomUnit = salt => {
+                const raw = Math.sin((burstId + 1) * (glyphIndex + 2) * (salt + 3.73)) * 10000
+                return raw - Math.floor(raw)
+              }
+              const jumpRange = lineIndex === 0 ? 72 : 42
+              const jumpX = Math.round((randomUnit(1) - 0.5) * jumpRange)
+              const jumpY = Math.round((randomUnit(2) - 0.72) * (lineIndex === 0 ? 96 : 54))
+              const jumpRotation = Math.round((randomUnit(3) - 0.5) * (lineIndex === 0 ? 28 : 16))
+              const jumpSkew = Math.round((randomUnit(4) - 0.5) * 14)
+              const jumpScaleX = Number((0.88 + randomUnit(5) * 0.34).toFixed(2))
+              const jumpScaleY = Number((0.88 + randomUnit(6) * 0.38).toFixed(2))
+              const twitchX = Math.round((randomUnit(7) - 0.5) * 14)
+              const twitchY = Math.round((randomUnit(8) - 0.5) * 16)
+              const phaseXReverse = Math.round(phaseX * -0.18)
+              const phaseRotationInverse = Number((phaseRotationSoft * -1).toFixed(2))
+              const phaseRotationRise = Number((phaseRotationSoft * -0.65).toFixed(2))
+              const phaseRotationSnap = Number((phaseRotationSoft * 1.4).toFixed(2))
+              const jumpXSnap = Math.round(jumpX * -0.2)
+              const jumpXReverse = Math.round(jumpX * -0.72)
+              const jumpYPop = Math.round(jumpY - 20)
+              const jumpYSoft = Math.round(jumpY * 0.42)
+              const jumpRotationSnap = Number((jumpRotation * -0.32).toFixed(2))
+              const jumpRotationReturn = Number((jumpRotation * -0.46).toFixed(2))
+              const jumpRotationLean = Number((jumpRotation * 0.7).toFixed(2))
+              const jumpRotationBounce = Number((jumpRotation * -0.52).toFixed(2))
+              const jumpSkewSoft = Number((jumpSkew * 0.42).toFixed(2))
+              const jumpSkewReverse = Number((jumpSkew * -0.5).toFixed(2))
+              const jumpSkewWideReverse = Number((jumpSkew * -0.7).toFixed(2))
+              const jumpSkewHalf = Number((jumpSkew * 0.5).toFixed(2))
+              const twitchYDrop = Math.round(twitchY + 16)
+              const settleXWide = Math.round(settleX * 1.3)
+              const settleYUp = Math.round(settleY - 4)
+              const settleYLand = Math.round(settleY + 8)
 
               return (
                 <span
@@ -403,6 +480,10 @@ function HeroMark() {
                     '--phase-rotation': `${phaseRotation}deg`,
                     '--phase-rotation-soft': `${phaseRotationSoft}deg`,
                     '--phase-rotation-counter': `${phaseRotationCounter}deg`,
+                    '--phase-x-reverse': `${phaseXReverse}px`,
+                    '--phase-rotation-inverse': `${phaseRotationInverse}deg`,
+                    '--phase-rotation-rise': `${phaseRotationRise}deg`,
+                    '--phase-rotation-snap': `${phaseRotationSnap}deg`,
                     '--phase-scale': phaseScale,
                     '--gather-x': `${gatherX}px`,
                     '--gather-y': `${gatherY}px`,
@@ -410,6 +491,31 @@ function HeroMark() {
                     '--counter-y': `${counterY}px`,
                     '--settle-x': `${settleX}px`,
                     '--settle-y': `${settleY}px`,
+                    '--jump-x': `${jumpX}px`,
+                    '--jump-y': `${jumpY}px`,
+                    '--jump-x-snap': `${jumpXSnap}px`,
+                    '--jump-x-reverse': `${jumpXReverse}px`,
+                    '--jump-y-pop': `${jumpYPop}px`,
+                    '--jump-y-soft': `${jumpYSoft}px`,
+                    '--jump-rotation': `${jumpRotation}deg`,
+                    '--jump-rotation-snap': `${jumpRotationSnap}deg`,
+                    '--jump-rotation-return': `${jumpRotationReturn}deg`,
+                    '--jump-rotation-lean': `${jumpRotationLean}deg`,
+                    '--jump-rotation-bounce': `${jumpRotationBounce}deg`,
+                    '--jump-skew': `${jumpSkew}deg`,
+                    '--jump-skew-soft': `${jumpSkewSoft}deg`,
+                    '--jump-skew-reverse': `${jumpSkewReverse}deg`,
+                    '--jump-skew-wide-reverse': `${jumpSkewWideReverse}deg`,
+                    '--jump-skew-half': `${jumpSkewHalf}deg`,
+                    '--jump-scale-x': jumpScaleX,
+                    '--jump-scale-y': jumpScaleY,
+                    '--twitch-x': `${twitchX}px`,
+                    '--twitch-y': `${twitchY}px`,
+                    '--twitch-y-drop': `${twitchYDrop}px`,
+                    '--settle-x-wide': `${settleXWide}px`,
+                    '--settle-y-up': `${settleYUp}px`,
+                    '--settle-y-land': `${settleYLand}px`,
+                    '--pop-delay': `${glyphIndex * 18}ms`,
                   }}
                 >
                   {letter}
@@ -420,11 +526,9 @@ function HeroMark() {
         ))}
       </h1>
       <div className="mc-hero-drifters" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
+        {Array.from({ length: 16 }).map((_, index) => (
+          <span key={index} />
+        ))}
       </div>
       <p className="mc-hero-caption">
         AIGC Design Portfolio. AI film direction, short drama hooks and finished motion packaging.

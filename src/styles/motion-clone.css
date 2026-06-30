@@ -63,12 +63,21 @@
   text-rendering: geometricPrecision;
 }
 
-html.mc-native-scroll,
-html.mc-native-scroll body {
+html.mc-native-scroll {
   height: auto;
   min-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.mc-native-scroll body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
   overscroll-behavior-y: auto;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
@@ -349,17 +358,21 @@ html.mc-native-scroll .motion-clone-page {
   overflow: hidden;
   width: 100%;
   min-height: calc(100svh - 88px);
-  padding: 92px clamp(36px, 9vw, 140px) 58px;
-  background: var(--mc-bg);
+  padding: 86px clamp(28px, 7vw, 120px) 42px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 253, 250, 0.04), transparent 34%),
+    radial-gradient(circle at 18% 18%, rgba(250, 52, 12, 0.06), transparent 18%),
+    radial-gradient(circle at 78% 26%, rgba(179, 159, 227, 0.06), transparent 20%),
+    var(--mc-bg);
   touch-action: pan-y;
 }
 
 .mc-hero-stage {
   position: relative;
-  width: min(100%, 1120px);
-  height: min(572px, calc(100svh - 196px));
-  min-height: 430px;
-  overflow: hidden;
+  width: min(100%, 1320px);
+  height: min(680px, calc(100svh - 154px));
+  min-height: 540px;
+  overflow: visible;
   container-type: inline-size;
   pointer-events: auto;
   touch-action: pan-y;
@@ -372,14 +385,23 @@ html.mc-native-scroll .motion-clone-page {
 .mc-hero-mark {
   position: absolute;
   left: 50%;
-  top: 52%;
-  width: min(100%, 1048px);
-  height: 420px;
+  top: 51%;
+  width: min(100%, 1280px);
+  height: 610px;
   display: grid;
   place-items: center;
+  border: 0;
+  outline: none;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  cursor: pointer;
+  pointer-events: auto;
   touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mc-hero-mark:focus-visible {
+  outline: 1px solid rgba(191, 255, 0, 0.7);
+  outline-offset: 12px;
 }
 
 .mc-hero-title {
@@ -394,7 +416,7 @@ html.mc-native-scroll .motion-clone-page {
   color: var(--mc-ink);
   font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
   font-weight: 800;
-  gap: clamp(4px, 0.42vw, 10px);
+  gap: 0;
   line-height: 0.78;
   letter-spacing: 0;
   text-align: center;
@@ -420,46 +442,46 @@ html.mc-native-scroll .motion-clone-page {
   transform: var(--line-rest);
   transform-origin: 50% 55%;
   will-change: transform, filter;
-  animation: mcHeroLineRegroup 7.8s cubic-bezier(0.64, 0, 0.18, 1) infinite;
+  animation: mcHeroLineRegroup 6.8s cubic-bezier(0.64, 0, 0.18, 1) infinite;
   animation-delay: var(--line-loop-delay, 0ms);
   pointer-events: none;
   touch-action: pan-y;
 }
 
 .mc-hero-line-1 {
-  --line-size: clamp(168px, 15.7vw, 236px);
-  --line-gap: clamp(5px, 0.85vw, 13px);
+  --line-size: clamp(216px, 19.6vw, 310px);
+  --line-gap: clamp(4px, 0.22vw, 8px);
   --line-rest: translateX(-0.6%) rotate(-1deg);
-  --line-scatter: translate3d(-20px, -12px, 0) rotate(-2.8deg) scaleX(1.035);
-  --line-gather: translate3d(10px, 9px, 0) rotate(1.25deg) scaleX(0.965);
-  --line-snap: translate3d(-4px, 2px, 0) rotate(-0.35deg) scaleX(1.01);
+  --line-scatter: translate3d(-28px, -24px, 0) rotate(-4.4deg) scaleX(1.04);
+  --line-gather: translate3d(16px, 13px, 0) rotate(2.4deg) scaleX(0.94);
+  --line-snap: translate3d(-6px, 3px, 0) rotate(-0.7deg) scaleX(1.025);
   --line-loop-delay: 820ms;
   z-index: 3;
-  margin-bottom: -34px;
+  margin-bottom: clamp(28px, 2.2vw, 38px);
 }
 
 .mc-hero-line-2 {
-  --line-size: clamp(150px, 14.2vw, 210px);
-  --line-gap: clamp(0px, 0.25vw, 4px);
-  --line-rest: translateX(0.2%) rotate(0.25deg) scaleX(1.04);
-  --line-scatter: translate3d(14px, 6px, 0) rotate(1.35deg) scaleX(1.09);
-  --line-gather: translate3d(-8px, -6px, 0) rotate(-0.85deg) scaleX(0.99);
-  --line-snap: translate3d(3px, -1px, 0) rotate(0.55deg) scaleX(1.055);
+  --line-size: clamp(166px, 14.5vw, 230px);
+  --line-gap: clamp(-2px, -0.1vw, 0px);
+  --line-rest: translateX(-0.4%) rotate(-1.1deg) scaleX(1.08);
+  --line-scatter: translate3d(18px, 9px, 0) rotate(2.6deg) scaleX(1.13);
+  --line-gather: translate3d(-10px, -8px, 0) rotate(-1.8deg) scaleX(1.01);
+  --line-snap: translate3d(4px, -2px, 0) rotate(0.9deg) scaleX(1.09);
   --line-loop-delay: 970ms;
   z-index: 2;
-  margin-top: 0;
+  margin-top: clamp(8px, 0.9vw, 14px);
 }
 
 .mc-hero-line-3 {
-  --line-size: clamp(118px, 11.6vw, 172px);
-  --line-gap: clamp(0px, 0.18vw, 3px);
-  --line-rest: translateX(-0.1%) rotate(-0.18deg) scaleX(1.03);
-  --line-scatter: translate3d(-12px, 12px, 0) rotate(-1deg) scaleX(1.075);
-  --line-gather: translate3d(7px, -8px, 0) rotate(0.7deg) scaleX(0.985);
-  --line-snap: translate3d(-2px, 2px, 0) rotate(-0.4deg) scaleX(1.045);
+  --line-size: clamp(174px, 15.5vw, 248px);
+  --line-gap: clamp(-3px, -0.18vw, 0px);
+  --line-rest: translateX(-0.2%) rotate(-1.6deg) scaleX(1.04);
+  --line-scatter: translate3d(-16px, 15px, 0) rotate(-2.5deg) scaleX(1.09);
+  --line-gather: translate3d(10px, -11px, 0) rotate(1.6deg) scaleX(0.99);
+  --line-snap: translate3d(-3px, 3px, 0) rotate(-0.8deg) scaleX(1.06);
   --line-loop-delay: 1090ms;
   z-index: 1;
-  margin-top: -12px;
+  margin-top: clamp(16px, 1.2vw, 22px);
 }
 
 .mc-hero-glyph {
@@ -495,6 +517,185 @@ html.mc-native-scroll .motion-clone-page {
   content: '';
   position: absolute;
   pointer-events: none;
+}
+
+.mc-glyph-balloon {
+  --glyph-w: 0.82em;
+  height: 0.88em;
+  color: var(--balloon-color, var(--mc-red));
+  font-family: 'Cooper Black', 'Arial Rounded MT Bold', 'Arial Black', 'Neue Regrade Extrabold', Syne, sans-serif;
+  font-weight: 900;
+  line-height: 0.62;
+  -webkit-text-stroke: clamp(1px, 0.11vw, 2px) rgba(255, 253, 250, 0.08);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0.035em 0 var(--balloon-rim, rgba(0, 0, 0, 0.22)),
+    0 0.08em 0 rgba(0, 0, 0, 0.22),
+    0 0.13em 0 rgba(0, 0, 0, 0.12);
+  filter:
+    drop-shadow(0 12px 0 rgba(0, 0, 0, 0.28))
+    saturate(1.18);
+  animation-name: mcBalloonEnter, mcBalloonIdle;
+  animation-duration: 860ms, 3.8s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), ease-in-out;
+  animation-delay: var(--glyph-delay, 0ms), var(--glyph-loop-delay, 0ms);
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: both, none;
+}
+
+.mc-glyph-balloon::before {
+  z-index: 3;
+  left: 16%;
+  top: 12%;
+  width: 38%;
+  height: 11%;
+  border-radius: 999px;
+  background: rgba(255, 253, 250, 0.84);
+  filter: blur(0.4px);
+  transform: rotate(-17deg);
+  animation: mcBalloonGlint 2.9s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
+}
+
+.mc-glyph-balloon::after {
+  z-index: -1;
+  inset: 11% 0 1%;
+  border-radius: 42% 58% 46% 54%;
+  background:
+    radial-gradient(circle at 50% 100%, var(--balloon-rim, rgba(0,0,0,0.18)) 0 10%, transparent 11%),
+    radial-gradient(circle at 15% 50%, rgba(255,255,255,0.16), transparent 35%);
+  opacity: 0.8;
+  transform: rotate(var(--phase-rotation-soft, 0deg)) scale(0.95);
+}
+
+.balloon-red {
+  --balloon-color: #ff3833;
+  --balloon-rim: #c60808;
+}
+
+.balloon-violet {
+  --balloon-color: #8f38ff;
+  --balloon-rim: #5d19c9;
+}
+
+.mc-glyph-balloon.mc-glyph-i {
+  --glyph-w: 0.52em;
+}
+
+.mc-glyph-balloon.mc-glyph-g {
+  --glyph-w: 0.94em;
+}
+
+.mc-glyph-balloon.mc-glyph-c {
+  --glyph-w: 0.96em;
+}
+
+.balloon-yellow {
+  --glyph-w: 0.9em;
+  --balloon-color: #ffd433;
+  --balloon-rim: #d99a00;
+  color: #ffd433;
+  text-shadow:
+    0 0.035em 0 #d99a00,
+    0 0.08em 0 rgba(0, 0, 0, 0.22),
+    0 0.13em 0 rgba(0, 0, 0, 0.12);
+}
+
+.balloon-yellow::before {
+  left: 36%;
+  top: 16%;
+  width: 32%;
+  height: 17%;
+  background:
+    radial-gradient(circle at 25% 50%, #fff 0 21%, #111 22% 29%, transparent 30%),
+    radial-gradient(circle at 75% 50%, #fff 0 21%, #111 22% 29%, transparent 30%);
+  filter: none;
+  transform: rotate(3deg);
+}
+
+.balloon-yellow::after {
+  z-index: 3;
+  left: 45%;
+  top: 38%;
+  width: 23%;
+  height: 10%;
+  border-radius: 0 0 999px 999px;
+  background: #25000b;
+  box-shadow:
+    -0.13em -0.03em 0 -0.08em #ff73ac,
+    0.13em -0.03em 0 -0.08em #ff73ac;
+  transform: rotate(4deg);
+}
+
+.balloon-pink {
+  --glyph-w: 0.98em;
+  --balloon-color: #ff4aa4;
+  --balloon-rim: #c91876;
+  color: #ff4aa4;
+  text-shadow:
+    0 0.035em 0 #c91876,
+    0 0.08em 0 rgba(0, 0, 0, 0.22),
+    0 0.13em 0 rgba(0, 0, 0, 0.12);
+}
+
+.balloon-pink::before {
+  left: 42%;
+  top: 18%;
+  width: 34%;
+  height: 15%;
+  background:
+    radial-gradient(circle at 26% 50%, #fff 0 19%, #111 20% 28%, transparent 29%),
+    radial-gradient(circle at 76% 50%, #fff 0 19%, #111 20% 28%, transparent 29%);
+  filter: none;
+  transform: rotate(-3deg);
+}
+
+.balloon-pink::after {
+  z-index: 3;
+  left: 39%;
+  top: 38%;
+  width: 38%;
+  height: 16%;
+  border-radius: 0 0 999px 999px;
+  background:
+    radial-gradient(circle at 16% 0, #fff 0 12%, transparent 13%),
+    radial-gradient(circle at 34% 0, #fff 0 12%, transparent 13%),
+    radial-gradient(circle at 52% 0, #fff 0 12%, transparent 13%),
+    radial-gradient(circle at 70% 0, #fff 0 12%, transparent 13%),
+    #1c0010;
+  transform: rotate(2deg);
+}
+
+.word-white {
+  color: var(--mc-ink);
+  font-family: 'Arial Black', 'Neue Regrade Extrabold', Impact, Syne, sans-serif;
+  font-weight: 900;
+  -webkit-text-stroke: clamp(1px, 0.12vw, 2px) rgba(255, 253, 250, 0.55);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0.02em 0 rgba(255, 253, 250, 0.18),
+    0 0.08em 0 rgba(255, 253, 250, 0.05),
+    0 0.15em 0 rgba(0, 0, 0, 0.34);
+  filter:
+    drop-shadow(0 14px 0 rgba(0, 0, 0, 0.18))
+    drop-shadow(0 0 14px rgba(255, 253, 250, 0.08));
+  animation-name: mcWordEnter, mcWhiteWordWobble;
+  animation-duration: 820ms, 4.6s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), ease-in-out;
+  animation-delay: var(--glyph-delay, 0ms), var(--glyph-loop-delay, 0ms);
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: both, none;
+}
+
+.word-white::before {
+  z-index: 2;
+  left: 14%;
+  top: 8%;
+  width: 45%;
+  height: 8%;
+  border-radius: 999px;
+  background: rgba(255, 253, 250, 0.26);
+  transform: rotate(-9deg);
 }
 
 .mc-glyph-sticker {
@@ -887,58 +1088,253 @@ html.mc-native-scroll .motion-clone-page {
 }
 
 .mc-hero-drifters span {
+  --drift-x: 10px;
+  --drift-y: -14px;
+  --drift-rotate: 18deg;
+  --drifter-burst-delay: 0ms;
   position: absolute;
   display: block;
   width: 18px;
   height: 18px;
   opacity: 0.88;
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.22));
   animation: mcDrifter 6.8s ease-in-out infinite;
 }
 
 .mc-hero-drifters span:nth-child(1) {
-  left: 15%;
-  top: 22%;
-  background: var(--mc-red);
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  left: 7%;
+  top: 28%;
+  width: 38px;
+  height: 38px;
+  background: var(--mc-yellow);
+  clip-path: polygon(50% 0, 61% 34%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 34%);
+  --drift-x: 12px;
+  --drift-y: -18px;
+  --drift-rotate: 24deg;
+  --drifter-burst-delay: 0ms;
 }
 
 .mc-hero-drifters span:nth-child(2) {
-  right: 18%;
-  top: 21%;
-  width: 22px;
-  height: 22px;
-  border: 3px solid var(--mc-ink);
+  right: 22%;
+  top: 9%;
+  width: 42px;
+  height: 42px;
+  background: var(--mc-ink);
+  clip-path: polygon(50% 0, 61% 34%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 34%);
   animation-delay: -1.4s;
-  transform: rotate(45deg);
+  --drift-x: -10px;
+  --drift-y: -20px;
+  --drift-rotate: -18deg;
+  --drifter-burst-delay: 30ms;
 }
 
 .mc-hero-drifters span:nth-child(3) {
-  left: 22%;
-  bottom: 25%;
-  width: 12px;
-  height: 42px;
-  background: var(--mc-acid);
+  left: 2%;
+  top: 16%;
+  width: 68px;
+  height: 48px;
+  border-top: 7px solid var(--mc-ink);
+  border-left: 7px solid var(--mc-ink);
+  border-radius: 999px 0 0 0;
+  background: transparent;
   animation-delay: -2.1s;
+  --drift-x: 16px;
+  --drift-y: 10px;
+  --drift-rotate: 12deg;
+  --drifter-burst-delay: 60ms;
 }
 
 .mc-hero-drifters span:nth-child(4) {
-  right: 12%;
-  bottom: 30%;
-  width: 26px;
+  left: 4%;
+  top: 62%;
+  width: 48px;
   height: 26px;
-  background: var(--mc-yellow);
-  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  border: 7px solid var(--mc-ink);
+  border-top: 0;
+  border-right: 0;
+  border-radius: 0 0 0 999px;
+  background: transparent;
   animation-delay: -3.4s;
+  --drift-x: 10px;
+  --drift-y: -16px;
+  --drift-rotate: -16deg;
+  --drifter-burst-delay: 90ms;
 }
 
 .mc-hero-drifters span:nth-child(5) {
-  left: 50%;
-  bottom: 17%;
+  left: 19%;
+  top: 11%;
   width: 16px;
   height: 16px;
   background: var(--mc-lavender);
   border-radius: 50%;
   animation-delay: -4.2s;
+  --drift-x: -12px;
+  --drift-y: 12px;
+  --drift-rotate: 8deg;
+  --drifter-burst-delay: 120ms;
+}
+
+.mc-hero-drifters span:nth-child(6) {
+  left: 36%;
+  top: 6%;
+  width: 40px;
+  height: 40px;
+  background: var(--mc-ink);
+  clip-path: polygon(50% 0, 61% 34%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 34%);
+  animation-delay: -0.8s;
+  --drift-x: 7px;
+  --drift-y: 18px;
+  --drift-rotate: 20deg;
+  --drifter-burst-delay: 150ms;
+}
+
+.mc-hero-drifters span:nth-child(7) {
+  right: 12%;
+  top: 14%;
+  width: 66px;
+  height: 44px;
+  border-top: 6px solid var(--mc-ink);
+  border-right: 6px solid var(--mc-ink);
+  border-radius: 0 999px 0 0;
+  background: transparent;
+  animation-delay: -2.8s;
+  --drift-x: -15px;
+  --drift-y: 8px;
+  --drift-rotate: -14deg;
+  --drifter-burst-delay: 180ms;
+}
+
+.mc-hero-drifters span:nth-child(8) {
+  right: 7%;
+  top: 34%;
+  width: 30px;
+  height: 14px;
+  border-radius: 999px;
+  background: #43dfd0;
+  transform: rotate(-32deg);
+  animation-delay: -1.9s;
+  --drift-x: -11px;
+  --drift-y: -13px;
+  --drift-rotate: 28deg;
+  --drifter-burst-delay: 210ms;
+}
+
+.mc-hero-drifters span:nth-child(9) {
+  right: 13%;
+  top: 58%;
+  width: 28px;
+  height: 28px;
+  background: var(--mc-ink);
+  clip-path: polygon(50% 0, 61% 34%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 34%);
+  animation-delay: -5s;
+  --drift-x: -8px;
+  --drift-y: -18px;
+  --drift-rotate: 28deg;
+  --drifter-burst-delay: 240ms;
+}
+
+.mc-hero-drifters span:nth-child(10) {
+  right: 4%;
+  top: 51%;
+  width: 16px;
+  height: 16px;
+  background: #ffbd45;
+  border-radius: 50%;
+  animation-delay: -3.9s;
+  --drift-x: -14px;
+  --drift-y: 10px;
+  --drift-rotate: -10deg;
+  --drifter-burst-delay: 270ms;
+}
+
+.mc-hero-drifters span:nth-child(11) {
+  left: 12%;
+  bottom: 18%;
+  width: 20px;
+  height: 20px;
+  background: #58c8ff;
+  border-radius: 50%;
+  animation-delay: -4.8s;
+  --drift-x: 10px;
+  --drift-y: -20px;
+  --drift-rotate: 12deg;
+  --drifter-burst-delay: 300ms;
+}
+
+.mc-hero-drifters span:nth-child(12) {
+  left: 46%;
+  top: 9%;
+  width: 18px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--mc-yellow);
+  transform: rotate(-30deg);
+  animation-delay: -2.4s;
+  --drift-x: 13px;
+  --drift-y: -11px;
+  --drift-rotate: -26deg;
+  --drifter-burst-delay: 330ms;
+}
+
+.mc-hero-drifters span:nth-child(13) {
+  left: 50%;
+  top: 7%;
+  width: 22px;
+  height: 58px;
+  border-radius: 999px;
+  background: #ff5cab;
+  transform: rotate(18deg);
+  animation-delay: -1.2s;
+  --drift-x: -9px;
+  --drift-y: 16px;
+  --drift-rotate: 24deg;
+  --drifter-burst-delay: 360ms;
+}
+
+.mc-hero-drifters span:nth-child(14) {
+  left: 58%;
+  top: 11%;
+  width: 16px;
+  height: 16px;
+  background: #52c8ff;
+  border-radius: 50%;
+  animation-delay: -3.2s;
+  --drift-x: -12px;
+  --drift-y: -12px;
+  --drift-rotate: 14deg;
+  --drifter-burst-delay: 390ms;
+}
+
+.mc-hero-drifters span:nth-child(15) {
+  right: 19%;
+  bottom: 16%;
+  width: 32px;
+  height: 22px;
+  border-radius: 999px 999px 999px 6px;
+  background: #58c8ff;
+  transform: rotate(23deg);
+  animation-delay: -5.8s;
+  --drift-x: -13px;
+  --drift-y: -15px;
+  --drift-rotate: -22deg;
+  --drifter-burst-delay: 420ms;
+}
+
+.mc-hero-drifters span:nth-child(16) {
+  right: 5%;
+  bottom: 20%;
+  width: 44px;
+  height: 30px;
+  border-top: 7px solid #ff4aa4;
+  border-radius: 999px 999px 0 0;
+  background: transparent;
+  animation-delay: -0.5s;
+  --drift-x: -16px;
+  --drift-y: 9px;
+  --drift-rotate: 18deg;
+  --drifter-burst-delay: 450ms;
 }
 
 .mc-hero-caption {
@@ -974,6 +1370,55 @@ html.mc-native-scroll .motion-clone-page {
   .mc-hero:hover .mc-hero-drifters span {
     animation-duration: 2.6s;
   }
+}
+
+.mc-hero-mark:focus-visible .mc-hero-glyph {
+  filter:
+    drop-shadow(0 12px 0 rgba(0, 0, 0, 0.22))
+    drop-shadow(0 0 18px rgba(191, 255, 0, 0.11));
+}
+
+.mc-hero-mark.is-chaos-a .mc-hero-line,
+.mc-hero-mark.is-chaos-b .mc-hero-line {
+  animation-duration: 4.4s;
+}
+
+.mc-hero-mark.is-chaos-a .mc-hero-glyph {
+  animation: mcGlyphRandomJumpA 920ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+  filter:
+    drop-shadow(0 15px 0 rgba(0, 0, 0, 0.26))
+    drop-shadow(0 0 20px rgba(255, 253, 250, 0.11));
+}
+
+.mc-hero-mark.is-chaos-b .mc-hero-glyph {
+  animation: mcGlyphRandomJumpB 860ms cubic-bezier(0.2, 1.28, 0.34, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+  filter:
+    drop-shadow(0 18px 0 rgba(0, 0, 0, 0.22))
+    drop-shadow(0 0 24px rgba(250, 52, 12, 0.12));
+}
+
+.mc-hero-mark.is-chaos-a .mc-glyph-balloon,
+.mc-hero-mark.is-chaos-b .mc-glyph-balloon {
+  filter:
+    drop-shadow(0 16px 0 rgba(0, 0, 0, 0.34))
+    drop-shadow(0 0 18px rgba(255, 253, 250, 0.18))
+    saturate(1.32);
+}
+
+.mc-hero-mark.is-chaos-a .word-white,
+.mc-hero-mark.is-chaos-b .word-white {
+  text-shadow:
+    0 0.02em 0 rgba(255, 253, 250, 0.24),
+    0 0.12em 0 rgba(0, 0, 0, 0.42),
+    0 0 22px rgba(255, 253, 250, 0.12);
+}
+
+.mc-hero-mark.is-chaos-a .mc-hero-drifters span,
+.mc-hero-mark.is-chaos-b .mc-hero-drifters span {
+  animation: mcDrifterBurst 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--drifter-burst-delay, 0ms);
 }
 
 .mc-ticker {
@@ -2121,6 +2566,89 @@ html.mc-native-scroll .motion-clone-page {
   }
 }
 
+@keyframes mcBalloonEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--phase-x, 20px), calc(var(--phase-y, -18px) + 54px), 0) rotate(var(--phase-rotation, -8deg)) scale(0.68, 1.28);
+  }
+  48% {
+    opacity: 1;
+    transform: translate3d(var(--phase-x-reverse, -4px), -18px, 0) rotate(var(--phase-rotation-inverse, -3deg)) scale(1.14, 0.86);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(var(--settle-x, 0px), 8px, 0) rotate(var(--phase-rotation-soft, 2deg)) scale(0.94, 1.08);
+  }
+  84% {
+    opacity: 1;
+    transform: translate3d(0, -4px, 0) rotate(-1deg) scale(1.035, 0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes mcBalloonIdle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-0.8deg) scale(1, 1);
+  }
+  26% {
+    transform: translate3d(var(--settle-x, -3px), -8px, 0) rotate(var(--phase-rotation-soft, 2deg)) scale(1.035, 0.975);
+  }
+  52% {
+    transform: translate3d(var(--counter-x, 4px), 5px, 0) rotate(var(--phase-rotation-counter, -2deg)) scale(0.965, 1.045);
+  }
+  74% {
+    transform: translate3d(var(--gather-x, 2px), -3px, 0) rotate(1.2deg) scale(1.015, 0.995);
+  }
+}
+
+@keyframes mcBalloonGlint {
+  0%, 100% {
+    opacity: 0.82;
+    transform: translateX(0) rotate(-17deg) scaleX(1);
+  }
+  50% {
+    opacity: 0.48;
+    transform: translateX(19%) rotate(-11deg) scaleX(0.72);
+  }
+}
+
+@keyframes mcWordEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 58px, 0) rotate(var(--phase-rotation, -3deg)) skewX(-5deg) scale(0.92, 1.12);
+  }
+  56% {
+    opacity: 1;
+    transform: translate3d(var(--settle-x, -2px), -10px, 0) rotate(var(--phase-rotation-rise, -2deg)) skewX(2deg) scale(1.055, 0.94);
+  }
+  76% {
+    opacity: 1;
+    transform: translate3d(0, 5px, 0) rotate(0.7deg) skewX(-1deg) scale(0.98, 1.035);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
+  }
+}
+
+@keyframes mcWhiteWordWobble {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
+  }
+  31% {
+    transform: translate3d(var(--phase-x, 8px), -5px, 0) rotate(var(--phase-rotation-soft, 1deg)) skewX(-1.7deg) scale(1.025, 0.985);
+  }
+  58% {
+    transform: translate3d(var(--counter-x, -4px), 3px, 0) rotate(var(--phase-rotation-counter, -1deg)) skewX(1.4deg) scale(0.982, 1.03);
+  }
+  78% {
+    transform: translate3d(var(--settle-x, 0px), -2px, 0) rotate(0.5deg) skewX(-0.5deg) scale(1.01);
+  }
+}
+
 @keyframes mcSolidWave {
   0%, 12%, 100% {
     transform: translate3d(0, 0, 0) skewX(0deg) scale(1, 1);
@@ -2137,6 +2665,48 @@ html.mc-native-scroll .motion-clone-page {
   63% {
     transform: translate3d(var(--settle-x, -2px), var(--settle-y, 2px), 0) skewX(-0.8deg) scale(1.015, 0.995);
     opacity: 0.99;
+  }
+}
+
+@keyframes mcGlyphRandomJumpA {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
+  }
+  18% {
+    transform: translate3d(var(--jump-x-snap, -5px), -18px, 0) rotate(var(--jump-rotation-snap, -3deg)) skewX(var(--jump-skew-soft, 3deg)) scale(1.12, 0.9);
+  }
+  43% {
+    transform: translate3d(var(--jump-x, 24px), var(--jump-y, -42px), 0) rotate(var(--jump-rotation, 8deg)) skewX(var(--jump-skew, 6deg)) scale(var(--jump-scale-x, 1.05), var(--jump-scale-y, 0.96));
+  }
+  62% {
+    transform: translate3d(var(--twitch-x, -8px), var(--twitch-y-drop, 24px), 0) rotate(var(--jump-rotation-return, -4deg)) skewX(var(--jump-skew-reverse, -3deg)) scale(0.92, 1.12);
+  }
+  80% {
+    transform: translate3d(var(--settle-x-wide, 0px), var(--settle-y-up, -4px), 0) rotate(var(--phase-rotation-snap, 1deg)) skewX(-1deg) scale(1.03, 0.98);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
+  }
+}
+
+@keyframes mcGlyphRandomJumpB {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
+  }
+  20% {
+    transform: translate3d(var(--twitch-x, 8px), var(--jump-y-pop, -56px), 0) rotate(var(--jump-rotation-lean, -6deg)) skewX(var(--jump-skew-wide-reverse, -4deg)) scale(0.88, 1.2);
+  }
+  38% {
+    transform: translate3d(var(--jump-x-reverse, -16px), 18px, 0) rotate(var(--jump-rotation-bounce, -4deg)) skewX(var(--jump-skew, 5deg)) scale(1.17, 0.82);
+  }
+  58% {
+    transform: translate3d(var(--jump-x, 22px), var(--jump-y-soft, -15px), 0) rotate(var(--jump-rotation, 8deg)) skewX(var(--jump-skew-half, 3deg)) scale(var(--jump-scale-x, 1.05), var(--jump-scale-y, 0.98));
+  }
+  78% {
+    transform: translate3d(var(--settle-x, 0px), var(--settle-y-land, 8px), 0) rotate(-1deg) skewX(1.4deg) scale(0.96, 1.055);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) skewX(0deg) scale(1);
   }
 }
 
@@ -2350,7 +2920,26 @@ html.mc-native-scroll .motion-clone-page {
     transform: translate3d(0, 0, 0) rotate(0deg);
   }
   50% {
-    transform: translate3d(10px, -14px, 0) rotate(18deg);
+    transform: translate3d(var(--drift-x, 10px), var(--drift-y, -14px), 0) rotate(var(--drift-rotate, 18deg));
+  }
+}
+
+@keyframes mcDrifterBurst {
+  0% {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.78);
+  }
+  38% {
+    opacity: 1;
+    transform: translate3d(var(--drift-x, 10px), var(--drift-y, -14px), 0) rotate(var(--drift-rotate, 18deg)) scale(1.22);
+  }
+  68% {
+    opacity: 0.92;
+    transform: translate3d(0, 4px, 0) rotate(-8deg) scale(0.94);
+  }
+  100% {
+    opacity: 0.88;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
 }
 
@@ -2361,14 +2950,14 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-stage {
-    width: min(100%, 980px);
-    height: min(520px, calc(100svh - 184px));
-    min-height: 386px;
+    width: min(100%, 1080px);
+    height: min(610px, calc(100svh - 164px));
+    min-height: 480px;
   }
 
   .mc-hero-mark {
-    width: min(100%, 930px);
-    height: 370px;
+    width: min(100%, 1040px);
+    height: 500px;
   }
 
   .mc-work-inner,
@@ -2393,20 +2982,21 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-line-1 {
-    --line-size: clamp(146px, 14.8vw, 194px);
-    --line-gap: clamp(4px, 0.72vw, 10px);
-    margin-bottom: -30px;
+    --line-size: clamp(172px, 17.8vw, 226px);
+    --line-gap: clamp(3px, 0.3vw, 6px);
+    margin-bottom: clamp(10px, 1vw, 16px);
   }
 
   .mc-hero-line-2 {
-    --line-size: clamp(130px, 13.1vw, 172px);
-    --line-gap: clamp(0px, 0.2vw, 3px);
+    --line-size: clamp(138px, 13.8vw, 176px);
+    --line-gap: 0px;
+    margin-top: 4px;
   }
 
   .mc-hero-line-3 {
-    --line-size: clamp(104px, 10.25vw, 138px);
-    --line-gap: clamp(0px, 0.14vw, 2px);
-    margin-top: -10px;
+    --line-size: clamp(142px, 14.4vw, 188px);
+    --line-gap: 0px;
+    margin-top: 4px;
   }
 }
 
@@ -2427,31 +3017,31 @@ html.mc-native-scroll .motion-clone-page {
 
   .mc-hero-stage {
     width: min(100%, 760px);
-    height: 430px;
-    min-height: 430px;
+    height: 500px;
+    min-height: 500px;
   }
 
   .mc-hero-mark {
     width: min(100%, 744px);
-    height: 318px;
+    height: 420px;
   }
 
   .mc-hero-line-1 {
-    --line-size: clamp(116px, 14.5vw, 150px);
-    --line-gap: clamp(4px, 0.7vw, 8px);
-    margin-bottom: -24px;
+    --line-size: clamp(130px, 15.2vw, 158px);
+    --line-gap: clamp(3px, 0.45vw, 6px);
+    margin-bottom: 10px;
   }
 
   .mc-hero-line-2 {
-    --line-size: clamp(102px, 12.9vw, 134px);
-    --line-gap: 1px;
-    margin-top: 0;
+    --line-size: clamp(108px, 12.8vw, 134px);
+    --line-gap: 0px;
+    margin-top: 4px;
   }
 
   .mc-hero-line-3 {
-    --line-size: clamp(84px, 10.6vw, 110px);
-    --line-gap: 1px;
-    margin-top: -8px;
+    --line-size: clamp(112px, 13.1vw, 140px);
+    --line-gap: 0px;
+    margin-top: 4px;
   }
 
   .mc-ticker {
@@ -2508,6 +3098,17 @@ html.mc-native-scroll .motion-clone-page {
     padding: 0 16px;
   }
 
+  html.mc-native-scroll,
+  html.mc-native-scroll body {
+    scrollbar-width: none;
+  }
+
+  html.mc-native-scroll::-webkit-scrollbar,
+  html.mc-native-scroll body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+
   .mc-nav-logo {
     width: 44px;
     height: 44px;
@@ -2539,10 +3140,6 @@ html.mc-native-scroll .motion-clone-page {
     flex: 0 0 auto;
     max-width: calc(100vw - 72px);
     overflow: visible;
-  }
-
-  .mc-nav-links button:nth-child(2) {
-    display: none;
   }
 
   .mc-nav-links button,
@@ -2603,45 +3200,45 @@ html.mc-native-scroll .motion-clone-page {
   .mc-hero-stage {
     width: 100%;
     max-width: none;
-    height: 374px;
-    min-height: 374px;
+    height: 430px;
+    min-height: 430px;
     overflow: visible;
   }
 
   .mc-hero-mark {
     top: 50%;
     width: min(100%, 528px);
-    height: 316px;
+    height: 374px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 108px;
-    --line-gap: 5px;
+    --line-size: 102px;
+    --line-gap: 4px;
     --line-rest: translateX(-0.9%) rotate(-1deg);
     --line-scatter: translate3d(-13px, -9px, 0) rotate(-2.4deg) scaleX(1.025);
     --line-gather: translate3d(7px, 7px, 0) rotate(1deg) scaleX(0.972);
     --line-snap: translate3d(-3px, 1px, 0) rotate(-0.28deg) scaleX(1.006);
-    margin-bottom: -10px;
+    margin-bottom: 12px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 95px;
+    --line-size: 90px;
     --line-gap: 0px;
     --line-rest: translateX(0.25%) rotate(0.25deg) scaleX(1.03);
     --line-scatter: translate3d(10px, 5px, 0) rotate(1.05deg) scaleX(1.07);
     --line-gather: translate3d(-6px, -5px, 0) rotate(-0.75deg) scaleX(0.99);
     --line-snap: translate3d(2px, -1px, 0) rotate(0.45deg) scaleX(1.038);
-    margin-top: 0;
+    margin-top: 4px;
   }
 
   .mc-hero-line-3 {
-    --line-size: 74px;
+    --line-size: 72px;
     --line-gap: 0px;
     --line-rest: translateX(-0.15%) rotate(-0.25deg) scaleX(1.02);
     --line-scatter: translate3d(-8px, 9px, 0) rotate(-0.85deg) scaleX(1.055);
     --line-gather: translate3d(5px, -6px, 0) rotate(0.6deg) scaleX(0.99);
     --line-snap: translate3d(-2px, 1px, 0) rotate(-0.35deg) scaleX(1.03);
-    margin-top: 0;
+    margin-top: 10px;
   }
 
   .mc-hero-glyph {
@@ -2920,28 +3517,28 @@ html.mc-native-scroll .motion-clone-page {
 
 @media (min-width: 520px) and (max-width: 808px) {
   .mc-hero-stage {
-    height: 408px;
-    min-height: 408px;
+    height: 470px;
+    min-height: 470px;
   }
 
   .mc-hero-mark {
     width: clamp(500px, 86vw, 610px);
-    height: 346px;
+    height: 414px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 136px;
-    --line-gap: 7px;
-    margin-bottom: -18px;
+    --line-size: 128px;
+    --line-gap: 6px;
+    margin-bottom: 14px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 118px;
+    --line-size: 112px;
   }
 
   .mc-hero-line-3 {
-    --line-size: 94px;
-    margin-top: -3px;
+    --line-size: 90px;
+    margin-top: 12px;
   }
 }
 
@@ -2951,28 +3548,29 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-stage {
-    height: 334px;
-    min-height: 334px;
+    height: 370px;
+    min-height: 370px;
   }
 
   .mc-hero-mark {
     width: min(100%, 312px);
-    height: 282px;
+    height: 320px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 84px;
+    --line-size: 78px;
     --line-gap: 4px;
-    margin-bottom: -7px;
+    margin-bottom: 8px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 76px;
+    --line-size: 66px;
+    margin-top: 2px;
   }
 
   .mc-hero-line-3 {
-    --line-size: 60px;
-    margin-top: 0;
+    --line-size: 58px;
+    margin-top: 8px;
   }
 
   .mc-work,
