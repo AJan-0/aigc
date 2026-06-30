@@ -466,7 +466,9 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
   const listRef = useRef(null)
   const rowRefs = useRef([])
   const scrollFrameRef = useRef(0)
+  const programmaticScrollRef = useRef(0)
   const wasDraggingPreviewRef = useRef(false)
+  const previewPointerRef = useRef(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -477,7 +479,14 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
     if (!list || !row) return
 
     const targetLeft = row.offsetLeft - (list.clientWidth - row.clientWidth) / 2
+    programmaticScrollRef.current += 1
     list.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
+
+    const timeoutId = window.setTimeout(() => {
+      programmaticScrollRef.current = Math.max(0, programmaticScrollRef.current - 1)
+    }, 520)
+
+    return () => window.clearTimeout(timeoutId)
   }, [activeIndex])
 
   useEffect(() => () => {
@@ -485,6 +494,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
   }, [])
 
   const syncActiveProjectFromScroll = () => {
+    if (programmaticScrollRef.current > 0) return
     if (scrollFrameRef.current) return
 
     scrollFrameRef.current = requestAnimationFrame(() => {
@@ -512,6 +522,54 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
 
       if (closestIndex !== activeIndex) onActiveIndexChange(closestIndex)
     })
+  }
+
+  const handlePreviewPointerDown = event => {
+    previewPointerRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: window.performance.now(),
+    }
+    wasDraggingPreviewRef.current = false
+  }
+
+  const handlePreviewPointerMove = event => {
+    const start = previewPointerRef.current
+    if (!start) return
+
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    if (Math.abs(deltaX) > 16 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
+      wasDraggingPreviewRef.current = true
+    }
+  }
+
+  const handlePreviewPointerUp = event => {
+    const start = previewPointerRef.current
+    if (!start) return
+
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    const elapsed = Math.max(1, window.performance.now() - start.time)
+    const velocityX = Math.abs(deltaX) / elapsed
+    const shouldMove = Math.abs(deltaX) > 72 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35
+
+    if (shouldMove || (Math.abs(deltaX) > 42 && velocityX > 0.55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2)) {
+      onMoveProject(deltaX < 0 ? 1 : -1)
+      wasDraggingPreviewRef.current = true
+      window.setTimeout(() => {
+        wasDraggingPreviewRef.current = false
+      }, 90)
+    }
+
+    previewPointerRef.current = null
+  }
+
+  const handlePreviewPointerCancel = () => {
+    previewPointerRef.current = null
+    window.setTimeout(() => {
+      wasDraggingPreviewRef.current = false
+    }, 90)
   }
 
   const handleRowAction = (project, index) => {
@@ -570,19 +628,10 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   if (wasDraggingPreviewRef.current) return
                   onOpenProject(activeProject)
                 }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.22}
-                onDragStart={() => {
-                  wasDraggingPreviewRef.current = true
-                }}
-                onDragEnd={(_, info) => {
-                  const shouldMove = Math.abs(info.offset.x) > 72 || Math.abs(info.velocity.x) > 420
-                  if (shouldMove) onMoveProject(info.offset.x < 0 ? 1 : -1)
-                  window.setTimeout(() => {
-                    wasDraggingPreviewRef.current = false
-                  }, 90)
-                }}
+                onPointerDown={handlePreviewPointerDown}
+                onPointerMove={handlePreviewPointerMove}
+                onPointerUp={handlePreviewPointerUp}
+                onPointerCancel={handlePreviewPointerCancel}
                 initial={{ opacity: 0, y: 22, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.985 }}

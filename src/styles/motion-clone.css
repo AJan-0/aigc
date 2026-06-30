@@ -1107,7 +1107,7 @@ html.mc-native-scroll .motion-clone-page {
   overflow: hidden;
   padding: 0;
   background: #030303;
-  touch-action: pan-y;
+  touch-action: manipulation;
 }
 
 .mc-cover-card::after {
@@ -2299,7 +2299,7 @@ html.mc-native-scroll .motion-clone-page {
     scrollbar-width: none;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
+    touch-action: auto;
   }
 
   .mc-work-list::-webkit-scrollbar {
@@ -2320,7 +2320,7 @@ html.mc-native-scroll .motion-clone-page {
     background: rgba(255, 253, 250, 0.018);
     scroll-snap-align: center;
     scroll-snap-stop: always;
-    touch-action: pan-x pan-y;
+    touch-action: auto;
   }
 
   .mc-work-row small {
