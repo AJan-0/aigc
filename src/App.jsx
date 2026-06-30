@@ -4,8 +4,8 @@
  * ============================================
  */
 
-import PortfolioCloneExperience from './components/experience/PortfolioCloneExperience'
+import MotionCloneExperience from './components/experience/MotionCloneExperience'
 
 export default function App() {
-  return <PortfolioCloneExperience />
+  return <MotionCloneExperience />
 }
