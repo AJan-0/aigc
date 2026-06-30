@@ -23,6 +23,34 @@ const tickerItems = ['aigc visual', 'ajan studio', 'ai drama', 'motion system', 
 const brandItems = ['COMFYUI', 'RUNWAY', 'KLING', 'SDXL', 'DAVINCI', 'LORA', 'CONTROLNET', 'AIGC']
 const contactEmail = '1248567324@qq.com'
 
+const heroTitleLines = [
+  [
+    ['A', 'sticker mc-glyph-a'],
+    ['I', 'pencil mc-glyph-i'],
+    ['G', 'cube mc-glyph-g'],
+    ['C', 'neon mc-glyph-c'],
+  ],
+  [
+    ['D', 'ink mc-glyph-d'],
+    ['e', 'bubble mc-glyph-e'],
+    ['s', 'outline mc-glyph-s'],
+    ['i', 'spark mc-glyph-i-small'],
+    ['g', 'blob mc-glyph-g-small'],
+    ['n', 'neon mc-glyph-n'],
+  ],
+  [
+    ['P', 'slab mc-glyph-p'],
+    ['o', 'face mc-glyph-o-face'],
+    ['r', 'ink mc-glyph-r'],
+    ['t', 'plus mc-glyph-t'],
+    ['f', 'outline mc-glyph-f'],
+    ['o', 'cube mc-glyph-o-cube'],
+    ['l', 'stroke mc-glyph-l'],
+    ['i', 'spark mc-glyph-i-tail'],
+    ['o', 'bubble mc-glyph-o-last'],
+  ],
+]
+
 const motionProjects = [
   {
     id: '01',
@@ -151,7 +179,7 @@ export default function MotionCloneExperience() {
       <NoiseLayer />
       <MotionNav activeSection={activeSection} onNavigate={goToSection} />
 
-      <section className="mc-hero" id="home" aria-label="AJan motion designer hero">
+      <section className="mc-hero" id="home" aria-label="AIGC Design Portfolio hero">
         <div className={shouldReduceMotion ? 'mc-hero-stage' : 'mc-hero-stage has-entry-motion'}>
           <HeroMark />
         </div>
@@ -181,27 +209,72 @@ export default function MotionCloneExperience() {
 
 function useLenis() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.06,
-      smoothWheel: true,
-      wheelMultiplier: 0.92,
-      touchMultiplier: 1.05,
-    })
+    if (typeof window === 'undefined') return undefined
 
-    window.__motionCloneLenis = lenis
+    const html = document.documentElement
+    const coarsePointerQuery = window.matchMedia('(pointer: coarse)')
+    const mobileWidthQuery = window.matchMedia('(max-width: 808px)')
+    let lenis = null
     let frameId = 0
 
-    const raf = time => {
-      lenis.raf(time)
+    const shouldUseNativeScroll = () => coarsePointerQuery.matches || mobileWidthQuery.matches
+
+    const destroyLenis = () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId)
+        frameId = 0
+      }
+
+      if (lenis) {
+        if (window.__motionCloneLenis === lenis) delete window.__motionCloneLenis
+        lenis.destroy()
+        lenis = null
+      }
+
+      html.classList.add('mc-native-scroll')
+    }
+
+    const startLenis = () => {
+      if (lenis || shouldUseNativeScroll()) {
+        if (shouldUseNativeScroll()) destroyLenis()
+        return
+      }
+
+      html.classList.remove('mc-native-scroll')
+      lenis = new Lenis({
+        duration: 1.06,
+        smoothWheel: true,
+        smoothTouch: false,
+        wheelMultiplier: 0.92,
+      })
+
+      window.__motionCloneLenis = lenis
+
+      const raf = time => {
+        lenis?.raf(time)
+        frameId = requestAnimationFrame(raf)
+      }
+
       frameId = requestAnimationFrame(raf)
     }
 
-    frameId = requestAnimationFrame(raf)
+    const syncScrollMode = () => {
+      if (shouldUseNativeScroll()) {
+        destroyLenis()
+      } else {
+        startLenis()
+      }
+    }
+
+    syncScrollMode()
+    coarsePointerQuery.addEventListener('change', syncScrollMode)
+    mobileWidthQuery.addEventListener('change', syncScrollMode)
 
     return () => {
-      cancelAnimationFrame(frameId)
-      if (window.__motionCloneLenis === lenis) delete window.__motionCloneLenis
-      lenis.destroy()
+      coarsePointerQuery.removeEventListener('change', syncScrollMode)
+      mobileWidthQuery.removeEventListener('change', syncScrollMode)
+      destroyLenis()
+      html.classList.remove('mc-native-scroll')
     }
   }, [])
 }
@@ -277,26 +350,44 @@ function HeroMark() {
   return (
     <div
       className="mc-hero-mark"
-      aria-label="Motion designer"
+      aria-label="AIGC Design Portfolio"
     >
-      <div className="mc-motion-word" aria-hidden="true">
-        <span className="mc-bubble-letter">m</span>
-        <span className="mc-cube-letter">o</span>
-        <span className="mc-plus-letter">t</span>
-        <span className="mc-pencil-wrap">
-          <span className="mc-pencil-body" />
-          <span className="mc-pencil-lead" />
-          <span className="mc-pencil-spark" />
-        </span>
-        <span className="mc-face-letter">
-          <span className="mc-face-eyes" />
-          <span className="mc-face-mouth" />
-        </span>
-        <span className="mc-neon-letter">n</span>
+      <h1 className="mc-hero-title" aria-label="AIGC Design Portfolio">
+        {heroTitleLines.map((line, lineIndex) => (
+          <span
+            className={`mc-hero-line mc-hero-line-${lineIndex + 1}`}
+            aria-hidden="true"
+            key={`line-${lineIndex}`}
+          >
+            {line.map(([letter, variant], letterIndex) => {
+              const glyphIndex = lineIndex * 9 + letterIndex
+
+              return (
+                <span
+                  className={`mc-hero-glyph mc-glyph-${variant}`}
+                  data-letter={letter}
+                  key={`${lineIndex}-${letter}-${letterIndex}`}
+                  style={{
+                    '--glyph-delay': `${glyphIndex * 18}ms`,
+                    '--glyph-loop-delay': `-${glyphIndex * 120}ms`,
+                  }}
+                >
+                  {letter}
+                </span>
+              )
+            })}
+          </span>
+        ))}
+      </h1>
+      <div className="mc-hero-drifters" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
       </div>
-      <h1>designer</h1>
       <p className="mc-hero-caption">
-        AI film direction, short drama hooks and finished motion packaging.
+        AIGC Design Portfolio. AI film direction, short drama hooks and finished motion packaging.
       </p>
     </div>
   )
@@ -329,7 +420,7 @@ function ShowreelSection({ activeProject }) {
         transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
       >
         <img className="mc-video-poster" src={activeProject?.cover} alt="" aria-hidden="true" loading="eager" decoding="async" />
-        <video ref={videoRef} src={v1Video} poster={activeProject?.cover} muted loop autoPlay playsInline preload="auto" />
+        <video ref={videoRef} src={activeProject?.video ?? v1Video} poster={activeProject?.cover} muted loop autoPlay playsInline preload="auto" />
         <div className="mc-video-overlay">
           <span className="mc-play-badge">play</span>
           <span>showreel / muted loop</span>

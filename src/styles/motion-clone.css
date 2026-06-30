@@ -54,11 +54,24 @@
   --mc-lavender: #b39fe3;
   min-height: 100vh;
   overflow-x: hidden;
+  touch-action: pan-y;
+  overscroll-behavior-y: auto;
   color: var(--mc-ink);
   background: var(--mc-bg);
   font-family: 'Neue Regrade Regular', Inter, 'Noto Sans SC', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+}
+
+html.mc-native-scroll,
+html.mc-native-scroll body,
+html.mc-native-scroll #root {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }
 
 .motion-clone-page *,
@@ -251,6 +264,7 @@
   width: 100%;
   padding: 72px 140px 80px;
   background: var(--mc-bg);
+  touch-action: pan-y;
 }
 
 .mc-hero-stage {
@@ -260,6 +274,8 @@
   aspect-ratio: 1.8552875696 / 1;
   overflow: hidden;
   container-type: inline-size;
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
 .mc-hero-stage.has-entry-motion {
@@ -270,251 +286,454 @@
   position: absolute;
   left: 50%;
   top: 49.9%;
-  width: 91.2%;
+  width: 94%;
   height: 91.28%;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+.mc-hero-title {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transform: translate(-50%, -50%);
-}
-
-.mc-motion-word {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
   width: 100%;
-  height: 43%;
-  gap: clamp(4px, 0.8vw, 12px);
-  margin-top: 3%;
-  transform: translateY(3%);
+  margin: 0;
+  color: var(--mc-ink);
+  font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
+  font-weight: 800;
+  line-height: 0.78;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+  text-transform: none;
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
-.mc-motion-word > span {
+.mc-hero-line {
   position: relative;
-  flex: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: clamp(88px, 13.5vw, 190px);
+  gap: var(--line-gap, 8px);
+  width: 100%;
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+.mc-hero-line-1 {
+  --line-size: 130px;
+  --line-gap: 10px;
+  z-index: 3;
+  transform: translateX(-1.1%) rotate(-1deg);
+}
+
+.mc-hero-line-2 {
+  --line-size: 147px;
+  --line-gap: 5px;
+  z-index: 2;
+  margin-top: -10px;
+  transform: translateX(1%) rotate(0.4deg);
+}
+
+.mc-hero-line-3 {
+  --line-size: 105px;
+  --line-gap: 4px;
+  z-index: 1;
+  margin-top: 0;
+  transform: translateX(-0.6%) rotate(-0.35deg);
+}
+
+.mc-hero-glyph {
+  --glyph-w: 0.7em;
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: var(--glyph-w);
+  height: 0.92em;
   color: rgba(255, 253, 250, 0.62);
-  font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
-  font-size: clamp(5.4rem, 13vw, 11.75rem);
+  font-size: var(--line-size);
   line-height: 0.72;
   letter-spacing: 0;
-  text-transform: lowercase;
+  isolation: isolate;
+  transform-origin: 50% 75%;
+  pointer-events: none;
+  touch-action: pan-y;
   will-change: transform, opacity;
+  animation:
+    mcGlyphEnter 780ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    mcGlyphFloat 5.7s ease-in-out infinite;
+  animation-delay: var(--glyph-delay, 0ms), var(--glyph-loop-delay, 0ms);
 }
 
-.mc-bubble-letter {
-  width: 1.28em;
-  color: #fa7575;
-  -webkit-text-stroke: 3px var(--mc-ink);
-  text-shadow: 0 3px 0 rgba(0,0,0,0.18);
-  filter: saturate(1.22);
-  transform-origin: 50% 80%;
-  animation: mcSoftBob 4.8s ease-in-out infinite;
-}
-
-.mc-bubble-letter::before,
-.mc-bubble-letter::after {
+.mc-hero-glyph::before,
+.mc-hero-glyph::after {
   content: '';
   position: absolute;
+  pointer-events: none;
+}
+
+.mc-glyph-sticker {
+  --glyph-w: 0.86em;
+  color: #fa7575;
+  -webkit-text-stroke: 3px var(--mc-ink);
+  filter: saturate(1.16);
+  text-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+}
+
+.mc-glyph-sticker::before,
+.mc-glyph-bubble::before {
   z-index: 2;
-  height: 12px;
+  left: 18%;
+  top: 16%;
+  width: 34%;
+  height: 9%;
   border-radius: 999px;
   background: var(--mc-ink);
-  transform: rotate(-34deg);
+  transform: rotate(-26deg);
 }
 
-.mc-bubble-letter::before {
-  left: 24%;
-  top: 22%;
-  width: 34%;
+.mc-glyph-sticker::after {
+  z-index: -1;
+  inset: 10% -3% 5% 3%;
+  border: 3px solid rgba(255, 253, 250, 0.42);
+  border-radius: 46% 54% 48% 52%;
+  transform: rotate(5deg);
 }
 
-.mc-bubble-letter::after {
-  right: 11%;
-  top: 30%;
-  width: 24%;
-}
-
-.mc-cube-letter {
-  width: 0.86em;
-  color: transparent;
+.mc-glyph-cube {
+  --glyph-w: 0.82em;
+  color: rgba(255, 253, 250, 0.9);
   background: linear-gradient(90deg, #5a21bd 0%, #854ac6 55%, #a582d7 100%);
   border: 8px solid #6f25f7;
   box-shadow:
     inset -14px -12px 0 rgba(52, 17, 124, 0.42),
     12px 12px 0 rgba(0, 0, 0, 0.2);
-  transform-origin: 50% 70%;
-  animation: mcCubeTilt 5.4s ease-in-out infinite;
+  transform: rotate(1deg);
 }
 
-.mc-cube-letter::after {
-  content: '';
-  position: absolute;
-  inset: 31% 30%;
+.mc-glyph-cube::before {
+  z-index: -1;
+  inset: 10% -10% -8% 12%;
+  background: #3e158c;
+  opacity: 0.82;
+  clip-path: polygon(10% 0, 100% 12%, 86% 100%, 0 84%);
+}
+
+.mc-glyph-cube::after {
+  inset: 34% 34%;
+  z-index: 2;
   background: var(--mc-bg);
+  opacity: 0.92;
 }
 
-.mc-plus-letter {
-  width: 0.56em;
-  color: var(--mc-yellow);
+.mc-glyph-plus {
+  --glyph-w: 0.55em;
+  color: transparent;
+}
+
+.mc-glyph-plus::before,
+.mc-glyph-plus::after {
+  z-index: 2;
+  background: var(--mc-yellow);
+}
+
+.mc-glyph-plus::before {
+  left: 41%;
+  top: 5%;
+  width: 24%;
+  height: 90%;
+}
+
+.mc-glyph-plus::after {
+  left: 9%;
+  top: 39%;
+  width: 82%;
+  height: 19%;
+}
+
+.mc-glyph-plus {
   text-shadow: 0 0 0 var(--mc-yellow);
 }
 
-.mc-plus-letter::before {
-  content: '';
-  position: absolute;
-  left: 48%;
-  top: 5%;
-  width: 20%;
-  height: 92%;
-  background: var(--mc-yellow);
+.mc-glyph-pencil {
+  --glyph-w: 0.36em;
+  color: transparent;
+  animation-name: mcGlyphEnter, mcPencilWiggle;
+  animation-duration: 780ms, 4.2s;
 }
 
-.mc-plus-letter::after {
-  content: '';
-  position: absolute;
-  left: 9%;
-  top: 37%;
-  width: 82%;
-  height: 18%;
-  background: var(--mc-yellow);
-}
-
-.mc-pencil-wrap {
-  width: 0.42em;
-  transform-origin: 50% 50%;
-  animation: mcPencilWiggle 4.2s ease-in-out infinite;
-}
-
-.mc-pencil-body {
-  position: absolute;
-  left: 27%;
+.mc-glyph-pencil::before {
+  left: 22%;
   top: 4%;
-  width: 46%;
-  height: 92%;
-  background: #08090b;
+  width: 54%;
+  height: 88%;
   border: 2px solid var(--mc-ink);
-  border-radius: 46% 46% 38% 38%;
+  border-radius: 48% 48% 38% 38%;
+  background:
+    linear-gradient(var(--mc-yellow) 0 14%, var(--mc-bg) 14% 73%, var(--mc-ink) 73% 100%);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 
-.mc-pencil-body::before {
-  content: '';
-  position: absolute;
-  left: -16px;
-  top: 45%;
-  width: 18px;
-  height: 38px;
-  border-left: 3px solid var(--mc-ink);
-  border-top: 3px solid var(--mc-ink);
-  transform: rotate(-24deg);
-}
-
-.mc-pencil-lead {
-  position: absolute;
-  left: 35%;
-  bottom: -4%;
-  width: 30%;
-  height: 18%;
+.mc-glyph-pencil::after {
+  left: 32%;
+  bottom: -3%;
+  width: 34%;
+  height: 17%;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
   background: var(--mc-ink);
 }
 
-.mc-pencil-spark {
-  position: absolute;
-  left: 50%;
-  top: -5%;
-  width: 13px;
-  height: 13px;
-  border: 2px solid var(--mc-ink);
-  transform: translateX(-50%) rotate(45deg);
+.mc-glyph-neon {
+  --glyph-w: 0.64em;
+  color: var(--mc-acid);
+  font-style: italic;
+  text-shadow: 0 0 22px rgba(191, 255, 0, 0.18);
+  transform-origin: 12% 82%;
+  animation-name: mcGlyphEnter, mcNeonSway;
+  animation-duration: 780ms, 4.7s;
 }
 
-.mc-face-letter {
-  width: 0.95em;
+.mc-glyph-ink {
+  color: rgba(255, 253, 250, 0.66);
+  text-shadow: 0 6px 0 rgba(0, 0, 0, 0.18);
+}
+
+.mc-glyph-ink::after {
+  right: -8%;
+  bottom: 10%;
+  width: 14%;
+  height: 14%;
+  background: var(--mc-red);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.mc-glyph-bubble {
+  --glyph-w: 0.74em;
+  color: #fa7575;
+  -webkit-text-stroke: 2px var(--mc-ink);
+  filter: saturate(1.2);
+  animation-name: mcGlyphEnter, mcSoftBob;
+  animation-duration: 780ms, 4.8s;
+}
+
+.mc-glyph-outline {
+  --glyph-w: 0.58em;
+  color: transparent;
+  -webkit-text-stroke: 4px rgba(255, 253, 250, 0.68);
+  text-shadow: none;
+}
+
+.mc-glyph-outline::after {
+  right: -9%;
+  top: 7%;
+  width: 18%;
+  height: 18%;
+  border: 3px solid var(--mc-acid);
+  transform: rotate(45deg);
+}
+
+.mc-glyph-spark {
+  --glyph-w: 0.26em;
+  color: var(--mc-yellow);
+  -webkit-text-stroke: 1px var(--mc-yellow);
+}
+
+.mc-glyph-spark::before {
+  left: 18%;
+  top: 2%;
+  width: 56%;
+  height: 18%;
+  border: 2px solid var(--mc-ink);
+  background: var(--mc-acid);
+  transform: rotate(45deg);
+}
+
+.mc-glyph-blob {
+  --glyph-w: 0.66em;
+  color: rgba(255, 253, 250, 0.72);
+  border-radius: 48% 52% 44% 56%;
+  background: radial-gradient(circle at 56% 36%, #b65bd0 0 24%, #8f2ab2 25% 68%, #6b178f 69% 100%);
+  box-shadow: inset -12px -18px 24px rgba(32, 0, 52, 0.25);
+  animation-name: mcGlyphEnter, mcBlobWobble;
+  animation-duration: 780ms, 5.1s;
+}
+
+.mc-glyph-blob::after {
+  left: 33%;
+  top: 35%;
+  width: 33%;
+  height: 9%;
+  border-top: 3px solid #1b1020;
+  border-radius: 50%;
+}
+
+.mc-glyph-slab {
+  --glyph-w: 0.68em;
+  color: var(--mc-red);
+  text-shadow:
+    -3px 0 0 var(--mc-ink),
+    0 3px 0 rgba(0, 0, 0, 0.22);
+}
+
+.mc-glyph-slab::after {
+  right: -10%;
+  top: 18%;
+  width: 22%;
+  height: 38%;
+  background: var(--mc-ink);
+  transform: rotate(10deg);
+}
+
+.mc-glyph-face {
+  --glyph-w: 0.76em;
+  color: transparent;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 42% 38%, rgba(255,255,255,0.95), transparent 0 7%, transparent 8%),
-    radial-gradient(circle at 58% 38%, rgba(255,255,255,0.95), transparent 0 7%, transparent 8%),
+    radial-gradient(circle at 42% 36%, var(--mc-ink) 0 5%, #19101f 5.5% 10%, transparent 10.5%),
+    radial-gradient(circle at 59% 36%, var(--mc-ink) 0 5%, #19101f 5.5% 10%, transparent 10.5%),
     radial-gradient(circle at 50% 50%, #b24ec0 0%, #9e39ad 54%, #7e238f 100%);
   box-shadow: inset -14px -20px 40px rgba(100, 0, 145, 0.26);
-  animation: mcFacePulse 5.2s ease-in-out infinite;
+  animation-name: mcGlyphEnter, mcFacePulse;
+  animation-duration: 780ms, 5.2s;
 }
 
-.mc-face-eyes {
-  position: absolute;
-  left: 38%;
-  top: 35%;
-  width: 26%;
-  height: 12%;
-}
-
-.mc-face-eyes::before,
-.mc-face-eyes::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 42%;
-  height: 100%;
-  border: 3px solid #141414;
-  border-radius: 50%;
-  background: var(--mc-ink);
-}
-
-.mc-face-eyes::before {
-  left: 0;
-}
-
-.mc-face-eyes::after {
-  right: 0;
-}
-
-.mc-face-mouth {
-  position: absolute;
-  left: 26%;
-  top: 51%;
-  width: 48%;
-  height: 22%;
+.mc-glyph-face::after {
+  left: 24%;
+  top: 53%;
+  width: 52%;
+  height: 20%;
   border: 3px solid #1b1020;
   border-radius: 999px;
   background:
     repeating-linear-gradient(90deg, var(--mc-yellow) 0 9%, var(--mc-ink) 9% 12%),
     #70204c;
-  box-shadow: inset 0 -8px 0 rgba(0,0,0,0.18);
+  box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.18);
 }
 
-.mc-neon-letter {
-  width: 0.72em;
-  color: var(--mc-acid);
-  font-style: italic;
-  transform-origin: 15% 85%;
-  text-shadow: 0 0 24px rgba(191,255,0,0.18);
-  animation: mcNeonSway 4.7s ease-in-out infinite;
+.mc-glyph-stroke {
+  --glyph-w: 0.32em;
+  color: transparent;
 }
 
-.mc-hero-mark h1 {
-  position: relative;
+.mc-glyph-stroke::before {
+  left: 35%;
+  top: 6%;
+  width: 30%;
+  height: 86%;
+  background: rgba(255, 253, 250, 0.72);
+  border-radius: 999px;
+}
+
+.mc-glyph-stroke::after {
+  left: 29%;
+  bottom: 7%;
+  width: 58%;
+  height: 13%;
+  background: var(--mc-yellow);
+  transform: rotate(-12deg);
+}
+
+.mc-glyph-a {
+  --glyph-w: 0.74em;
+}
+
+.mc-glyph-d {
+  --glyph-w: 0.75em;
+}
+
+.mc-glyph-e {
+  --glyph-w: 0.62em;
+}
+
+.mc-glyph-s {
+  --glyph-w: 0.56em;
+}
+
+.mc-glyph-p,
+.mc-glyph-r {
+  --glyph-w: 0.58em;
+}
+
+.mc-glyph-t {
+  --glyph-w: 0.5em;
+}
+
+.mc-glyph-f {
+  --glyph-w: 0.45em;
+}
+
+.mc-glyph-o-last {
+  --glyph-w: 0.66em;
+}
+
+.mc-hero-drifters {
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  display: block;
-  margin: -0.5% 0 0;
-  opacity: 1;
-  color: rgba(255, 253, 250, 0.62);
-  font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
-  font-size: clamp(5.2rem, 12.2vw, 12rem);
-  font-weight: 800;
-  line-height: 0.76;
-  letter-spacing: 0;
-  text-transform: lowercase;
-  white-space: nowrap;
+  pointer-events: none;
 }
 
-.mc-hero-stage.has-entry-motion .mc-hero-mark h1 {
-  animation: none;
+.mc-hero-drifters span {
+  position: absolute;
+  display: block;
+  width: 18px;
+  height: 18px;
+  opacity: 0.88;
+  animation: mcDrifter 6.8s ease-in-out infinite;
+}
+
+.mc-hero-drifters span:nth-child(1) {
+  left: 13%;
+  top: 24%;
+  background: var(--mc-red);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.mc-hero-drifters span:nth-child(2) {
+  right: 17%;
+  top: 19%;
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--mc-ink);
+  animation-delay: -1.4s;
+  transform: rotate(45deg);
+}
+
+.mc-hero-drifters span:nth-child(3) {
+  left: 22%;
+  bottom: 22%;
+  width: 12px;
+  height: 42px;
+  background: var(--mc-acid);
+  animation-delay: -2.1s;
+}
+
+.mc-hero-drifters span:nth-child(4) {
+  right: 10%;
+  bottom: 29%;
+  width: 26px;
+  height: 26px;
+  background: var(--mc-yellow);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  animation-delay: -3.4s;
+}
+
+.mc-hero-drifters span:nth-child(5) {
+  left: 49%;
+  bottom: 12%;
+  width: 16px;
+  height: 16px;
+  background: var(--mc-lavender);
+  border-radius: 50%;
+  animation-delay: -4.2s;
 }
 
 .mc-hero-caption {
@@ -603,6 +822,7 @@
     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.055), transparent 16%),
     #020203;
   cursor: pointer;
+  touch-action: pan-y;
 }
 
 .mc-video-shell::before {
@@ -621,6 +841,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
+  pointer-events: none;
   filter: saturate(1.04) contrast(1.05);
 }
 
@@ -746,6 +967,7 @@
   overflow: hidden;
   padding: 0;
   background: #030303;
+  touch-action: manipulation;
 }
 
 .mc-cover-card::after {
@@ -763,6 +985,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
+  pointer-events: none;
   transition: transform 780ms cubic-bezier(0.16, 1, 0.3, 1), filter 780ms ease;
 }
 
@@ -1178,14 +1401,27 @@
   }
 }
 
-@keyframes mcWordRise {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
+@keyframes mcGlyphEnter {
+  0% {
+    opacity: 0.22;
+    transform: translateY(18px) rotate(-3deg) scale(0.9);
   }
-  to {
+  64% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-4px) rotate(1.6deg) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes mcGlyphFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.4deg);
   }
 }
 
@@ -1234,9 +1470,29 @@
   }
 }
 
+@keyframes mcBlobWobble {
+  0%, 100% {
+    transform: translateY(0) rotate(-2deg) scale(1);
+    border-radius: 48% 52% 44% 56%;
+  }
+  50% {
+    transform: translateY(6px) rotate(2deg) scale(1.035);
+    border-radius: 56% 44% 54% 46%;
+  }
+}
+
 @keyframes mcBlobSpin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes mcDrifter {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(10px, -14px, 0) rotate(18deg);
   }
 }
 
@@ -1266,6 +1522,18 @@
   .mc-about {
     gap: 40px;
   }
+
+  .mc-hero-line-1 {
+    --line-size: 110px;
+  }
+
+  .mc-hero-line-2 {
+    --line-size: 125px;
+  }
+
+  .mc-hero-line-3 {
+    --line-size: 89px;
+  }
 }
 
 @media (max-width: 1023px) {
@@ -1286,8 +1554,21 @@
     max-width: 800px;
   }
 
-  .mc-motion-word > span {
-    height: clamp(64px, 13vw, 140px);
+  .mc-hero-line-1 {
+    --line-size: 87px;
+    --line-gap: 8px;
+  }
+
+  .mc-hero-line-2 {
+    --line-size: 98px;
+    --line-gap: 4px;
+    margin-top: -7px;
+  }
+
+  .mc-hero-line-3 {
+    --line-size: 70px;
+    --line-gap: 3px;
+    margin-top: 1px;
   }
 
   .mc-ticker {
@@ -1427,52 +1708,105 @@
 
   .mc-hero {
     padding: 64px 0 40px;
+    height: 324px;
   }
 
   .mc-hero-stage {
     width: 100%;
     max-width: none;
-    height: 210px;
+    height: 220px;
     aspect-ratio: 1.857 / 1;
+    overflow: visible;
   }
 
   .mc-hero-mark {
-    width: min(75%, 292px);
+    width: min(92vw, 360px);
     height: 90%;
   }
 
-  .mc-motion-word {
-    gap: 2px;
-    height: 45%;
+  .mc-hero-line-1 {
+    --line-size: 46px;
+    --line-gap: 5px;
+    transform: translateX(-1.2%) rotate(-1deg);
   }
 
-  .mc-motion-word > span {
-    height: clamp(34px, 11.4cqw, 54px);
-    font-size: clamp(1.92rem, 11.3cqw, 3.35rem);
+  .mc-hero-line-2 {
+    --line-size: 53px;
+    --line-gap: 2px;
+    margin-top: 0;
+    transform: translateX(0.8%) rotate(0.4deg);
   }
 
-  .mc-cube-letter {
-    border-width: 4px;
-    box-shadow: inset -7px -6px 0 rgba(52, 17, 124, 0.42);
+  .mc-hero-line-3 {
+    --line-size: 37px;
+    --line-gap: 1px;
+    margin-top: 6px;
+    transform: translateX(-0.2%) rotate(-0.25deg);
   }
 
-  .mc-bubble-letter {
+  .mc-hero-glyph {
+    line-height: 0.78;
+  }
+
+  .mc-glyph-sticker {
     -webkit-text-stroke-width: 2px;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
   }
 
-  .mc-bubble-letter::before,
-  .mc-bubble-letter::after {
-    height: 6px;
-  }
-
-  .mc-face-eyes::before,
-  .mc-face-eyes::after,
-  .mc-face-mouth {
+  .mc-glyph-sticker::after,
+  .mc-glyph-outline::after {
     border-width: 2px;
   }
 
-  .mc-hero-mark h1 {
-    font-size: clamp(2.32rem, 12.2cqw, 3.65rem);
+  .mc-glyph-cube {
+    border-width: 4px;
+    box-shadow:
+      inset -6px -5px 0 rgba(52, 17, 124, 0.42),
+      6px 6px 0 rgba(0, 0, 0, 0.18);
+  }
+
+  .mc-glyph-bubble {
+    -webkit-text-stroke-width: 2px;
+  }
+
+  .mc-glyph-outline {
+    -webkit-text-stroke-width: 2px;
+  }
+
+  .mc-glyph-pencil::before,
+  .mc-glyph-spark::before,
+  .mc-glyph-face::after {
+    border-width: 2px;
+  }
+
+  .mc-glyph-blob::after {
+    border-top-width: 2px;
+  }
+
+  .mc-hero-drifters span {
+    width: 10px;
+    height: 10px;
+  }
+
+  .mc-hero-drifters span:nth-child(2) {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+
+  .mc-hero-drifters span:nth-child(3) {
+    width: 7px;
+    height: 24px;
+  }
+
+  .mc-hero-drifters span:nth-child(4) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mc-hero-drifters span:nth-child(5) {
+    width: 9px;
+    height: 9px;
   }
 
   .mc-ticker {
