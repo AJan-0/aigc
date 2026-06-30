@@ -64,14 +64,25 @@
 }
 
 html.mc-native-scroll,
-html.mc-native-scroll body,
-html.mc-native-scroll #root {
+html.mc-native-scroll body {
   height: auto;
   min-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: auto;
   touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.mc-native-scroll #root {
+  min-height: 100%;
+  overflow: visible;
+  touch-action: pan-y;
+}
+
+html.mc-native-scroll .motion-clone-page {
+  overflow: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .motion-clone-page *,
@@ -320,12 +331,21 @@ html.mc-native-scroll #root {
 }
 
 .mc-hero-line {
+  --line-rest: translate3d(0, 0, 0);
+  --line-scatter: translate3d(0, 0, 0);
+  --line-gather: translate3d(0, 0, 0);
+  --line-snap: translate3d(0, 0, 0);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--line-gap, 0px);
   width: 100%;
+  transform: var(--line-rest);
+  transform-origin: 50% 55%;
+  will-change: transform, filter;
+  animation: mcHeroLineRegroup 7.8s cubic-bezier(0.64, 0, 0.18, 1) infinite;
+  animation-delay: var(--line-loop-delay, 0ms);
   pointer-events: none;
   touch-action: pan-y;
 }
@@ -333,25 +353,37 @@ html.mc-native-scroll #root {
 .mc-hero-line-1 {
   --line-size: clamp(168px, 15.7vw, 236px);
   --line-gap: clamp(5px, 0.85vw, 13px);
+  --line-rest: translateX(-0.6%) rotate(-1deg);
+  --line-scatter: translate3d(-20px, -12px, 0) rotate(-2.8deg) scaleX(1.035);
+  --line-gather: translate3d(10px, 9px, 0) rotate(1.25deg) scaleX(0.965);
+  --line-snap: translate3d(-4px, 2px, 0) rotate(-0.35deg) scaleX(1.01);
+  --line-loop-delay: 820ms;
   z-index: 3;
   margin-bottom: -50px;
-  transform: translateX(-0.6%) rotate(-1deg);
 }
 
 .mc-hero-line-2 {
   --line-size: clamp(150px, 14.2vw, 210px);
   --line-gap: clamp(0px, 0.25vw, 4px);
+  --line-rest: translateX(0.2%) rotate(0.25deg) scaleX(1.04);
+  --line-scatter: translate3d(14px, 6px, 0) rotate(1.35deg) scaleX(1.09);
+  --line-gather: translate3d(-8px, -6px, 0) rotate(-0.85deg) scaleX(0.99);
+  --line-snap: translate3d(3px, -1px, 0) rotate(0.55deg) scaleX(1.055);
+  --line-loop-delay: 970ms;
   z-index: 2;
   margin-top: 0;
-  transform: translateX(0.2%) rotate(0.25deg) scaleX(1.04);
 }
 
 .mc-hero-line-3 {
   --line-size: clamp(118px, 11.6vw, 172px);
   --line-gap: clamp(0px, 0.18vw, 3px);
+  --line-rest: translateX(-0.1%) rotate(-0.18deg) scaleX(1.03);
+  --line-scatter: translate3d(-12px, 12px, 0) rotate(-1deg) scaleX(1.075);
+  --line-gather: translate3d(7px, -8px, 0) rotate(0.7deg) scaleX(0.985);
+  --line-snap: translate3d(-2px, 2px, 0) rotate(-0.4deg) scaleX(1.045);
+  --line-loop-delay: 1090ms;
   z-index: 1;
   margin-top: -24px;
-  transform: translateX(-0.1%) rotate(-0.18deg) scaleX(1.03);
 }
 
 .mc-hero-glyph {
@@ -836,6 +868,8 @@ html.mc-native-scroll #root {
   border-top: 1px solid var(--mc-border);
   border-bottom: 1px solid var(--mc-border);
   background: var(--mc-bg);
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
 .mc-ticker-track {
@@ -846,6 +880,8 @@ html.mc-native-scroll #root {
   gap: 46px;
   padding-left: 32px;
   animation: mcTicker 24s linear infinite;
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
 .mc-ticker-item {
@@ -859,6 +895,8 @@ html.mc-native-scroll #root {
   letter-spacing: 0;
   text-transform: lowercase;
   white-space: nowrap;
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
 .mc-ticker-item::before {
@@ -936,6 +974,8 @@ html.mc-native-scroll #root {
   display: block;
   object-fit: cover;
   filter: saturate(1.04) contrast(1.05);
+  pointer-events: none;
+  touch-action: pan-y;
 }
 
 .mc-video-overlay {
@@ -1042,6 +1082,23 @@ html.mc-native-scroll #root {
   top: 96px;
 }
 
+.mc-work-preview-top {
+  width: min(100%, 360px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.mc-work-count {
+  color: var(--mc-muted);
+  font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .mc-cover-card {
   position: relative;
   display: block;
@@ -1050,7 +1107,7 @@ html.mc-native-scroll #root {
   overflow: hidden;
   padding: 0;
   background: #030303;
-  touch-action: manipulation;
+  touch-action: pan-y;
 }
 
 .mc-cover-card::after {
@@ -1079,6 +1136,7 @@ html.mc-native-scroll #root {
   height: 100%;
   display: block;
   object-fit: cover;
+  pointer-events: none;
 }
 
 .mc-cover-card:hover video,
@@ -1217,7 +1275,7 @@ html.mc-native-scroll #root {
   grid-template-columns: 46px minmax(0, 1fr) 46px;
   gap: 14px;
   align-items: center;
-  margin-top: 24px;
+  margin-top: 0;
 }
 
 .mc-work-controls button {
@@ -1226,6 +1284,17 @@ html.mc-native-scroll #root {
   height: 46px;
   border: 1px solid var(--mc-border);
   border-radius: 50%;
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mc-work-controls button:hover,
+.mc-work-controls button:focus-visible {
+  border-color: var(--mc-ink);
+  background: var(--mc-ink);
+  transform: translateY(-2px);
 }
 
 .mc-work-controls button span {
@@ -1234,6 +1303,12 @@ html.mc-native-scroll #root {
   border-top: 2px solid var(--mc-ink);
   border-left: 2px solid var(--mc-ink);
   transform: rotate(-45deg);
+  transition: border-color 220ms ease;
+}
+
+.mc-work-controls button:hover span,
+.mc-work-controls button:focus-visible span {
+  border-color: var(--mc-bg);
 }
 
 .mc-work-controls button:last-child span {
@@ -1519,35 +1594,70 @@ html.mc-native-scroll #root {
 }
 
 @keyframes mcGlyphFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(-1deg) scale(1);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg) scale(1);
   }
-  50% {
-    transform: translateY(-7px) rotate(1.4deg) scale(1.015);
+  30% {
+    transform: translate3d(var(--phase-x, 18px), var(--phase-y, -16px), 0) rotate(var(--phase-rotation, 6deg)) scale(var(--phase-scale, 1.06));
+  }
+  48% {
+    transform: translate3d(var(--gather-x, -8px), var(--gather-y, 7px), 0) rotate(var(--phase-rotation-counter, -2deg)) scale(0.94, 1.08);
+  }
+  66% {
+    transform: translate3d(var(--counter-x, -4px), var(--counter-y, 3px), 0) rotate(1.4deg) scale(1.02);
   }
 }
 
 @keyframes mcSolidWave {
-  0%, 100% {
-    transform: translateY(0) skewX(0deg) scaleY(1);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) skewX(0deg) scale(1, 1);
+    opacity: 0.985;
   }
-  46% {
-    transform: translateY(-3px) skewX(-0.7deg) scaleY(1.015);
+  28% {
+    transform: translate3d(var(--phase-x, 10px), var(--phase-y, -10px), 0) rotate(var(--phase-rotation-soft, 2deg)) skewX(-3deg) scale(1.04, 0.95);
+    opacity: 1;
   }
-  68% {
-    transform: translateY(1px) skewX(0.5deg) scaleY(0.992);
+  45% {
+    transform: translate3d(var(--gather-x, -5px), var(--gather-y, 4px), 0) rotate(var(--phase-rotation-counter, -1deg)) skewX(2.3deg) scale(0.91, 1.12);
+    opacity: 0.96;
+  }
+  63% {
+    transform: translate3d(var(--settle-x, -2px), var(--settle-y, 2px), 0) skewX(-0.8deg) scale(1.015, 0.995);
+    opacity: 0.99;
   }
 }
 
 @keyframes mcStickerSquash {
-  0%, 100% {
-    transform: translateY(0) rotate(-1deg) scale(1, 1);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg) scale(1, 1);
   }
-  42% {
-    transform: translateY(-9px) rotate(2deg) scale(1.035, 0.97);
+  28% {
+    transform: translate3d(var(--phase-x, 18px), var(--phase-y, -18px), 0) rotate(var(--phase-rotation, 9deg)) scale(1.08, 0.94);
+  }
+  48% {
+    transform: translate3d(var(--gather-x, -8px), var(--gather-y, 6px), 0) rotate(-4deg) scale(0.92, 1.12);
   }
   68% {
-    transform: translateY(2px) rotate(-1.4deg) scale(0.985, 1.025);
+    transform: translate3d(var(--counter-x, -3px), 2px, 0) rotate(-1.4deg) scale(0.985, 1.025);
+  }
+}
+
+@keyframes mcHeroLineRegroup {
+  0%, 10%, 100% {
+    transform: var(--line-rest);
+    filter: none;
+  }
+  28% {
+    transform: var(--line-scatter);
+    filter: saturate(1.08);
+  }
+  48% {
+    transform: var(--line-gather);
+    filter: saturate(0.96);
+  }
+  66% {
+    transform: var(--line-snap);
+    filter: none;
   }
 }
 
@@ -1637,20 +1747,32 @@ html.mc-native-scroll #root {
 }
 
 @keyframes mcCubeTilt {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translate3d(var(--phase-x, 24px), var(--phase-y, -18px), 0) rotate(var(--phase-rotation, 8deg)) scale(1.075);
   }
   50% {
-    transform: translateY(7px) rotate(1.5deg);
+    transform: translate3d(var(--gather-x, -8px), var(--gather-y, 8px), 0) rotate(-5deg) scale(0.92, 1.08);
+  }
+  70% {
+    transform: translate3d(-4px, 4px, 0) rotate(1.5deg) scale(1.015);
   }
 }
 
 @keyframes mcPencilWiggle {
-  0%, 100% {
-    transform: rotate(-3deg);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-3deg) scale(1);
   }
-  50% {
-    transform: rotate(3deg);
+  30% {
+    transform: translate3d(var(--phase-x, 12px), var(--phase-y, -20px), 0) rotate(var(--phase-rotation, -10deg)) scale(1.08, 0.96);
+  }
+  52% {
+    transform: translate3d(var(--gather-x, -8px), var(--gather-y, 6px), 0) rotate(8deg) scale(0.9, 1.14);
+  }
+  72% {
+    transform: translate3d(2px, -2px, 0) rotate(3deg) scale(1.01);
   }
 }
 
@@ -1664,11 +1786,17 @@ html.mc-native-scroll #root {
 }
 
 @keyframes mcNeonSway {
-  0%, 100% {
-    transform: rotate(-5deg) skewX(-4deg);
+  0%, 12%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-5deg) skewX(-4deg) scale(1);
+  }
+  30% {
+    transform: translate3d(var(--phase-x, 22px), var(--phase-y, -16px), 0) rotate(var(--phase-rotation, 8deg)) skewX(-10deg) scale(1.06);
   }
   50% {
-    transform: rotate(4deg) skewX(-8deg);
+    transform: translate3d(var(--gather-x, -8px), var(--gather-y, 6px), 0) rotate(4deg) skewX(-14deg) scale(0.93, 1.08);
+  }
+  70% {
+    transform: translate3d(-3px, 3px, 0) rotate(2deg) skewX(-8deg) scale(1.015);
   }
 }
 
@@ -1833,6 +1961,10 @@ html.mc-native-scroll #root {
     top: auto;
   }
 
+  .mc-work-preview-top {
+    width: min(330px, 74vw);
+  }
+
   .mc-cover-card {
     width: min(330px, 74vw);
   }
@@ -1935,44 +2067,53 @@ html.mc-native-scroll #root {
 
   .mc-hero {
     height: auto;
-    min-height: 442px;
-    padding: 64px 0 28px;
+    min-height: 468px;
+    padding: 64px 0 32px;
     overflow: hidden;
   }
 
   .mc-hero-stage {
     width: 100%;
     max-width: none;
-    height: 344px;
-    min-height: 344px;
+    height: 374px;
+    min-height: 374px;
     overflow: visible;
   }
 
   .mc-hero-mark {
-    top: 51%;
-    width: clamp(560px, 158vw, 680px);
-    height: 296px;
+    top: 50%;
+    width: min(100%, 528px);
+    height: 316px;
   }
 
   .mc-hero-line-1 {
-    --line-size: clamp(122px, 34vw, 150px);
-    --line-gap: clamp(5px, 1.6vw, 8px);
-    margin-bottom: -28px;
-    transform: translateX(-1.2%) rotate(-1deg);
+    --line-size: 118px;
+    --line-gap: 5px;
+    --line-rest: translateX(-0.9%) rotate(-1deg);
+    --line-scatter: translate3d(-13px, -9px, 0) rotate(-2.4deg) scaleX(1.025);
+    --line-gather: translate3d(7px, 7px, 0) rotate(1deg) scaleX(0.972);
+    --line-snap: translate3d(-3px, 1px, 0) rotate(-0.28deg) scaleX(1.006);
+    margin-bottom: -27px;
   }
 
   .mc-hero-line-2 {
-    --line-size: clamp(108px, 30vw, 132px);
+    --line-size: 104px;
     --line-gap: 0px;
+    --line-rest: translateX(0.25%) rotate(0.25deg) scaleX(1.03);
+    --line-scatter: translate3d(10px, 5px, 0) rotate(1.05deg) scaleX(1.07);
+    --line-gather: translate3d(-6px, -5px, 0) rotate(-0.75deg) scaleX(0.99);
+    --line-snap: translate3d(2px, -1px, 0) rotate(0.45deg) scaleX(1.038);
     margin-top: 0;
-    transform: translateX(0.6%) rotate(0.25deg);
   }
 
   .mc-hero-line-3 {
-    --line-size: clamp(90px, 24vw, 112px);
+    --line-size: 82px;
     --line-gap: 0px;
-    margin-top: -13px;
-    transform: translateX(-0.2%) rotate(-0.25deg);
+    --line-rest: translateX(-0.15%) rotate(-0.25deg) scaleX(1.02);
+    --line-scatter: translate3d(-8px, 9px, 0) rotate(-0.85deg) scaleX(1.055);
+    --line-gather: translate3d(5px, -6px, 0) rotate(0.6deg) scaleX(0.99);
+    --line-snap: translate3d(-2px, 1px, 0) rotate(-0.35deg) scaleX(1.03);
+    margin-top: -12px;
   }
 
   .mc-hero-glyph {
@@ -2107,28 +2248,101 @@ html.mc-native-scroll #root {
     gap: 19px;
   }
 
-  .mc-cover-card {
+  .mc-work-preview {
+    display: grid;
+    justify-items: center;
+  }
+
+  .mc-work-preview-top {
     width: min(100%, 325px);
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .mc-work-count {
+    font-size: 12px;
+  }
+
+  .mc-cover-card {
+    width: min(78vw, 325px);
+  }
+
+  .mc-work-controls {
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    gap: 10px;
+  }
+
+  .mc-work-controls button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mc-work-controls button span {
+    inset: 14px;
+  }
+
+  .mc-work-content {
+    min-width: 100%;
+    margin-inline: -30px;
+  }
+
+  .mc-work-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 30px 8px;
+    border-top: 0;
+    scroll-padding-inline: 30px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  .mc-work-list::-webkit-scrollbar {
+    display: none;
   }
 
   .mc-work-row {
-    min-height: 76px;
+    flex: 0 0 min(82vw, 342px);
+    min-height: 158px;
     grid-template-columns: 36px minmax(0, 1fr) 28px;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: 12px;
+    align-items: start;
+    align-content: space-between;
+    padding: 15px 14px 14px;
+    border: 1px solid var(--mc-border);
+    border-bottom: 1px solid var(--mc-border);
+    background: rgba(255, 253, 250, 0.018);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    touch-action: pan-x pan-y;
   }
 
   .mc-work-row small {
     grid-column: 2 / 3;
+    grid-row: 2 / 3;
     justify-self: start;
+    align-self: end;
     text-align: left;
   }
 
   .mc-work-row strong {
-    font-size: clamp(1.55rem, 9vw, 3.2rem);
+    align-self: start;
+    font-size: clamp(1.62rem, 8.3vw, 2.95rem);
+    line-height: 0.86;
+  }
+
+  .mc-work-row i {
+    align-self: start;
   }
 
   .mc-work-row::before {
-    inset: 6px -8px;
+    inset: 0;
   }
 
   .mc-about {
@@ -2159,6 +2373,80 @@ html.mc-native-scroll #root {
 
   .mc-modal-media {
     min-height: 52vh;
+  }
+}
+
+@media (min-width: 520px) and (max-width: 808px) {
+  .mc-hero-stage {
+    height: 408px;
+    min-height: 408px;
+  }
+
+  .mc-hero-mark {
+    width: clamp(500px, 86vw, 610px);
+    height: 346px;
+  }
+
+  .mc-hero-line-1 {
+    --line-size: 142px;
+    --line-gap: 7px;
+    margin-bottom: -34px;
+  }
+
+  .mc-hero-line-2 {
+    --line-size: 124px;
+  }
+
+  .mc-hero-line-3 {
+    --line-size: 99px;
+    margin-top: -16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mc-hero {
+    min-height: 426px;
+  }
+
+  .mc-hero-stage {
+    height: 334px;
+    min-height: 334px;
+  }
+
+  .mc-hero-mark {
+    width: 354px;
+    height: 282px;
+  }
+
+  .mc-hero-line-1 {
+    --line-size: 98px;
+    --line-gap: 4px;
+    margin-bottom: -23px;
+  }
+
+  .mc-hero-line-2 {
+    --line-size: 88px;
+  }
+
+  .mc-hero-line-3 {
+    --line-size: 70px;
+    margin-top: -10px;
+  }
+
+  .mc-work,
+  .mc-about,
+  .mc-brands,
+  .mc-contact {
+    padding-inline: 22px;
+  }
+
+  .mc-work-content {
+    margin-inline: -22px;
+  }
+
+  .mc-work-list {
+    padding-inline: 22px;
+    scroll-padding-inline: 22px;
   }
 }
 

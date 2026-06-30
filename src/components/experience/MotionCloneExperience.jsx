@@ -364,6 +364,21 @@ function HeroMark() {
                 .slice(0, lineIndex)
                 .reduce((count, currentLine) => count + currentLine.length, 0) + letterIndex
               const lineDelay = [60, 180, 270][lineIndex] ?? 0
+              const lineCenter = (line.length - 1) / 2
+              const fromCenter = letterIndex - lineCenter
+              const scatterScale = lineIndex === 0 ? 24 : lineIndex === 1 ? 15 : 11
+              const phaseX = Math.round(fromCenter * scatterScale + ((glyphIndex % 3) - 1) * 10)
+              const phaseY = Math.round((glyphIndex % 2 === 0 ? -1 : 1) * (lineIndex === 0 ? 24 : 15) + (lineIndex - 1) * 8)
+              const gatherX = Math.round(-fromCenter * (lineIndex === 0 ? 11 : 8))
+              const gatherY = Math.round((1 - lineIndex) * 10)
+              const phaseRotation = ((glyphIndex % 5) - 2) * (lineIndex === 0 ? 7 : 3)
+              const phaseRotationSoft = Number((phaseRotation * 0.55).toFixed(2))
+              const phaseRotationCounter = Number((phaseRotation * -0.24).toFixed(2))
+              const counterX = Math.round(phaseX * -0.24)
+              const counterY = Math.round(phaseY * -0.18)
+              const settleX = Math.round(phaseX * -0.16)
+              const settleY = Math.round(phaseY * -0.16)
+              const phaseScale = lineIndex === 0 ? 1.08 : lineIndex === 1 ? 1.035 : 1.025
 
               return (
                 <span
@@ -373,6 +388,19 @@ function HeroMark() {
                   style={{
                     '--glyph-delay': `${lineDelay + letterIndex * 24}ms`,
                     '--glyph-loop-delay': `${1080 + glyphIndex * 72}ms`,
+                    '--phase-delay': `${glyphIndex * 86}ms`,
+                    '--phase-x': `${phaseX}px`,
+                    '--phase-y': `${phaseY}px`,
+                    '--phase-rotation': `${phaseRotation}deg`,
+                    '--phase-rotation-soft': `${phaseRotationSoft}deg`,
+                    '--phase-rotation-counter': `${phaseRotationCounter}deg`,
+                    '--phase-scale': phaseScale,
+                    '--gather-x': `${gatherX}px`,
+                    '--gather-y': `${gatherY}px`,
+                    '--counter-x': `${counterX}px`,
+                    '--counter-y': `${counterY}px`,
+                    '--settle-x': `${settleX}px`,
+                    '--settle-y': `${settleY}px`,
                   }}
                 >
                   {letter}
@@ -435,6 +463,65 @@ function ShowreelSection({ activeProject }) {
 
 function WorkSection({ projects: workProjects, activeIndex, activeProject, onActiveIndexChange, onMoveProject, onOpenProject }) {
   const progress = workProjects.length ? ((activeIndex + 1) / workProjects.length) * 100 : 0
+  const listRef = useRef(null)
+  const rowRefs = useRef([])
+  const scrollFrameRef = useRef(0)
+  const wasDraggingPreviewRef = useRef(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!window.matchMedia('(max-width: 808px)').matches) return
+
+    const list = listRef.current
+    const row = rowRefs.current[activeIndex]
+    if (!list || !row) return
+
+    const targetLeft = row.offsetLeft - (list.clientWidth - row.clientWidth) / 2
+    list.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
+  }, [activeIndex])
+
+  useEffect(() => () => {
+    if (scrollFrameRef.current) cancelAnimationFrame(scrollFrameRef.current)
+  }, [])
+
+  const syncActiveProjectFromScroll = () => {
+    if (scrollFrameRef.current) return
+
+    scrollFrameRef.current = requestAnimationFrame(() => {
+      scrollFrameRef.current = 0
+
+      const list = listRef.current
+      if (!list || !window.matchMedia('(max-width: 808px)').matches) return
+
+      const listRect = list.getBoundingClientRect()
+      const listCenter = listRect.left + listRect.width / 2
+      let closestIndex = activeIndex
+      let closestDistance = Number.POSITIVE_INFINITY
+
+      rowRefs.current.forEach((row, index) => {
+        if (!row) return
+        const rowRect = row.getBoundingClientRect()
+        const rowCenter = rowRect.left + rowRect.width / 2
+        const distance = Math.abs(rowCenter - listCenter)
+
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closestIndex = index
+        }
+      })
+
+      if (closestIndex !== activeIndex) onActiveIndexChange(closestIndex)
+    })
+  }
+
+  const handleRowAction = (project, index) => {
+    if (index !== activeIndex) {
+      onActiveIndexChange(index)
+      return
+    }
+
+    onOpenProject(project)
+  }
 
   if (!workProjects.length) return null
 
@@ -460,12 +547,42 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.68, ease: [0.16, 1, 0.3, 1] }}
           >
+            <div className="mc-work-preview-top">
+              <span className="mc-work-count">{activeProject.id} / {String(workProjects.length).padStart(2, '0')}</span>
+              <div className="mc-work-controls">
+                <button type="button" onClick={() => onMoveProject(-1)} aria-label="Previous reel">
+                  <span aria-hidden="true" />
+                </button>
+                <div aria-hidden="true">
+                  <span style={{ width: `${progress}%` }} />
+                </div>
+                <button type="button" onClick={() => onMoveProject(1)} aria-label="Next reel">
+                  <span aria-hidden="true" />
+                </button>
+              </div>
+            </div>
             <AnimatePresence mode="wait">
               <motion.button
                 type="button"
                 key={activeProject.slug}
                 className="mc-cover-card"
-                onClick={() => onOpenProject(activeProject)}
+                onClick={() => {
+                  if (wasDraggingPreviewRef.current) return
+                  onOpenProject(activeProject)
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.22}
+                onDragStart={() => {
+                  wasDraggingPreviewRef.current = true
+                }}
+                onDragEnd={(_, info) => {
+                  const shouldMove = Math.abs(info.offset.x) > 72 || Math.abs(info.velocity.x) > 420
+                  if (shouldMove) onMoveProject(info.offset.x < 0 ? 1 : -1)
+                  window.setTimeout(() => {
+                    wasDraggingPreviewRef.current = false
+                  }, 90)
+                }}
                 initial={{ opacity: 0, y: 22, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.985 }}
@@ -479,17 +596,38 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
           </motion.div>
 
           <div className="mc-work-content">
-            <div className="mc-work-list" role="listbox" aria-label="AIGC reel list">
+            <div
+              className="mc-work-list"
+              role="listbox"
+              aria-label="AIGC reel list"
+              ref={listRef}
+              onScroll={syncActiveProjectFromScroll}
+            >
               {workProjects.map((project, index) => (
                 <motion.button
+                  ref={node => {
+                    rowRefs.current[index] = node
+                  }}
                   key={project.slug}
                   type="button"
                   role="option"
                   aria-selected={index === activeIndex}
+                  aria-label={`${index === activeIndex ? 'Open' : 'Select'} ${project.titleEn}`}
                   className={index === activeIndex ? 'mc-work-row is-active' : 'mc-work-row'}
                   onMouseEnter={() => onActiveIndexChange(index)}
                   onFocus={() => onActiveIndexChange(index)}
-                  onClick={() => onOpenProject(project)}
+                  onClick={() => handleRowAction(project, index)}
+                  onKeyDown={event => {
+                    if (event.key === 'ArrowLeft') {
+                      event.preventDefault()
+                      onMoveProject(-1)
+                    }
+
+                    if (event.key === 'ArrowRight') {
+                      event.preventDefault()
+                      onMoveProject(1)
+                    }
+                  }}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
@@ -501,18 +639,6 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   <i aria-hidden="true" />
                 </motion.button>
               ))}
-            </div>
-
-            <div className="mc-work-controls">
-              <button type="button" onClick={() => onMoveProject(-1)} aria-label="Previous reel">
-                <span aria-hidden="true" />
-              </button>
-              <div aria-hidden="true">
-                <span style={{ width: `${progress}%` }} />
-              </div>
-              <button type="button" onClick={() => onMoveProject(1)} aria-label="Next reel">
-                <span aria-hidden="true" />
-              </button>
             </div>
           </div>
         </div>
