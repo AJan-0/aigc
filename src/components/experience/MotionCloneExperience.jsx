@@ -20,7 +20,16 @@ const navItems = [
 ]
 
 const tickerItems = ['aigc visual', 'ajan studio', 'ai drama', 'motion system', 'vertical reels']
-const brandItems = ['COMFYUI', 'RUNWAY', 'KLING', 'SDXL', 'DAVINCI', 'LORA', 'CONTROLNET', 'AIGC']
+const brandItems = [
+  { label: 'COMFYUI', role: 'node graph / shot DNA', accent: '#bfff00', span: 'wide' },
+  { label: 'RUNWAY', role: 'motion draft', accent: '#fa340c' },
+  { label: 'KLING', role: 'video generation', accent: '#f7e40f' },
+  { label: 'SDXL', role: 'character base', accent: '#b39fe3' },
+  { label: 'DAVINCI', role: 'grade / final edit', accent: '#fffdfa', span: 'tall' },
+  { label: 'LORA', role: 'identity lock', accent: '#fa7575' },
+  { label: 'CONTROLNET', role: 'pose / framing', accent: '#9b30ff', span: 'wide' },
+  { label: 'AIGC', role: 'portfolio system', accent: '#bfff00' },
+]
 const contactEmail = '1248567324@qq.com'
 
 const heroTitleLines = [
@@ -31,22 +40,22 @@ const heroTitleLines = [
     ['C', 'neon mc-glyph-c'],
   ],
   [
-    ['D', 'solid mc-glyph-d'],
-    ['e', 'solid mc-glyph-e'],
-    ['s', 'solid mc-glyph-s'],
-    ['i', 'solid mc-glyph-i-small'],
-    ['g', 'solid mc-glyph-g-small'],
+    ['D', 'slab mc-glyph-d'],
+    ['e', 'bubble mc-glyph-e'],
+    ['s', 'solid mc-glyph-ink mc-glyph-s'],
+    ['i', 'stroke mc-glyph-i-small'],
+    ['g', 'blob mc-glyph-g-small'],
     ['n', 'solid mc-glyph-n'],
   ],
   [
     ['P', 'solid mc-glyph-p'],
-    ['o', 'solid mc-glyph-o-face'],
+    ['o', 'face mc-glyph-o-face'],
     ['r', 'solid mc-glyph-r'],
     ['t', 'solid mc-glyph-t'],
-    ['f', 'solid mc-glyph-f'],
-    ['o', 'solid mc-glyph-o-cube'],
+    ['f', 'outline mc-glyph-f'],
+    ['o', 'cube mc-glyph-o-cube'],
     ['l', 'solid mc-glyph-l'],
-    ['i', 'solid mc-glyph-i-tail'],
+    ['i', 'stroke mc-glyph-i-tail'],
     ['o', 'solid mc-glyph-o-last'],
   ],
 ]
@@ -682,9 +691,14 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.42, delay: index * 0.045, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span>{project.id}</span>
-                  <strong>{project.titleEn}</strong>
-                  <small>{project.type} / {project.duration}</small>
+                  <span className="mc-work-row-index">{project.id}</span>
+                  <strong className="mc-work-title" data-title={project.titleEn}>
+                    <span>{project.titleEn}</span>
+                  </strong>
+                  <small className="mc-work-meta">
+                    <span>{project.type} / {project.duration}</span>
+                    <em aria-hidden="true">{index === activeIndex ? 'open reel' : 'select reel'}</em>
+                  </small>
                   <i aria-hidden="true" />
                 </motion.button>
               ))}
@@ -794,10 +808,20 @@ function BrandSection() {
         viewport={{ once: true, amount: 0.18 }}
       >
         {brandItems.map((brand, index) => (
-          <motion.div className="mc-brand-tile" key={brand} variants={reveal}>
-            <span>{brand}</span>
-            <i style={{ animationDelay: `${index * 0.18}s` }} aria-hidden="true" />
-          </motion.div>
+          <motion.article
+            className={brand.span ? `mc-brand-tile is-${brand.span}` : 'mc-brand-tile'}
+            key={brand.label}
+            variants={reveal}
+            style={{
+              '--tile-accent': brand.accent,
+              '--tile-delay': `${index * 0.12}s`,
+            }}
+          >
+            <span className="mc-brand-index">{String(index + 1).padStart(2, '0')}</span>
+            <strong>{brand.label}</strong>
+            <small>{brand.role}</small>
+            <i aria-hidden="true" />
+          </motion.article>
         ))}
       </motion.div>
     </section>
@@ -816,7 +840,7 @@ function ContactSection() {
       >
         <p className="mc-kicker">contact</p>
         <h2>Let&apos;s shape an AI reel that feels finished.</h2>
-        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        <a href={`mailto:${contactEmail}`}><span>{contactEmail}</span></a>
       </motion.div>
     </section>
   )
