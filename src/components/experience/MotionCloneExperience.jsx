@@ -196,7 +196,7 @@ export default function MotionCloneExperience() {
 
       <HeroTicker />
 
-      <ShowreelSection activeProject={activeProject} />
+      <ShowreelSection activeProject={activeProject} onOpenProject={setSelectedProject} />
 
       <WorkSection
         projects={videoProjects}
@@ -408,11 +408,11 @@ function HeroMark() {
       <h1 className="mc-hero-title" aria-label="AIGC Design Portfolio">
         {heroTitleLines.map((line, lineIndex) => (
           <span
-            className={`mc-hero-line mc-hero-line-${lineIndex + 1}`}
+            className={lineIndex === 0 ? `mc-hero-line mc-hero-line-${lineIndex + 1}` : `mc-hero-line mc-hero-line-${lineIndex + 1} mc-hero-plain-line`}
             aria-hidden="true"
             key={`line-${lineIndex}`}
           >
-            {line.map(([letter, variant], letterIndex) => {
+            {lineIndex > 0 ? line.map(([letter]) => letter).join('') : line.map(([letter, variant], letterIndex) => {
               const glyphIndex = heroTitleLines
                 .slice(0, lineIndex)
                 .reduce((count, currentLine) => count + currentLine.length, 0) + letterIndex
@@ -551,20 +551,45 @@ function HeroTicker() {
   )
 }
 
-function ShowreelSection({ activeProject }) {
+function ShowreelSection({ activeProject, onOpenProject }) {
   const videoRef = useAutoplayVideo(activeProject?.slug)
+  const openShowreel = useCallback(() => {
+    if (activeProject) onOpenProject(activeProject)
+  }, [activeProject, onOpenProject])
 
   return (
     <section className="mc-showreel mc-section" id="showreel" aria-label="Showreel">
       <motion.div
         className="mc-video-shell"
+        role="button"
+        tabIndex={0}
+        aria-label="Play showreel"
         initial={{ opacity: 0, y: 60, scale: 0.985 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, amount: 0.35 }}
         transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
+        onClick={openShowreel}
+        onKeyDown={event => {
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          openShowreel()
+        }}
       >
         <img className="mc-video-poster" src={activeProject?.cover} alt="" aria-hidden="true" loading="eager" decoding="async" />
-        <video ref={videoRef} src={activeProject?.video ?? v1Video} poster={activeProject?.cover} muted loop autoPlay playsInline preload="auto" />
+        <video
+          ref={videoRef}
+          src={activeProject?.video ?? v1Video}
+          poster={activeProject?.cover}
+          muted
+          loop
+          autoPlay
+          playsInline
+          preload="auto"
+          webkit-playsinline="true"
+          x5-playsinline="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="false"
+        />
         <div className="mc-video-overlay">
           <span className="mc-play-badge">play</span>
           <span>showreel / muted loop</span>
@@ -827,6 +852,10 @@ function PreviewVideo({ project }) {
       autoPlay
       playsInline
       preload="metadata"
+      webkit-playsinline="true"
+      x5-playsinline="true"
+      x5-video-player-type="h5"
+      x5-video-player-fullscreen="false"
       aria-label={`${project.titleEn} preview`}
     />
   )
@@ -839,11 +868,67 @@ function useAutoplayVideo(resetKey) {
     const video = videoRef.current
     if (!video) return
 
-    video.muted = true
-    video.playsInline = true
-    video.currentTime = 0
-    const playPromise = video.play()
-    if (playPromise?.catch) playPromise.catch(() => {})
+    let disposed = false
+    let retryTimer = 0
+
+    const playMuted = () => {
+      if (disposed || !video) return
+
+      video.muted = true
+      video.defaultMuted = true
+      video.volume = 0
+      video.playsInline = true
+      video.setAttribute('muted', '')
+      video.setAttribute('playsinline', '')
+      video.setAttribute('webkit-playsinline', 'true')
+      video.setAttribute('x5-playsinline', 'true')
+      video.setAttribute('x5-video-player-type', 'h5')
+      video.setAttribute('x5-video-player-fullscreen', 'false')
+      video.preload = 'auto'
+
+      try {
+        video.currentTime = 0
+      } catch {
+        // Some mobile browsers block seeking until metadata is ready.
+      }
+
+      const playPromise = video.play()
+      if (playPromise?.catch) {
+        playPromise.catch(() => {
+          if (disposed) return
+          retryTimer = window.setTimeout(() => {
+            if (!disposed) video.play().catch(() => {})
+          }, 220)
+        })
+      }
+    }
+
+    const handleReady = () => playMuted()
+    const handleVisibility = () => {
+      if (!document.hidden) playMuted()
+    }
+
+    if (video.readyState >= 2) {
+      playMuted()
+    } else {
+      video.load()
+      playMuted()
+    }
+
+    video.addEventListener('loadeddata', handleReady)
+    video.addEventListener('canplay', handleReady)
+    video.addEventListener('error', handleReady)
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      disposed = true
+      if (retryTimer) window.clearTimeout(retryTimer)
+      video.removeEventListener('loadeddata', handleReady)
+      video.removeEventListener('canplay', handleReady)
+      video.removeEventListener('error', handleReady)
+      document.removeEventListener('visibilitychange', handleVisibility)
+      video.pause()
+    }
   }, [resetKey])
 
   return videoRef
@@ -960,6 +1045,8 @@ function SimpleBadge({ label }) {
 }
 
 function ProjectModal({ project, onClose }) {
+  const videoRef = useAutoplayVideo(project?.slug)
+
   useEffect(() => {
     if (!project) return undefined
     const handleKeyDown = event => {
@@ -1000,7 +1087,21 @@ function ProjectModal({ project, onClose }) {
               <span aria-hidden="true" />
             </button>
             <div className="mc-modal-media">
-              <video src={project.video} poster={project.cover} muted controls playsInline preload="metadata" />
+              <video
+                ref={videoRef}
+                src={project.video}
+                poster={project.cover}
+                muted
+                controls
+                autoPlay
+                playsInline
+                preload="auto"
+                webkit-playsinline="true"
+                x5-playsinline="true"
+                x5-video-player-type="h5"
+                x5-video-player-fullscreen="false"
+                onClick={event => toggleInlineVideo(event.currentTarget)}
+              />
             </div>
             <div className="mc-modal-copy">
               <p className="mc-kicker">{project.type}</p>
@@ -1023,4 +1124,16 @@ function NoiseLayer() {
 
 function wrap(value, length) {
   return ((value % length) + length) % length
+}
+
+function toggleInlineVideo(video) {
+  if (!video) return
+
+  if (video.paused || video.ended) {
+    if (video.ended) video.currentTime = 0
+    video.play().catch(() => {})
+    return
+  }
+
+  video.pause()
 }

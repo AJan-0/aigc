@@ -358,7 +358,7 @@ html.mc-native-scroll .motion-clone-page {
   overflow: hidden;
   width: 100%;
   min-height: calc(100svh - 88px);
-  padding: 86px clamp(28px, 7vw, 120px) 42px;
+  padding: 78px clamp(28px, 6vw, 112px) 34px;
   background:
     radial-gradient(circle at 50% 42%, rgba(255, 253, 250, 0.04), transparent 34%),
     radial-gradient(circle at 18% 18%, rgba(250, 52, 12, 0.06), transparent 18%),
@@ -370,8 +370,8 @@ html.mc-native-scroll .motion-clone-page {
 .mc-hero-stage {
   position: relative;
   width: min(100%, 1320px);
-  height: min(680px, calc(100svh - 154px));
-  min-height: 540px;
+  height: min(652px, calc(100svh - 154px));
+  min-height: 500px;
   overflow: visible;
   container-type: inline-size;
   pointer-events: auto;
@@ -387,7 +387,7 @@ html.mc-native-scroll .motion-clone-page {
   left: 50%;
   top: 51%;
   width: min(100%, 1280px);
-  height: 610px;
+  height: 580px;
   display: grid;
   place-items: center;
   border: 0;
@@ -417,7 +417,7 @@ html.mc-native-scroll .motion-clone-page {
   font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
   font-weight: 800;
   gap: 0;
-  line-height: 0.78;
+  line-height: 0.75;
   letter-spacing: 0;
   text-align: center;
   white-space: nowrap;
@@ -448,20 +448,35 @@ html.mc-native-scroll .motion-clone-page {
   touch-action: pan-y;
 }
 
+.mc-hero-plain-line {
+  display: block;
+  color: var(--mc-ink);
+  font-family: 'Arial Black', 'Neue Regrade Extrabold', Impact, Syne, sans-serif;
+  font-size: var(--line-size);
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: 0;
+  text-align: center;
+  text-shadow:
+    0 0.02em 0 rgba(255, 253, 250, 0.14),
+    0 0.12em 0 rgba(0, 0, 0, 0.32);
+  white-space: nowrap;
+}
+
 .mc-hero-line-1 {
-  --line-size: clamp(216px, 19.6vw, 310px);
-  --line-gap: clamp(4px, 0.22vw, 8px);
+  --line-size: clamp(204px, 18.2vw, 292px);
+  --line-gap: clamp(3px, 0.18vw, 6px);
   --line-rest: translateX(-0.6%) rotate(-1deg);
   --line-scatter: translate3d(-28px, -24px, 0) rotate(-4.4deg) scaleX(1.04);
   --line-gather: translate3d(16px, 13px, 0) rotate(2.4deg) scaleX(0.94);
   --line-snap: translate3d(-6px, 3px, 0) rotate(-0.7deg) scaleX(1.025);
   --line-loop-delay: 820ms;
   z-index: 3;
-  margin-bottom: clamp(28px, 2.2vw, 38px);
+  margin-bottom: clamp(22px, 1.8vw, 30px);
 }
 
 .mc-hero-line-2 {
-  --line-size: clamp(166px, 14.5vw, 230px);
+  --line-size: clamp(156px, 13.8vw, 210px);
   --line-gap: clamp(-2px, -0.1vw, 0px);
   --line-rest: translateX(-0.4%) rotate(-1.1deg) scaleX(1.08);
   --line-scatter: translate3d(18px, 9px, 0) rotate(2.6deg) scaleX(1.13);
@@ -469,11 +484,11 @@ html.mc-native-scroll .motion-clone-page {
   --line-snap: translate3d(4px, -2px, 0) rotate(0.9deg) scaleX(1.09);
   --line-loop-delay: 970ms;
   z-index: 2;
-  margin-top: clamp(8px, 0.9vw, 14px);
+  margin-top: clamp(6px, 0.7vw, 10px);
 }
 
 .mc-hero-line-3 {
-  --line-size: clamp(174px, 15.5vw, 248px);
+  --line-size: clamp(164px, 14.5vw, 224px);
   --line-gap: clamp(-3px, -0.18vw, 0px);
   --line-rest: translateX(-0.2%) rotate(-1.6deg) scaleX(1.04);
   --line-scatter: translate3d(-16px, 15px, 0) rotate(-2.5deg) scaleX(1.09);
@@ -481,7 +496,7 @@ html.mc-native-scroll .motion-clone-page {
   --line-snap: translate3d(-3px, 3px, 0) rotate(-0.8deg) scaleX(1.06);
   --line-loop-delay: 1090ms;
   z-index: 1;
-  margin-top: clamp(16px, 1.2vw, 22px);
+  margin-top: clamp(10px, 0.9vw, 16px);
 }
 
 .mc-hero-glyph {
@@ -1085,6 +1100,7 @@ html.mc-native-scroll .motion-clone-page {
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  opacity: 0.72;
 }
 
 .mc-hero-drifters span {
@@ -1339,11 +1355,22 @@ html.mc-native-scroll .motion-clone-page {
 
 .mc-hero-caption {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  left: clamp(28px, 4vw, 60px);
+  bottom: 10px;
+  margin: 0;
+  color: var(--mc-muted);
+  font-family: 'Neue Regrade Medium', Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: lowercase;
   white-space: nowrap;
+  z-index: 2;
+  pointer-events: none;
+  clip: auto;
+  width: auto;
+  height: auto;
+  overflow: visible;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1505,6 +1532,7 @@ html.mc-native-scroll .motion-clone-page {
     #020203;
   cursor: pointer;
   touch-action: pan-y;
+  outline: none;
 }
 
 .mc-video-shell::before {
@@ -1527,6 +1555,10 @@ html.mc-native-scroll .motion-clone-page {
   filter: saturate(1.04) contrast(1.05);
   transform: scale(1);
   transition: transform 840ms cubic-bezier(0.16, 1, 0.3, 1), filter 840ms ease;
+}
+
+.mc-video-shell:focus-visible {
+  box-shadow: 0 0 0 2px rgba(191, 255, 0, 0.7);
 }
 
 .mc-video-poster {
@@ -1618,7 +1650,7 @@ html.mc-native-scroll .motion-clone-page {
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 53px;
+  margin-bottom: 34px;
 }
 
 .mc-kicker {
@@ -1682,13 +1714,13 @@ html.mc-native-scroll .motion-clone-page {
 .mc-work-layout {
   display: grid;
   grid-template-columns: minmax(252px, 360px) minmax(0, 1fr);
-  gap: 53px;
+  gap: 34px;
   align-items: start;
 }
 
 .mc-work-preview {
   position: sticky;
-  top: 96px;
+  top: 88px;
 }
 
 .mc-work-preview-top {
@@ -1801,12 +1833,12 @@ html.mc-native-scroll .motion-clone-page {
 .mc-work-row {
   position: relative;
   width: 100%;
-  min-height: 86px;
+  min-height: 94px;
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) minmax(150px, 0.34fr) 36px;
-  gap: 18px;
+  grid-template-columns: 54px minmax(0, 1fr) minmax(160px, 0.36fr) 36px;
+  gap: 16px;
   align-items: center;
-  padding: 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--mc-border);
   color: var(--mc-muted);
   text-align: left;
@@ -1840,11 +1872,11 @@ html.mc-native-scroll .motion-clone-page {
   min-width: 0;
   color: var(--mc-ink);
   font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
-  font-size: clamp(2rem, 4.2vw, 5.35rem);
+  font-size: clamp(1.78rem, 3.95vw, 4.8rem);
   font-weight: 800;
-  line-height: 0.82;
+  line-height: 0.88;
   letter-spacing: 0;
-  overflow: hidden;
+  overflow: visible;
   transition:
     color 220ms ease,
     transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -1937,7 +1969,7 @@ html.mc-native-scroll .motion-clone-page {
 .mc-work-row:focus-visible,
 .mc-work-row.is-active {
   color: var(--mc-bg);
-  transform: translateX(8px);
+  transform: translateX(6px);
 }
 
 .mc-work-row:hover::before,
@@ -1958,7 +1990,7 @@ html.mc-native-scroll .motion-clone-page {
 .mc-work-row:hover .mc-work-title span,
 .mc-work-row:focus-visible .mc-work-title span,
 .mc-work-row.is-active .mc-work-title span {
-  transform: translateY(-104%);
+  transform: translateY(-102%);
 }
 
 .mc-work-row:hover .mc-work-title::after,
@@ -1982,16 +2014,16 @@ html.mc-native-scroll .motion-clone-page {
 
 .mc-work-controls {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 46px;
-  gap: 14px;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  gap: 10px;
   align-items: center;
   margin-top: 0;
 }
 
 .mc-work-controls button {
   position: relative;
-  width: 46px;
-  height: 46px;
+  width: 42px;
+  height: 42px;
   border: 1px solid var(--mc-border);
   border-radius: 50%;
   overflow: hidden;
@@ -2029,7 +2061,7 @@ html.mc-native-scroll .motion-clone-page {
 
 .mc-work-controls button span {
   position: absolute;
-  inset: 15px;
+  inset: 14px;
   border-top: 2px solid var(--mc-ink);
   border-left: 2px solid var(--mc-ink);
   transform: rotate(-45deg);
@@ -2409,7 +2441,7 @@ html.mc-native-scroll .motion-clone-page {
   z-index: 200;
   display: grid;
   place-items: center;
-  padding: 18px;
+  padding: 12px;
 }
 
 .mc-modal-scrim {
@@ -2422,7 +2454,7 @@ html.mc-native-scroll .motion-clone-page {
   position: relative;
   z-index: 1;
   width: min(1120px, 100%);
-  max-height: min(760px, calc(100vh - 36px));
+  max-height: min(760px, calc(100vh - 24px));
   overflow: auto;
   display: grid;
   grid-template-columns: minmax(280px, 0.55fr) minmax(0, 0.45fr);
@@ -2471,6 +2503,7 @@ html.mc-native-scroll .motion-clone-page {
   height: 100%;
   display: block;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .mc-modal-copy {
@@ -2946,18 +2979,18 @@ html.mc-native-scroll .motion-clone-page {
 @media (max-width: 1279px) {
   .mc-hero {
     min-height: calc(100svh - 88px);
-    padding: 88px clamp(30px, 7vw, 96px) 50px;
+    padding: 80px clamp(30px, 6vw, 92px) 42px;
   }
 
   .mc-hero-stage {
     width: min(100%, 1080px);
-    height: min(610px, calc(100svh - 164px));
-    min-height: 480px;
+    height: min(584px, calc(100svh - 164px));
+    min-height: 460px;
   }
 
   .mc-hero-mark {
     width: min(100%, 1040px);
-    height: 500px;
+    height: 468px;
   }
 
   .mc-work-inner,
@@ -2971,7 +3004,7 @@ html.mc-native-scroll .motion-clone-page {
   .mc-about,
   .mc-brands,
   .mc-contact {
-    padding: 40px 120px 65px;
+    padding: 40px 96px 65px;
   }
 
   .mc-work-heading,
@@ -2982,19 +3015,19 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-line-1 {
-    --line-size: clamp(172px, 17.8vw, 226px);
+    --line-size: clamp(164px, 16.8vw, 216px);
     --line-gap: clamp(3px, 0.3vw, 6px);
     margin-bottom: clamp(10px, 1vw, 16px);
   }
 
   .mc-hero-line-2 {
-    --line-size: clamp(138px, 13.8vw, 176px);
+    --line-size: clamp(132px, 13vw, 166px);
     --line-gap: 0px;
     margin-top: 4px;
   }
 
   .mc-hero-line-3 {
-    --line-size: clamp(142px, 14.4vw, 188px);
+    --line-size: clamp(136px, 13.2vw, 176px);
     --line-gap: 0px;
     margin-top: 4px;
   }
@@ -3011,35 +3044,35 @@ html.mc-native-scroll .motion-clone-page {
 
   .mc-hero {
     height: auto;
-    min-height: 610px;
-    padding: 92px 38px 48px;
+    min-height: 560px;
+    padding: 76px 28px 38px;
   }
 
   .mc-hero-stage {
     width: min(100%, 760px);
-    height: 500px;
-    min-height: 500px;
+    height: 448px;
+    min-height: 448px;
   }
 
   .mc-hero-mark {
     width: min(100%, 744px);
-    height: 420px;
+    height: 392px;
   }
 
   .mc-hero-line-1 {
-    --line-size: clamp(130px, 15.2vw, 158px);
+    --line-size: clamp(122px, 14.6vw, 150px);
     --line-gap: clamp(3px, 0.45vw, 6px);
     margin-bottom: 10px;
   }
 
   .mc-hero-line-2 {
-    --line-size: clamp(108px, 12.8vw, 134px);
+    --line-size: clamp(102px, 12vw, 124px);
     --line-gap: 0px;
     margin-top: 4px;
   }
 
   .mc-hero-line-3 {
-    --line-size: clamp(112px, 13.1vw, 140px);
+    --line-size: clamp(106px, 12.2vw, 132px);
     --line-gap: 0px;
     margin-top: 4px;
   }
@@ -3065,7 +3098,7 @@ html.mc-native-scroll .motion-clone-page {
   .mc-about,
   .mc-brands,
   .mc-contact {
-    padding: 40px 60px 65px;
+    padding: 36px 48px 60px;
   }
 
   .mc-work-layout,
@@ -3192,27 +3225,27 @@ html.mc-native-scroll .motion-clone-page {
 
   .mc-hero {
     height: auto;
-    min-height: 468px;
-    padding: 64px 0 32px;
+    min-height: 448px;
+    padding: 60px 0 28px;
     overflow: hidden;
   }
 
   .mc-hero-stage {
     width: 100%;
     max-width: none;
-    height: 430px;
-    min-height: 430px;
+    height: 392px;
+    min-height: 392px;
     overflow: visible;
   }
 
   .mc-hero-mark {
     top: 50%;
     width: min(100%, 528px);
-    height: 374px;
+    height: 338px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 102px;
+    --line-size: 92px;
     --line-gap: 4px;
     --line-rest: translateX(-0.9%) rotate(-1deg);
     --line-scatter: translate3d(-13px, -9px, 0) rotate(-2.4deg) scaleX(1.025);
@@ -3222,7 +3255,7 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-line-2 {
-    --line-size: 90px;
+    --line-size: 80px;
     --line-gap: 0px;
     --line-rest: translateX(0.25%) rotate(0.25deg) scaleX(1.03);
     --line-scatter: translate3d(10px, 5px, 0) rotate(1.05deg) scaleX(1.07);
@@ -3232,7 +3265,7 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-hero-line-3 {
-    --line-size: 72px;
+    --line-size: 70px;
     --line-gap: 0px;
     --line-rest: translateX(-0.15%) rotate(-0.25deg) scaleX(1.02);
     --line-scatter: translate3d(-8px, 9px, 0) rotate(-0.85deg) scaleX(1.055);
@@ -3353,7 +3386,7 @@ html.mc-native-scroll .motion-clone-page {
   .mc-about,
   .mc-brands,
   .mc-contact {
-    padding: 31px 30px;
+    padding: 28px 24px;
   }
 
   .mc-work-heading,
@@ -3366,11 +3399,11 @@ html.mc-native-scroll .motion-clone-page {
   .mc-brand-heading h2,
   .mc-about-copy h2,
   .mc-contact-panel h2 {
-    font-size: clamp(2.7rem, 14vw, 4.8rem);
+    font-size: clamp(2.2rem, 12vw, 3.7rem);
   }
 
   .mc-work-layout {
-    gap: 19px;
+    gap: 16px;
   }
 
   .mc-work-preview {
@@ -3433,13 +3466,13 @@ html.mc-native-scroll .motion-clone-page {
 
   .mc-work-row {
     flex: 0 0 min(82vw, 342px);
-    min-height: 158px;
-    grid-template-columns: 36px minmax(0, 1fr) 28px;
+    min-height: 146px;
+    grid-template-columns: 32px minmax(0, 1fr) 26px;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 12px;
+    gap: 10px;
     align-items: start;
     align-content: space-between;
-    padding: 15px 14px 14px;
+    padding: 14px 12px 13px;
     border: 1px solid var(--mc-border);
     border-bottom: 1px solid var(--mc-border);
     background: rgba(255, 253, 250, 0.018);
@@ -3464,8 +3497,8 @@ html.mc-native-scroll .motion-clone-page {
 
   .mc-work-row strong {
     align-self: start;
-    font-size: clamp(1.62rem, 8.3vw, 2.95rem);
-    line-height: 0.86;
+    font-size: clamp(1.38rem, 7.2vw, 2.42rem);
+    line-height: 0.94;
   }
 
   .mc-work-row i {
@@ -3511,65 +3544,65 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-modal-media {
-    min-height: 52vh;
+    min-height: 46vh;
   }
 }
 
 @media (min-width: 520px) and (max-width: 808px) {
   .mc-hero-stage {
-    height: 470px;
-    min-height: 470px;
+    height: 438px;
+    min-height: 438px;
   }
 
   .mc-hero-mark {
-    width: clamp(500px, 86vw, 610px);
-    height: 414px;
+    width: clamp(480px, 84vw, 590px);
+    height: 382px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 128px;
+    --line-size: 118px;
     --line-gap: 6px;
     margin-bottom: 14px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 112px;
+    --line-size: 102px;
   }
 
   .mc-hero-line-3 {
-    --line-size: 90px;
+    --line-size: 84px;
     margin-top: 12px;
   }
 }
 
 @media (max-width: 360px) {
   .mc-hero {
-    min-height: 426px;
+    min-height: 404px;
   }
 
   .mc-hero-stage {
-    height: 370px;
-    min-height: 370px;
+    height: 344px;
+    min-height: 344px;
   }
 
   .mc-hero-mark {
     width: min(100%, 312px);
-    height: 320px;
+    height: 292px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 78px;
+    --line-size: 70px;
     --line-gap: 4px;
     margin-bottom: 8px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 66px;
+    --line-size: 58px;
     margin-top: 2px;
   }
 
   .mc-hero-line-3 {
-    --line-size: 58px;
+    --line-size: 50px;
     margin-top: 8px;
   }
 
@@ -3653,15 +3686,15 @@ html.mc-native-scroll .motion-clone-page {
 }
 
 .motion-clone-page .mc-work-row {
-  min-height: 104px;
-  grid-template-columns: 54px minmax(0, 1fr) minmax(145px, 0.3fr) 36px;
+  min-height: 96px;
+  grid-template-columns: 54px minmax(0, 1fr) minmax(130px, 0.32fr) 36px;
   align-items: center;
-  padding: 14px 0;
+  padding: 12px 0;
 }
 
 .motion-clone-page .mc-work-row strong {
-  font-size: clamp(1.9rem, 3.65vw, 4.55rem);
-  line-height: 0.94;
+  font-size: clamp(1.72rem, 3.3vw, 4.15rem);
+  line-height: 0.96;
   overflow: visible;
   overflow-wrap: normal;
   word-break: normal;
@@ -3698,19 +3731,19 @@ html.mc-native-scroll .motion-clone-page {
   .motion-clone-page .mc-work-row {
     flex: 0 0 min(86vw, 360px);
     min-height: 0;
-    grid-template-columns: 36px minmax(0, 1fr) 30px;
+    grid-template-columns: 34px minmax(0, 1fr) 28px;
     grid-template-rows: auto auto;
-    gap: 14px 12px;
+    gap: 12px 10px;
     align-items: start;
     align-content: start;
-    padding: 18px 16px;
+    padding: 16px 14px;
   }
 
   .motion-clone-page .mc-work-row strong {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
-    font-size: clamp(1.36rem, 6.6vw, 2.28rem);
-    line-height: 0.98;
+    font-size: clamp(1.24rem, 6vw, 2rem);
+    line-height: 1;
   }
 
   .motion-clone-page .mc-work-row small {
@@ -3733,6 +3766,103 @@ html.mc-native-scroll .motion-clone-page {
 
 @media (max-width: 360px) {
   .motion-clone-page .mc-work-row strong {
-    font-size: clamp(1.22rem, 6vw, 1.9rem);
+    font-size: clamp(1.1rem, 5.4vw, 1.72rem);
+  }
+}
+
+/* Final visual pass: keep the hero complete and calmer across real devices. */
+.motion-clone-page .mc-hero-stage {
+  height: min(610px, calc(100svh - 154px));
+  min-height: 470px;
+}
+
+.motion-clone-page .mc-hero-mark {
+  top: 50%;
+  width: min(100%, 1160px);
+  height: 520px;
+}
+
+.motion-clone-page .mc-hero-line-1 {
+  --line-size: clamp(160px, 14.5vw, 230px);
+  --line-gap: clamp(3px, 0.18vw, 6px);
+  margin-bottom: clamp(16px, 1.5vw, 24px);
+}
+
+.motion-clone-page .mc-hero-line-2 {
+  --line-size: clamp(122px, 11.2vw, 170px);
+  margin-top: 2px;
+}
+
+.motion-clone-page .mc-hero-line-3 {
+  --line-size: clamp(104px, 8.4vw, 132px);
+  --line-gap: 2px;
+  transform: translateX(0) scaleX(0.86);
+  margin-top: 6px;
+}
+
+.motion-clone-page .mc-hero-plain-line {
+  animation: mcWordEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.motion-clone-page .mc-hero-caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 808px) {
+  .motion-clone-page .mc-hero-stage {
+    height: 384px;
+    min-height: 384px;
+  }
+
+  .motion-clone-page .mc-hero-mark {
+    width: min(100%, 430px);
+    height: 318px;
+  }
+
+  .motion-clone-page .mc-hero-line-1 {
+    --line-size: 84px;
+    --line-gap: 3px;
+    margin-bottom: 10px;
+  }
+
+  .motion-clone-page .mc-hero-line-2 {
+    --line-size: 72px;
+    margin-top: 2px;
+  }
+
+  .motion-clone-page .mc-hero-line-3 {
+    --line-size: 50px;
+    --line-gap: 1px;
+    transform: translateX(0) scaleX(0.9);
+    margin-top: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .motion-clone-page .mc-hero-stage {
+    height: 326px;
+    min-height: 326px;
+  }
+
+  .motion-clone-page .mc-hero-mark {
+    width: min(100%, 310px);
+    height: 276px;
+  }
+
+  .motion-clone-page .mc-hero-line-1 {
+    --line-size: 66px;
+  }
+
+  .motion-clone-page .mc-hero-line-2 {
+    --line-size: 56px;
+  }
+
+  .motion-clone-page .mc-hero-line-3 {
+    --line-size: 42px;
   }
 }
