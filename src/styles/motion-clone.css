@@ -3600,3 +3600,139 @@ html.mc-native-scroll .motion-clone-page {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Fix: crisp hero lettering and complete work titles. */
+.motion-clone-page .mc-hero-line {
+  animation: none;
+  filter: none;
+}
+
+.motion-clone-page .mc-hero-glyph {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-synthesis: none;
+  will-change: auto;
+  filter: none;
+  animation: mcGlyphEnter 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--glyph-delay, 0ms);
+}
+
+.motion-clone-page .mc-glyph-balloon {
+  filter: none;
+  animation-name: mcBalloonEnter;
+  animation-duration: 760ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-delay: var(--glyph-delay, 0ms);
+  animation-iteration-count: 1;
+}
+
+.motion-clone-page .mc-glyph-balloon::before,
+.motion-clone-page .mc-hero-mark:focus-visible .mc-hero-glyph,
+.motion-clone-page .mc-hero-mark.is-chaos-a .mc-hero-glyph,
+.motion-clone-page .mc-hero-mark.is-chaos-b .mc-hero-glyph,
+.motion-clone-page .mc-hero-mark.is-chaos-a .mc-glyph-balloon,
+.motion-clone-page .mc-hero-mark.is-chaos-b .mc-glyph-balloon {
+  filter: none;
+}
+
+.motion-clone-page .word-white {
+  filter: none;
+  animation-name: mcWordEnter;
+  animation-duration: 760ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-delay: var(--glyph-delay, 0ms);
+  animation-iteration-count: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motion-clone-page .mc-hero:hover .mc-hero-line,
+  .motion-clone-page .mc-hero:hover .mc-hero-glyph {
+    animation: none;
+    filter: none;
+  }
+}
+
+.motion-clone-page .mc-work-row {
+  min-height: 104px;
+  grid-template-columns: 54px minmax(0, 1fr) minmax(145px, 0.3fr) 36px;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.motion-clone-page .mc-work-row strong {
+  font-size: clamp(1.9rem, 3.65vw, 4.55rem);
+  line-height: 0.94;
+  overflow: visible;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  transition: color 220ms ease;
+}
+
+.motion-clone-page .mc-work-title span,
+.motion-clone-page .mc-work-row:hover .mc-work-title span,
+.motion-clone-page .mc-work-row:focus-visible .mc-work-title span,
+.motion-clone-page .mc-work-row.is-active .mc-work-title span {
+  transform: none;
+}
+
+.motion-clone-page .mc-work-title::after {
+  content: none;
+  display: none;
+}
+
+.motion-clone-page .mc-work-row:hover,
+.motion-clone-page .mc-work-row:focus-visible,
+.motion-clone-page .mc-work-row.is-active {
+  transform: translateX(4px);
+}
+
+.motion-clone-page .mc-work-row:hover strong,
+.motion-clone-page .mc-work-row:focus-visible strong,
+.motion-clone-page .mc-work-row.is-active strong {
+  color: var(--mc-red);
+  transform: none;
+}
+
+@media (max-width: 808px) {
+  .motion-clone-page .mc-work-row {
+    flex: 0 0 min(86vw, 360px);
+    min-height: 0;
+    grid-template-columns: 36px minmax(0, 1fr) 30px;
+    grid-template-rows: auto auto;
+    gap: 14px 12px;
+    align-items: start;
+    align-content: start;
+    padding: 18px 16px;
+  }
+
+  .motion-clone-page .mc-work-row strong {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    font-size: clamp(1.36rem, 6.6vw, 2.28rem);
+    line-height: 0.98;
+  }
+
+  .motion-clone-page .mc-work-row small {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    justify-self: start;
+    align-self: start;
+    text-align: left;
+  }
+
+  .motion-clone-page .mc-work-meta {
+    justify-items: start;
+  }
+
+  .motion-clone-page .mc-work-meta em {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .motion-clone-page .mc-work-row strong {
+    font-size: clamp(1.22rem, 6vw, 1.9rem);
+  }
+}
