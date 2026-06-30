@@ -262,16 +262,17 @@ html.mc-native-scroll #root {
   justify-content: center;
   overflow: hidden;
   width: 100%;
-  padding: 72px 140px 80px;
+  min-height: calc(100svh - 88px);
+  padding: 92px clamp(36px, 9vw, 140px) 58px;
   background: var(--mc-bg);
   touch-action: pan-y;
 }
 
 .mc-hero-stage {
   position: relative;
-  width: 100%;
-  max-width: 1200px;
-  aspect-ratio: 1.8552875696 / 1;
+  width: min(100%, 1120px);
+  height: min(572px, calc(100svh - 196px));
+  min-height: 430px;
   overflow: hidden;
   container-type: inline-size;
   pointer-events: none;
@@ -285,9 +286,9 @@ html.mc-native-scroll #root {
 .mc-hero-mark {
   position: absolute;
   left: 50%;
-  top: 49.9%;
-  width: 94%;
-  height: 91.28%;
+  top: 52%;
+  width: min(100%, 1048px);
+  height: 420px;
   display: grid;
   place-items: center;
   transform: translate(-50%, -50%);
@@ -307,11 +308,13 @@ html.mc-native-scroll #root {
   color: var(--mc-ink);
   font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
   font-weight: 800;
-  line-height: 0.78;
+  line-height: 0.68;
   letter-spacing: 0;
   text-align: center;
   white-space: nowrap;
   text-transform: none;
+  font-kerning: none;
+  font-feature-settings: 'kern' 0;
   pointer-events: none;
   touch-action: pan-y;
 }
@@ -321,33 +324,34 @@ html.mc-native-scroll #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--line-gap, 8px);
+  gap: var(--line-gap, 0px);
   width: 100%;
   pointer-events: none;
   touch-action: pan-y;
 }
 
 .mc-hero-line-1 {
-  --line-size: 130px;
-  --line-gap: 10px;
+  --line-size: clamp(168px, 15.7vw, 236px);
+  --line-gap: clamp(5px, 0.85vw, 13px);
   z-index: 3;
-  transform: translateX(-1.1%) rotate(-1deg);
+  margin-bottom: -50px;
+  transform: translateX(-0.6%) rotate(-1deg);
 }
 
 .mc-hero-line-2 {
-  --line-size: 147px;
-  --line-gap: 5px;
+  --line-size: clamp(150px, 14.2vw, 210px);
+  --line-gap: clamp(0px, 0.25vw, 4px);
   z-index: 2;
-  margin-top: -10px;
-  transform: translateX(1%) rotate(0.4deg);
+  margin-top: 0;
+  transform: translateX(0.2%) rotate(0.25deg) scaleX(1.04);
 }
 
 .mc-hero-line-3 {
-  --line-size: 105px;
-  --line-gap: 4px;
+  --line-size: clamp(118px, 11.6vw, 172px);
+  --line-gap: clamp(0px, 0.18vw, 3px);
   z-index: 1;
-  margin-top: 0;
-  transform: translateX(-0.6%) rotate(-0.35deg);
+  margin-top: -24px;
+  transform: translateX(-0.1%) rotate(-0.18deg) scaleX(1.03);
 }
 
 .mc-hero-glyph {
@@ -357,10 +361,10 @@ html.mc-native-scroll #root {
   display: inline-grid;
   place-items: center;
   width: var(--glyph-w);
-  height: 0.92em;
+  height: 0.86em;
   color: rgba(255, 253, 250, 0.62);
   font-size: var(--line-size);
-  line-height: 0.72;
+  line-height: 0.66;
   letter-spacing: 0;
   isolation: isolate;
   transform-origin: 50% 75%;
@@ -368,8 +372,8 @@ html.mc-native-scroll #root {
   touch-action: pan-y;
   will-change: transform, opacity;
   animation:
-    mcGlyphEnter 780ms cubic-bezier(0.16, 1, 0.3, 1) both,
-    mcGlyphFloat 5.7s ease-in-out infinite;
+    mcGlyphEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    mcGlyphFloat 5.8s ease-in-out infinite;
   animation-delay: var(--glyph-delay, 0ms), var(--glyph-loop-delay, 0ms);
 }
 
@@ -381,11 +385,13 @@ html.mc-native-scroll #root {
 }
 
 .mc-glyph-sticker {
-  --glyph-w: 0.86em;
+  --glyph-w: 0.94em;
   color: #fa7575;
-  -webkit-text-stroke: 3px var(--mc-ink);
-  filter: saturate(1.16);
-  text-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+  -webkit-text-stroke: clamp(3px, 0.34vw, 5px) var(--mc-ink);
+  filter: saturate(1.18) contrast(1.02);
+  text-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
+  animation-name: mcGlyphEnter, mcStickerSquash;
+  animation-duration: 760ms, 5.2s;
 }
 
 .mc-glyph-sticker::before,
@@ -400,23 +406,32 @@ html.mc-native-scroll #root {
   transform: rotate(-26deg);
 }
 
+.mc-glyph-sticker::before {
+  animation: mcStickerHighlight 5.2s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
+}
+
 .mc-glyph-sticker::after {
   z-index: -1;
-  inset: 10% -3% 5% 3%;
-  border: 3px solid rgba(255, 253, 250, 0.42);
-  border-radius: 46% 54% 48% 52%;
-  transform: rotate(5deg);
+  inset: 8% -4% 5% 2%;
+  border: clamp(2px, 0.24vw, 4px) solid rgba(255, 253, 250, 0.48);
+  border-radius: 44% 56% 49% 51%;
+  transform: rotate(7deg);
+  animation: mcStickerHalo 5.2s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
 }
 
 .mc-glyph-cube {
-  --glyph-w: 0.82em;
+  --glyph-w: 0.98em;
   color: rgba(255, 253, 250, 0.9);
-  background: linear-gradient(90deg, #5a21bd 0%, #854ac6 55%, #a582d7 100%);
-  border: 8px solid #6f25f7;
+  background: linear-gradient(118deg, #4b16a2 0%, #7b31ff 48%, #b39fe3 100%);
+  border: clamp(6px, 0.58vw, 9px) solid #6f25f7;
+  border-radius: 8% 16% 9% 18%;
   box-shadow:
-    inset -14px -12px 0 rgba(52, 17, 124, 0.42),
-    12px 12px 0 rgba(0, 0, 0, 0.2);
-  transform: rotate(1deg);
+    inset -18px -14px 0 rgba(52, 17, 124, 0.42),
+    13px 13px 0 rgba(0, 0, 0, 0.22);
+  animation-name: mcGlyphEnter, mcCubeTilt;
+  animation-duration: 760ms, 4.9s;
 }
 
 .mc-glyph-cube::before {
@@ -425,6 +440,8 @@ html.mc-native-scroll #root {
   background: #3e158c;
   opacity: 0.82;
   clip-path: polygon(10% 0, 100% 12%, 86% 100%, 0 84%);
+  animation: mcCubeDepth 4.9s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
 }
 
 .mc-glyph-cube::after {
@@ -432,6 +449,8 @@ html.mc-native-scroll #root {
   z-index: 2;
   background: var(--mc-bg);
   opacity: 0.92;
+  animation: mcCubeCenter 4.9s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
 }
 
 .mc-glyph-plus {
@@ -464,10 +483,10 @@ html.mc-native-scroll #root {
 }
 
 .mc-glyph-pencil {
-  --glyph-w: 0.36em;
+  --glyph-w: 0.4em;
   color: transparent;
   animation-name: mcGlyphEnter, mcPencilWiggle;
-  animation-duration: 780ms, 4.2s;
+  animation-duration: 760ms, 4.2s;
 }
 
 .mc-glyph-pencil::before {
@@ -480,6 +499,9 @@ html.mc-native-scroll #root {
   background:
     linear-gradient(var(--mc-yellow) 0 14%, var(--mc-bg) 14% 73%, var(--mc-ink) 73% 100%);
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+  transform-origin: 50% 72%;
+  animation: mcPencilCore 4.2s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
 }
 
 .mc-glyph-pencil::after {
@@ -489,16 +511,58 @@ html.mc-native-scroll #root {
   height: 17%;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
   background: var(--mc-ink);
+  animation: mcPencilTip 4.2s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
 }
 
 .mc-glyph-neon {
-  --glyph-w: 0.64em;
+  --glyph-w: 0.82em;
   color: var(--mc-acid);
   font-style: italic;
-  text-shadow: 0 0 22px rgba(191, 255, 0, 0.18);
+  -webkit-text-stroke: clamp(1px, 0.12vw, 2px) rgba(191, 255, 0, 0.78);
+  text-shadow:
+    0 0 18px rgba(191, 255, 0, 0.22),
+    7px 5px 0 rgba(250, 52, 12, 0.18);
   transform-origin: 12% 82%;
   animation-name: mcGlyphEnter, mcNeonSway;
-  animation-duration: 780ms, 4.7s;
+  animation-duration: 760ms, 4.7s;
+}
+
+.mc-glyph-neon::before {
+  left: 70%;
+  top: 9%;
+  width: 14%;
+  height: 14%;
+  background: var(--mc-red);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  animation: mcNeonAccent 4.7s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
+}
+
+.mc-glyph-neon::after {
+  left: 16%;
+  bottom: 10%;
+  width: 48%;
+  height: 7%;
+  border-radius: 999px;
+  background: var(--mc-ink);
+  transform: rotate(-8deg);
+  animation: mcNeonUnderline 4.7s ease-in-out infinite;
+  animation-delay: var(--glyph-loop-delay, 0ms);
+}
+
+.mc-glyph-solid {
+  --glyph-w: 0.64em;
+  height: 0.74em;
+  color: var(--mc-ink);
+  font-family: 'Neue Regrade Extrabold', Syne, sans-serif;
+  font-weight: 800;
+  line-height: 0.58;
+  opacity: 0.985;
+  text-shadow: 0 1px 0 rgba(255, 253, 250, 0.08);
+  animation-name: mcSolidEnter, mcSolidWave;
+  animation-duration: 780ms, 6.9s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), ease-in-out;
 }
 
 .mc-glyph-ink {
@@ -642,36 +706,55 @@ html.mc-native-scroll #root {
 }
 
 .mc-glyph-a {
-  --glyph-w: 0.74em;
+  --glyph-w: 0.94em;
 }
 
 .mc-glyph-d {
-  --glyph-w: 0.75em;
+  --glyph-w: 0.74em;
 }
 
 .mc-glyph-e {
-  --glyph-w: 0.62em;
+  --glyph-w: 0.57em;
 }
 
 .mc-glyph-s {
-  --glyph-w: 0.56em;
+  --glyph-w: 0.53em;
 }
 
-.mc-glyph-p,
+.mc-glyph-i-small,
+.mc-glyph-i-tail {
+  --glyph-w: 0.25em;
+}
+
+.mc-glyph-g-small,
+.mc-glyph-n {
+  --glyph-w: 0.64em;
+}
+
+.mc-glyph-p {
+  --glyph-w: 0.61em;
+}
+
+.mc-glyph-o-face,
+.mc-glyph-o-cube,
+.mc-glyph-o-last {
+  --glyph-w: 0.63em;
+}
+
 .mc-glyph-r {
-  --glyph-w: 0.58em;
+  --glyph-w: 0.47em;
 }
 
 .mc-glyph-t {
-  --glyph-w: 0.5em;
+  --glyph-w: 0.42em;
 }
 
 .mc-glyph-f {
-  --glyph-w: 0.45em;
+  --glyph-w: 0.41em;
 }
 
-.mc-glyph-o-last {
-  --glyph-w: 0.66em;
+.mc-glyph-l {
+  --glyph-w: 0.23em;
 }
 
 .mc-hero-drifters {
@@ -691,15 +774,15 @@ html.mc-native-scroll #root {
 }
 
 .mc-hero-drifters span:nth-child(1) {
-  left: 13%;
-  top: 24%;
+  left: 15%;
+  top: 22%;
   background: var(--mc-red);
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
 
 .mc-hero-drifters span:nth-child(2) {
-  right: 17%;
-  top: 19%;
+  right: 18%;
+  top: 21%;
   width: 22px;
   height: 22px;
   border: 3px solid var(--mc-ink);
@@ -709,7 +792,7 @@ html.mc-native-scroll #root {
 
 .mc-hero-drifters span:nth-child(3) {
   left: 22%;
-  bottom: 22%;
+  bottom: 25%;
   width: 12px;
   height: 42px;
   background: var(--mc-acid);
@@ -717,8 +800,8 @@ html.mc-native-scroll #root {
 }
 
 .mc-hero-drifters span:nth-child(4) {
-  right: 10%;
-  bottom: 29%;
+  right: 12%;
+  bottom: 30%;
   width: 26px;
   height: 26px;
   background: var(--mc-yellow);
@@ -727,8 +810,8 @@ html.mc-native-scroll #root {
 }
 
 .mc-hero-drifters span:nth-child(5) {
-  left: 49%;
-  bottom: 12%;
+  left: 50%;
+  bottom: 17%;
   width: 16px;
   height: 16px;
   background: var(--mc-lavender);
@@ -1403,12 +1486,16 @@ html.mc-native-scroll #root {
 
 @keyframes mcGlyphEnter {
   0% {
-    opacity: 0.22;
-    transform: translateY(18px) rotate(-3deg) scale(0.9);
+    opacity: 0;
+    transform: translateY(34px) rotate(-7deg) scale(0.82);
   }
-  64% {
+  58% {
     opacity: 1;
-    transform: translateY(-4px) rotate(1.6deg) scale(1.03);
+    transform: translateY(-9px) rotate(2.8deg) scale(1.08);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(2px) rotate(-1.1deg) scale(0.985);
   }
   100% {
     opacity: 1;
@@ -1416,12 +1503,127 @@ html.mc-native-scroll #root {
   }
 }
 
+@keyframes mcSolidEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(52px) scaleY(0.82) skewX(-5deg);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-7px) scaleY(1.08) skewX(1.4deg);
+  }
+  100% {
+    opacity: 0.985;
+    transform: translateY(0) scaleY(1) skewX(0deg);
+  }
+}
+
 @keyframes mcGlyphFloat {
   0%, 100% {
-    transform: translateY(0) rotate(-1deg);
+    transform: translateY(0) rotate(-1deg) scale(1);
   }
   50% {
-    transform: translateY(-7px) rotate(1.4deg);
+    transform: translateY(-7px) rotate(1.4deg) scale(1.015);
+  }
+}
+
+@keyframes mcSolidWave {
+  0%, 100% {
+    transform: translateY(0) skewX(0deg) scaleY(1);
+  }
+  46% {
+    transform: translateY(-3px) skewX(-0.7deg) scaleY(1.015);
+  }
+  68% {
+    transform: translateY(1px) skewX(0.5deg) scaleY(0.992);
+  }
+}
+
+@keyframes mcStickerSquash {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg) scale(1, 1);
+  }
+  42% {
+    transform: translateY(-9px) rotate(2deg) scale(1.035, 0.97);
+  }
+  68% {
+    transform: translateY(2px) rotate(-1.4deg) scale(0.985, 1.025);
+  }
+}
+
+@keyframes mcStickerHighlight {
+  0%, 100% {
+    transform: translateX(0) rotate(-26deg) scaleX(1);
+  }
+  50% {
+    transform: translateX(8%) rotate(-20deg) scaleX(0.82);
+  }
+}
+
+@keyframes mcStickerHalo {
+  0%, 100% {
+    transform: rotate(7deg) scale(1);
+    border-radius: 44% 56% 49% 51%;
+  }
+  50% {
+    transform: rotate(1deg) scale(1.035);
+    border-radius: 52% 48% 56% 44%;
+  }
+}
+
+@keyframes mcCubeDepth {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(4px, 5px, 0) rotate(1.5deg);
+  }
+}
+
+@keyframes mcCubeCenter {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.78) rotate(8deg);
+  }
+}
+
+@keyframes mcPencilCore {
+  0%, 100% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  50% {
+    transform: rotate(4deg) scaleY(0.96);
+  }
+}
+
+@keyframes mcPencilTip {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8%) rotate(-5deg);
+  }
+}
+
+@keyframes mcNeonAccent {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-18%, 18%) rotate(45deg) scale(0.74);
+  }
+}
+
+@keyframes mcNeonUnderline {
+  0%, 100% {
+    transform: rotate(-8deg) scaleX(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(-2deg) scaleX(0.62);
+    opacity: 0.68;
   }
 }
 
@@ -1498,10 +1700,21 @@ html.mc-native-scroll #root {
 
 @media (max-width: 1279px) {
   .mc-hero {
-    padding: 72px 120px 55px;
+    min-height: calc(100svh - 88px);
+    padding: 88px clamp(30px, 7vw, 96px) 50px;
   }
 
-  .mc-hero-stage,
+  .mc-hero-stage {
+    width: min(100%, 980px);
+    height: min(520px, calc(100svh - 184px));
+    min-height: 386px;
+  }
+
+  .mc-hero-mark {
+    width: min(100%, 930px);
+    height: 370px;
+  }
+
   .mc-work-inner,
   .mc-about,
   .mc-brands,
@@ -1524,15 +1737,20 @@ html.mc-native-scroll #root {
   }
 
   .mc-hero-line-1 {
-    --line-size: 110px;
+    --line-size: clamp(146px, 14.8vw, 194px);
+    --line-gap: clamp(4px, 0.72vw, 10px);
+    margin-bottom: -42px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 125px;
+    --line-size: clamp(130px, 13.1vw, 172px);
+    --line-gap: clamp(0px, 0.2vw, 3px);
   }
 
   .mc-hero-line-3 {
-    --line-size: 89px;
+    --line-size: clamp(104px, 10.25vw, 138px);
+    --line-gap: clamp(0px, 0.14vw, 2px);
+    margin-top: -21px;
   }
 }
 
@@ -1546,29 +1764,38 @@ html.mc-native-scroll #root {
   }
 
   .mc-hero {
-    height: 406px;
-    padding: 104px 60px 80px;
+    height: auto;
+    min-height: 610px;
+    padding: 92px 38px 48px;
   }
 
   .mc-hero-stage {
-    max-width: 800px;
+    width: min(100%, 760px);
+    height: 430px;
+    min-height: 430px;
+  }
+
+  .mc-hero-mark {
+    width: min(100%, 744px);
+    height: 318px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 87px;
-    --line-gap: 8px;
+    --line-size: clamp(116px, 14.5vw, 150px);
+    --line-gap: clamp(4px, 0.7vw, 8px);
+    margin-bottom: -34px;
   }
 
   .mc-hero-line-2 {
-    --line-size: 98px;
-    --line-gap: 4px;
-    margin-top: -7px;
+    --line-size: clamp(102px, 12.9vw, 134px);
+    --line-gap: 1px;
+    margin-top: 0;
   }
 
   .mc-hero-line-3 {
-    --line-size: 70px;
-    --line-gap: 3px;
-    margin-top: 1px;
+    --line-size: clamp(84px, 10.6vw, 110px);
+    --line-gap: 1px;
+    margin-top: -17px;
   }
 
   .mc-ticker {
@@ -1707,45 +1934,49 @@ html.mc-native-scroll #root {
   }
 
   .mc-hero {
-    padding: 64px 0 40px;
-    height: 324px;
+    height: auto;
+    min-height: 442px;
+    padding: 64px 0 28px;
+    overflow: hidden;
   }
 
   .mc-hero-stage {
     width: 100%;
     max-width: none;
-    height: 220px;
-    aspect-ratio: 1.857 / 1;
+    height: 344px;
+    min-height: 344px;
     overflow: visible;
   }
 
   .mc-hero-mark {
-    width: min(92vw, 360px);
-    height: 90%;
+    top: 51%;
+    width: clamp(560px, 158vw, 680px);
+    height: 296px;
   }
 
   .mc-hero-line-1 {
-    --line-size: 46px;
-    --line-gap: 5px;
+    --line-size: clamp(122px, 34vw, 150px);
+    --line-gap: clamp(5px, 1.6vw, 8px);
+    margin-bottom: -28px;
     transform: translateX(-1.2%) rotate(-1deg);
   }
 
   .mc-hero-line-2 {
-    --line-size: 53px;
-    --line-gap: 2px;
+    --line-size: clamp(108px, 30vw, 132px);
+    --line-gap: 0px;
     margin-top: 0;
-    transform: translateX(0.8%) rotate(0.4deg);
+    transform: translateX(0.6%) rotate(0.25deg);
   }
 
   .mc-hero-line-3 {
-    --line-size: 37px;
-    --line-gap: 1px;
-    margin-top: 6px;
+    --line-size: clamp(90px, 24vw, 112px);
+    --line-gap: 0px;
+    margin-top: -13px;
     transform: translateX(-0.2%) rotate(-0.25deg);
   }
 
   .mc-hero-glyph {
-    line-height: 0.78;
+    line-height: 0.66;
   }
 
   .mc-glyph-sticker {

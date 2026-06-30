@@ -31,23 +31,23 @@ const heroTitleLines = [
     ['C', 'neon mc-glyph-c'],
   ],
   [
-    ['D', 'ink mc-glyph-d'],
-    ['e', 'bubble mc-glyph-e'],
-    ['s', 'outline mc-glyph-s'],
-    ['i', 'spark mc-glyph-i-small'],
-    ['g', 'blob mc-glyph-g-small'],
-    ['n', 'neon mc-glyph-n'],
+    ['D', 'solid mc-glyph-d'],
+    ['e', 'solid mc-glyph-e'],
+    ['s', 'solid mc-glyph-s'],
+    ['i', 'solid mc-glyph-i-small'],
+    ['g', 'solid mc-glyph-g-small'],
+    ['n', 'solid mc-glyph-n'],
   ],
   [
-    ['P', 'slab mc-glyph-p'],
-    ['o', 'face mc-glyph-o-face'],
-    ['r', 'ink mc-glyph-r'],
-    ['t', 'plus mc-glyph-t'],
-    ['f', 'outline mc-glyph-f'],
-    ['o', 'cube mc-glyph-o-cube'],
-    ['l', 'stroke mc-glyph-l'],
-    ['i', 'spark mc-glyph-i-tail'],
-    ['o', 'bubble mc-glyph-o-last'],
+    ['P', 'solid mc-glyph-p'],
+    ['o', 'solid mc-glyph-o-face'],
+    ['r', 'solid mc-glyph-r'],
+    ['t', 'solid mc-glyph-t'],
+    ['f', 'solid mc-glyph-f'],
+    ['o', 'solid mc-glyph-o-cube'],
+    ['l', 'solid mc-glyph-l'],
+    ['i', 'solid mc-glyph-i-tail'],
+    ['o', 'solid mc-glyph-o-last'],
   ],
 ]
 
@@ -360,7 +360,10 @@ function HeroMark() {
             key={`line-${lineIndex}`}
           >
             {line.map(([letter, variant], letterIndex) => {
-              const glyphIndex = lineIndex * 9 + letterIndex
+              const glyphIndex = heroTitleLines
+                .slice(0, lineIndex)
+                .reduce((count, currentLine) => count + currentLine.length, 0) + letterIndex
+              const lineDelay = [60, 180, 270][lineIndex] ?? 0
 
               return (
                 <span
@@ -368,8 +371,8 @@ function HeroMark() {
                   data-letter={letter}
                   key={`${lineIndex}-${letter}-${letterIndex}`}
                   style={{
-                    '--glyph-delay': `${glyphIndex * 18}ms`,
-                    '--glyph-loop-delay': `-${glyphIndex * 120}ms`,
+                    '--glyph-delay': `${lineDelay + letterIndex * 24}ms`,
+                    '--glyph-loop-delay': `${1080 + glyphIndex * 72}ms`,
                   }}
                 >
                   {letter}
