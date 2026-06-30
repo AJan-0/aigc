@@ -11,36 +11,34 @@ import pickingVideo from '../../picking.mp4'
 import pickingCover from '../../picking_cover.jpg'
 
 export const navigation = [
-  { id: 'home', label: '首页' },
-  { id: 'profile', label: '简介' },
-  { id: 'work', label: '作品' },
-  { id: 'skills', label: '技能' },
-  { id: 'contact', label: '联系' },
+  { id: 'home', label: 'Home' },
+  { id: 'work', label: 'Work' },
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Systems' },
+  { id: 'contact', label: 'Contact' },
 ]
 
 export const profile = {
   name: 'AJan',
   title: 'AIGC Video Director / AI Short-Drama Workflow Designer',
-  headline: 'I turn AI-generated shots into finished short-drama reels with clear hooks, consistent characters and platform-ready pacing.',
+  headline:
+    'I turn AI-generated shots into finished short-drama reels with clear hooks, consistent characters and platform-ready pacing.',
   aboutColumns: [
-    '我是 AJan，专注 AIGC 短剧与商业预告影像。我的工作不是堆生成画面，而是把钩子、角色连续性、镜头节奏和后期包装整理成能被观看、能被判断、能被交付的成片流程。',
-    '适合需要快速验证海外短剧题材、品牌视觉样片和竖屏内容方向的团队。用更低试错成本，提前看到故事气质、人物关系和平台播放节奏是否成立。',
-  ],
-  bio: [
-    '我的工作不是堆素材，而是把剧本钩子、角色一致性、镜头节奏和后期包装连成一条可交付流程。',
-    '适合需要快速验证短剧概念、海外题材预告、AIGC 视觉方案和成片包装的团队。',
+    'I am AJan, an AIGC video director focused on AI short drama, vertical reels and commercial concept trailers. My work is not a pile of generated frames. I shape hooks, characters, shot rhythm, sound and delivery into finished pieces that can be watched, judged and shipped.',
+    'The workflow is built for teams that need to test overseas short-drama ideas, brand visual samples and fast concept packaging before committing to a full production pipeline. The goal is simple: make the story feel real enough to evaluate quickly.',
+    'I work across prompt systems, character continuity, AI video generation, editing and color, with a strong bias toward finished reels instead of isolated experiments.',
   ],
   principles: [
-    { label: 'Hook', text: '前 3 秒先建立情绪和冲突。' },
-    { label: 'Continuity', text: '角色、服装、光线和场景保持同一套视觉 DNA。' },
-    { label: 'Delivery', text: '按竖屏短剧、预告和社媒播放场景完成包装。' },
+    { label: 'Hook', text: 'The first three seconds need a clear emotional trigger.' },
+    { label: 'Continuity', text: 'Characters, wardrobe, light and scene DNA must survive across shots.' },
+    { label: 'Delivery', text: 'Every reel is packaged for vertical viewing, review and iteration.' },
   ],
   signature: 'AJan',
 }
 
 export const categories = [
-  { id: 'all', label: 'All Videos', labelZh: '公开视频', accent: '#f2d06b' },
-  { id: 'ai-drama', label: 'AI Drama', labelZh: '海外真人 AI 剧', accent: '#ff6a3d' },
+  { id: 'all', label: 'All Videos', labelZh: 'All Videos', accent: '#f7f2e8' },
+  { id: 'ai-drama', label: 'AI Drama', labelZh: 'AI Drama', accent: '#ff4f3e' },
 ]
 
 export const projects = [
@@ -49,15 +47,18 @@ export const projects = [
     slug: 'dreams-lead-to-my-alpha',
     category: 'ai-drama',
     type: 'Vertical AI Drama',
-    titleZh: '梦把我带向那只 Alpha',
+    titleZh: 'Dreams Lead to My Alpha',
     titleEn: 'Dreams Lead to My Alpha',
-    introZh: '命运感、逃离欲和竖屏开场钩子。',
+    introZh: 'A wolf-romance opener built around fate, desire and escape.',
     introEn: 'A wolf-romance opener built around fate, desire and escape.',
     hook: 'Fate-driven wolf romance',
     value: 'Fast emotional hook',
-    challenge: '如何让 AI 理解“命运感”这种抽象情绪，并转化为观众愿意停留的镜头氛围。',
-    approach: '用光线、姿态和剪辑节奏压缩开场信息。',
-    outcome: '形成竖屏 AI 真人剧的第一眼模板。',
+    challenge:
+      'The opening needs to translate a very abstract feeling of fate into frames that make the audience stop, understand the relationship and want the next beat.',
+    approach:
+      'I compressed the first act into a rhythm of close-ups, low light, body language and vertical framing so the romance premise lands before the lore expands.',
+    outcome:
+      'A repeatable first-look template for vertical AI romance reels with a clear emotional entry point.',
     cover: v1Cover,
     video: v1Video,
     fullVideo: v1FullVideo,
@@ -65,7 +66,7 @@ export const projects = [
     year: '2026',
     role: 'AI Director / Workflow Designer',
     tools: ['SDXL', 'ComfyUI', 'LoRA', 'Runway', 'DaVinci Resolve'],
-    tags: ['AI 真人短剧', '狼人题材', '竖屏叙事'],
+    tags: ['AI drama', 'Wolf romance', 'Vertical reel'],
     metrics: [
       { label: 'Shots', value: '42' },
       { label: 'Iterations', value: '237' },
@@ -78,22 +79,25 @@ export const projects = [
     slug: 'betrayed-by-the-wolf',
     category: 'ai-drama',
     type: 'AI Short Drama',
-    titleZh: '背叛之后，被 Alpha 认领',
+    titleZh: 'Betrayed by the Wolf, Claimed by the Alpha',
     titleEn: 'Betrayed by the Wolf, Claimed by the Alpha',
-    introZh: '背叛、占有和强情绪压力测试。',
+    introZh: 'A high-emotion drama test for betrayal, possession and continuity.',
     introEn: 'A high-emotion drama test for betrayal, possession and continuity.',
     hook: 'Betrayal to possession',
     value: 'High-emotion continuity',
-    challenge: '短剧需要迅速建立背叛、占有和情绪冲突，但 AI 生成的人脸与微表情容易失焦。',
-    approach: '用构图、肢体和灯光补足微表情的不稳定。',
-    outcome: '建立强情绪短剧的氛围控制方法。',
+    challenge:
+      'Short drama depends on immediate betrayal, pressure and attraction, while generated faces and micro-expressions can easily break the emotional line.',
+    approach:
+      'I used composition, posture, lighting and sound design to hold emotional pressure even when individual generated moments needed cleanup.',
+    outcome:
+      'A controlled atmosphere method for high-emotion AI short-drama scenes.',
     cover: betrayalCover,
     video: betrayalVideo,
     duration: '2:24',
     year: '2026',
     role: 'AI Drama Visual Direction',
     tools: ['SDXL', 'RealisticVision', 'ControlNet', 'Sound Design'],
-    tags: ['强情绪', '角色一致性', '海外短剧'],
+    tags: ['Betrayal', 'Character continuity', 'Overseas drama'],
     metrics: [
       { label: 'Shots', value: '38' },
       { label: 'Duration', value: '2:24' },
@@ -106,22 +110,25 @@ export const projects = [
     slug: 'mated-to-the-alpha-curse',
     category: 'ai-drama',
     type: 'Supernatural Romance',
-    titleZh: '与 Alpha 的诅咒结契',
+    titleZh: "Mated to the Alpha's Curse",
     titleEn: "Mated to the Alpha's Curse",
-    introZh: '诅咒、亲密关系和镜头连续性。',
+    introZh: 'A supernatural romance reel about curse, intimacy and shot continuity.',
     introEn: 'A supernatural romance reel about curse, intimacy and shot continuity.',
     hook: 'Curse-led intimacy',
     value: 'Consistent scene DNA',
-    challenge: '多个独立生成镜头需要看起来属于同一部电影，而不是一组风格相近的海报。',
-    approach: '固定色彩、光源、服装和景别规律。',
-    outcome: '沉淀奇幻爱情题材的连续性规则。',
+    challenge:
+      'Multiple generated shots need to feel like they belong to the same film, not a set of similar posters.',
+    approach:
+      'I locked color, light source, wardrobe logic and scene rules, then edited around the strongest continuity anchors.',
+    outcome:
+      'A scene-DNA rule set for moody supernatural romance packaging.',
     cover: curseCover,
     video: curseVideo,
     duration: '1:39',
     year: '2026',
     role: 'Continuity Workflow',
     tools: ['SDXL', 'ControlNet', 'Img2Img', 'Prompt System'],
-    tags: ['奇幻爱情', '镜头连续性', '场景 DNA'],
+    tags: ['Supernatural romance', 'Continuity', 'Scene DNA'],
     metrics: [
       { label: 'Shots', value: '56' },
       { label: 'Duration', value: '1:39' },
@@ -133,22 +140,25 @@ export const projects = [
     slug: 'reborn-killers-uncle',
     category: 'ai-drama',
     type: 'AI Romance Drama',
-    titleZh: '重生后，我选择凶手的叔叔',
+    titleZh: "Reborn This Time I Choose My Killer's Uncle",
     titleEn: "Reborn This Time I Choose My Killer's Uncle",
-    introZh: '重生复仇题材的黑色浪漫包装。',
+    introZh: 'A revenge-romance concept shaped through noir pacing and live-action framing.',
     introEn: 'A revenge-romance concept shaped through noir pacing and live-action framing.',
     hook: 'Revenge romance switch',
     value: 'Noir trailer pacing',
-    challenge: '重生复仇题材需要快速建立身份、权力关系和选择冲突，画面不能只停留在氛围。',
-    approach: '用站位、景别和转场分出危险关系。',
-    outcome: '验证黑色浪漫短剧的包装潜力。',
+    challenge:
+      'The rebirth revenge premise needs identity, danger and choice to become readable fast without becoming only mood imagery.',
+    approach:
+      'I used blocking, contrast, edit rhythm and noir color to separate power positions and make the relationship stakes legible.',
+    outcome:
+      'A compact noir-romance trailer system for AI-generated drama concepts.',
     cover: rebornCover,
     video: rebornVideo,
     duration: '1:24',
     year: '2026',
     role: 'AI Short Drama Packaging',
     tools: ['ComfyUI', 'LoRA', 'Kling', 'DaVinci Resolve'],
-    tags: ['重生复仇', '黑色浪漫', '英文短剧'],
+    tags: ['Rebirth revenge', 'Noir romance', 'English short drama'],
     metrics: [
       { label: 'Duration', value: '1:24' },
       { label: 'Tone', value: 'Noir' },
@@ -160,22 +170,25 @@ export const projects = [
     slug: 'picking-up-governor',
     category: 'ai-drama',
     type: 'Absurd Drama Concept',
-    titleZh: '街头捡到一位州长',
+    titleZh: 'Picking Up a Governor from the Street',
     titleEn: 'Picking Up a Governor from the Street',
-    introZh: '街头现实感与权力反差。',
+    introZh: 'A power-reversal concept mixing street realism and absurd identity contrast.',
     introEn: 'A power-reversal concept mixing street realism and absurd identity contrast.',
     hook: 'Street-level power reversal',
     value: 'Concept trailer clarity',
-    challenge: '荒诞设定容易显得悬浮，需要让街头真实感和身份反差同时成立。',
-    approach: '用环境细节和服装层级控制反差。',
-    outcome: '形成现实场景加高概念剧情的方向。',
+    challenge:
+      'The absurd premise can float away unless the street realism and the identity reversal feel grounded at the same time.',
+    approach:
+      'I kept the environment tactile and the costume hierarchy clear, using contrast as the engine of the concept.',
+    outcome:
+      'A grounded high-concept test for short-drama pitch reels.',
     cover: pickingCover,
     video: pickingVideo,
     duration: '1:46',
     year: '2026',
     role: 'Concept Trailer Direction',
     tools: ['SDXL', 'Video Generation', 'Editing', 'Color Grade'],
-    tags: ['荒诞设定', '权力反差', '剧情预告'],
+    tags: ['Absurd premise', 'Power reversal', 'Concept trailer'],
     metrics: [
       { label: 'Duration', value: '1:46' },
       { label: 'Hook', value: 'Power' },
@@ -187,34 +200,44 @@ export const projects = [
 export const skillGroups = [
   {
     title: 'Creative Direction',
-    summary: '选题、钩子、分镜和节奏。',
-    items: ['短剧钩子', '情绪开场', '分镜节奏', '社媒包装'],
+    summary: 'Topic selection, hook design, shot structure and platform rhythm.',
+    items: ['Short-drama hooks', 'Opening conflict', 'Shot rhythm', 'Visual packaging'],
   },
   {
     title: 'AI Production',
-    summary: '角色、风格和批量生成。',
-    items: ['ComfyUI', 'SDXL / LoRA', 'ControlNet', '视频模型'],
+    summary: 'Character, style and batch-generation systems for usable footage.',
+    items: ['ComfyUI', 'SDXL / LoRA', 'ControlNet', 'Video generation'],
   },
   {
     title: 'Post Production',
-    summary: '从素材到可发布成片。',
-    items: ['剪辑', '调色', '字幕', '交付规格'],
+    summary: 'From generated assets to watchable reels with edit, grade and sound.',
+    items: ['Editing', 'Color grade', 'Subtitles', 'Sound design'],
   },
   {
     title: 'Commercial Delivery',
-    summary: '按成片和平台需求组织交付。',
-    items: ['AI 真人短剧', '竖屏预告', '英文短剧包装', '作品集精修'],
+    summary: 'Organized outputs for review, iteration and release workflows.',
+    items: ['AI live-action drama', 'Vertical trailer', 'English drama packaging', 'Portfolio curation'],
   },
 ]
 
 export const executionStandards = [
-  { label: 'Visual-first', text: '作品封面优先，说明只保留必要信息。' },
-  { label: 'Fast path', text: '首屏可读，作品两步内打开。' },
-  { label: 'Responsive', text: '桌面、平板、移动端独立校准。' },
-  { label: 'Media-aware', text: '视频按需加载，封面先行。' },
+  { label: 'Visual-first', text: 'Covers and moving images carry the first read. Explanations stay short.' },
+  { label: 'Fast path', text: 'The first screen is readable and every project can be opened in two steps.' },
+  { label: 'Responsive', text: 'Desktop, tablet and mobile use separate interaction rules.' },
+  { label: 'Media-aware', text: 'Video waits for intent. Covers load first and preserve motion performance.' },
 ]
 
 export const contact = {
   email: '1248567324@qq.com',
-  availability: ['AIGC 作品集合作', 'AI 真人短剧视觉方案', '角色一致性工作流', '短剧预告包装'],
+  availability: [
+    'AIGC portfolio curation',
+    'AI live-action short-drama direction',
+    'Character-continuity workflow',
+    'Vertical trailer packaging',
+  ],
+  socials: [
+    { label: 'Bilibili', href: '#' },
+    { label: 'Xiaohongshu', href: '#' },
+    { label: 'Vimeo', href: '#' },
+  ],
 }

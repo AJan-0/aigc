@@ -6,6 +6,7 @@ server/data/
 server/uploads/
 *.db
 .DS_Store
+.firecrawl/
 _projects_data_backup.txt
 _features_data_backup.txt
 _replace_projects.py
