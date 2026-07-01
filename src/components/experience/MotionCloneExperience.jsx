@@ -34,6 +34,8 @@ const brandItems = [
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
 const isRiveHeroEnabled = import.meta.env.VITE_ENABLE_RIVE_HERO === 'true'
+const showreelBumperVideo = '/motion/showreel-motion-bumper.mp4'
+const showreelBumperPoster = '/motion/showreel-motion-bumper-poster.png'
 const RiveHeroTitle = lazy(() => import('./RiveHeroTitle'))
 const optionalRiveAssetCache = new Map()
 
@@ -201,7 +203,7 @@ export default function MotionCloneExperience() {
 
       <HeroTicker />
 
-      <ShowreelSection activeProject={activeProject} onOpenProject={setSelectedProject} />
+      <ShowreelSection />
 
       <WorkSection
         projects={videoProjects}
@@ -747,35 +749,23 @@ function HeroTicker() {
   )
 }
 
-function ShowreelSection({ activeProject, onOpenProject }) {
-  const videoRef = useAutoplayVideo(activeProject?.slug)
-  const openShowreel = useCallback(() => {
-    if (activeProject) onOpenProject(activeProject)
-  }, [activeProject, onOpenProject])
+function ShowreelSection() {
+  const videoRef = useAutoplayVideo('showreel-motion-bumper')
 
   return (
-    <section className="mc-showreel mc-section" id="showreel" aria-label="Showreel">
+    <section className="mc-showreel mc-section" id="showreel" aria-label="AIGC motion bumper loop">
       <motion.div
         className="mc-video-shell"
-        role="button"
-        tabIndex={0}
-        aria-label="Play showreel"
         initial={{ opacity: 0, y: 60, scale: 0.985 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, amount: 0.35 }}
         transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
-        onClick={openShowreel}
-        onKeyDown={event => {
-          if (event.key !== 'Enter' && event.key !== ' ') return
-          event.preventDefault()
-          openShowreel()
-        }}
       >
-        <img className="mc-video-poster" src={activeProject?.cover} alt="" aria-hidden="true" loading="eager" decoding="async" />
+        <img className="mc-video-poster" src={showreelBumperPoster} alt="" aria-hidden="true" loading="eager" decoding="async" />
         <video
           ref={videoRef}
-          src={activeProject?.video ?? v1Video}
-          poster={activeProject?.cover}
+          src={showreelBumperVideo}
+          poster={showreelBumperPoster}
           muted
           loop
           autoPlay
@@ -785,11 +775,8 @@ function ShowreelSection({ activeProject, onOpenProject }) {
           x5-playsinline="true"
           x5-video-player-type="h5"
           x5-video-player-fullscreen="false"
+          aria-label="AIGC visual studio motion bumper"
         />
-        <div className="mc-video-overlay">
-          <span className="mc-play-badge">play</span>
-          <span>showreel / muted loop</span>
-        </div>
       </motion.div>
     </section>
   )

@@ -6,14 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "remotion:render-showreel": "remotion render remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper.mp4 --codec=h264 --overwrite && ffmpeg -y -i public/motion/showreel-motion-bumper.mp4 -an -c:v copy public/motion/showreel-motion-bumper.silent.mp4 && node -e \"const fs=require('fs');fs.copyFileSync('public/motion/showreel-motion-bumper.silent.mp4','public/motion/showreel-motion-bumper.mp4');fs.rmSync('public/motion/showreel-motion-bumper.silent.mp4',{force:true})\"",
+    "remotion:still-showreel": "remotion still remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper-poster.png --frame=54 --overwrite"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.484",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "remotion": "^4.0.484",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
