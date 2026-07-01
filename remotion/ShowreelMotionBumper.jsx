@@ -104,6 +104,9 @@ export function ShowreelMotionBumper({
       }}
     >
       <SnapBackground frame={frame} impact={impact} />
+      <RhythmGrid frame={frame} impact={impact} />
+      <ReversalPanels frame={frame} />
+      <FluidSheets frame={frame} impact={impact} />
       <HalftonePlates frame={frame} />
       <StripeWipes frame={frame} />
       <CollisionField frame={frame} />
@@ -112,6 +115,120 @@ export function ShowreelMotionBumper({
       <FinalLock frame={frame} title={title} subtitle={subtitle} opacity={final} />
       <CutFlash frame={frame} impact={impact} />
       <FilmSurface frame={frame} />
+    </AbsoluteFill>
+  )
+}
+
+function RhythmGrid({ frame, impact }) {
+  const p = sceneInOut(frame, 24, 328, 10, 18)
+  const cols = 8
+  const rows = 5
+  const cellW = 1920 / cols
+  const cellH = 1080 / rows
+  const beat = Math.floor(frame / 14)
+
+  return (
+    <AbsoluteFill style={{ opacity: p * (0.56 + impact * 0.14), mixBlendMode: 'screen' }}>
+      {Array.from({ length: cols * rows }).map((_, index) => {
+        const col = index % cols
+        const row = Math.floor(index / cols)
+        const waveIndex = (col + row * 2 + beat) % 9
+        const active = waveIndex < 3 ? 1 : 0
+        const local = hit(frame, 42 + (col * 5 + row * 9) % 70 + beat * 2, 15)
+        const color = active ? chroma[(col + row + beat) % chroma.length] : palette.white
+        const scale = 0.36 + active * 0.3 + local * 0.32 + impact * 0.16
+
+        return (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: col * cellW + cellW * 0.5,
+              top: row * cellH + cellH * 0.5,
+              width: cellW * scale,
+              height: cellH * (0.16 + active * 0.22 + local * 0.18),
+              opacity: 0.1 + active * 0.36 + local * 0.24,
+              background: color,
+              borderRadius: active ? 999 : 8,
+              transform: `translate(-50%, -50%) rotate(${(col - row) * 4 + frame * 0.12}deg)`,
+            }}
+          />
+        )
+      })}
+    </AbsoluteFill>
+  )
+}
+
+function ReversalPanels({ frame }) {
+  return (
+    <AbsoluteFill>
+      {[
+        { start: 58, color: palette.white, mode: 'difference', angle: -12 },
+        { start: 152, color: palette.black, mode: 'normal', angle: 9 },
+        { start: 246, color: palette.white, mode: 'difference', angle: 16 },
+        { start: 328, color: palette.black, mode: 'normal', angle: -7 },
+      ].map((panel, index) => {
+        const p = sceneInOut(frame, panel.start, 34, 5, 7)
+        const reveal = ease(frame, [panel.start, panel.start + 15], [-118, 118], Easing.out(Easing.cubic))
+        const edge = 46 + Math.sin((frame - panel.start) * 0.12) * 8
+
+        return (
+          <div
+            key={panel.start}
+            style={{
+              position: 'absolute',
+              left: -260,
+              top: -180 + index * 18,
+              width: 2440,
+              height: 1440,
+              opacity: p * 0.72,
+              background: panel.color,
+              clipPath: `polygon(${reveal - edge}% 0, ${reveal + edge}% 0, ${reveal + edge + 18}% 100%, ${reveal - edge - 18}% 100%)`,
+              mixBlendMode: panel.mode,
+              transform: `rotate(${panel.angle}deg)`,
+            }}
+          />
+        )
+      })}
+    </AbsoluteFill>
+  )
+}
+
+function FluidSheets({ frame, impact }) {
+  return (
+    <AbsoluteFill>
+      {[
+        { start: 68, y: 220, a: palette.cyan, b: palette.blue, rotate: -10, dir: 1, width: 980 },
+        { start: 126, y: 530, a: palette.magenta, b: palette.red, rotate: 8, dir: -1, width: 1180 },
+        { start: 206, y: 360, a: palette.yellow, b: palette.orange, rotate: -5, dir: 1, width: 1280 },
+        { start: 286, y: 610, a: palette.green, b: palette.cyan, rotate: 12, dir: -1, width: 1040 },
+      ].map((sheet, index) => {
+        const p = sceneInOut(frame, sheet.start, 112, 16, 18)
+        const flow = progress(frame, sheet.start, 112)
+        const x = ease(p, [0, 1], [sheet.dir * -420, 0], Easing.bezier(0.2, 1, 0.18, 1))
+        const swell = Math.sin(flow * Math.PI)
+        const radiusA = 44 + Math.sin(frame * 0.035 + index) * 16
+        const radiusB = 56 + Math.cos(frame * 0.03 + index * 2) * 15
+
+        return (
+          <div
+            key={sheet.start}
+            style={{
+              position: 'absolute',
+              left: 960 - sheet.width / 2 + x + wave(frame, 0.018, index) * 42,
+              top: sheet.y + wave(frame, 0.023, index + 1) * 28,
+              width: sheet.width * (0.86 + swell * 0.28 + impact * 0.06),
+              height: 210 + index * 18 + swell * 72,
+              opacity: p * (0.72 + impact * 0.16),
+              background: `linear-gradient(105deg, ${sheet.a}, ${palette.white} 44%, ${sheet.b})`,
+              borderRadius: `${radiusA}% ${100 - radiusA}% ${radiusB}% ${100 - radiusB}% / ${radiusB}% ${radiusA}% ${100 - radiusA}% ${100 - radiusB}%`,
+              filter: 'saturate(1.18)',
+              mixBlendMode: index % 2 === 0 ? 'screen' : 'multiply',
+              transform: `rotate(${sheet.rotate + Math.sin(frame * 0.015 + index) * 5}deg) scaleX(${1 + swell * 0.1})`,
+            }}
+          />
+        )
+      })}
     </AbsoluteFill>
   )
 }

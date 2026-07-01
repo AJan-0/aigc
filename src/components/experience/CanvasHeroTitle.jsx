@@ -274,11 +274,11 @@ function renderHero(ctx, state, time) {
   const burstProgress = clamp(burstAge / 1240, 0, 1)
   const burst = burstAge >= 0 && burstAge <= 1120 ? Math.sin(burstProgress * Math.PI) * (1 - burstProgress * 0.12) : 0
   const unit = clamp(Math.min(width / 1120, height / 590), 0.36, 1.05)
-  const topSize = isMobile ? clamp(width * 0.218, 74, 100) : clamp(width * 0.166, 72, 178)
-  const designSize = topSize * (isMobile ? 0.5 : 0.7)
-  const portfolioSize = topSize * (isMobile ? 0.32 : 0.43)
+  const topSize = isMobile ? clamp(width * 0.182, 62, 76) : clamp(width * 0.166, 72, 178)
+  const designSize = topSize * (isMobile ? 0.66 : 0.7)
+  const portfolioSize = topSize * (isMobile ? 0.46 : 0.43)
   const centerX = width / 2
-  const centerY = height * (isMobile ? 0.43 : 0.49)
+  const centerY = height * (isMobile ? 0.45 : 0.49)
   const scrollLift = scroll * height * (isMobile ? 0.04 : 0.055)
   const compress = 1 - scroll * 0.1
   const idle = Math.sin(time / 1160)
@@ -403,18 +403,20 @@ function drawRigPieces(ctx, props) {
     y: topY + size * (isMobile ? 0.27 : 0.34) + driftY * 0.26 - burstSpread * 0.4,
   })
 
-  drawSpringCord(ctx, {
-    alpha,
-    burst,
-    hover,
-    isMobile,
-    morph,
-    pointer,
-    size,
-    time,
-    x: centerX + size * (isMobile ? 1.62 : 1.7) + driftX * 0.26,
-    y: topY - size * 0.05 + driftY * 0.14,
-  })
+  if (!isMobile) {
+    drawSpringCord(ctx, {
+      alpha,
+      burst,
+      hover,
+      isMobile,
+      morph,
+      pointer,
+      size,
+      time,
+      x: centerX + size * 1.7 + driftX * 0.26,
+      y: topY - size * 0.05 + driftY * 0.14,
+    })
+  }
 
   drawRigNodes(ctx, {
     alpha,

@@ -34,8 +34,9 @@ const brandItems = [
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
 const isRiveHeroEnabled = import.meta.env.VITE_ENABLE_RIVE_HERO === 'true'
-const showreelBumperVideo = '/motion/showreel-motion-bumper.mp4'
-const showreelBumperPoster = '/motion/showreel-motion-bumper-poster.png'
+const showreelBumperVersion = '20260702-fluid-rhythm'
+const showreelBumperVideo = `/motion/showreel-motion-bumper.mp4?v=${showreelBumperVersion}`
+const showreelBumperPoster = `/motion/showreel-motion-bumper-poster.png?v=${showreelBumperVersion}`
 const RiveHeroTitle = lazy(() => import('./RiveHeroTitle'))
 const optionalRiveAssetCache = new Map()
 
@@ -751,11 +752,26 @@ function HeroTicker() {
 
 function ShowreelSection() {
   const videoRef = useAutoplayVideo('showreel-motion-bumper')
+  const [showVideoPlayPrompt, setShowVideoPlayPrompt] = useState(true)
+
+  const playShowreelVideo = useCallback(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    video.defaultMuted = true
+    video.volume = 0
+    video.playsInline = true
+
+    video.play()
+      .then(() => setShowVideoPlayPrompt(false))
+      .catch(() => setShowVideoPlayPrompt(true))
+  }, [videoRef])
 
   return (
     <section className="mc-showreel mc-section" id="showreel" aria-label="AIGC motion bumper loop">
       <motion.div
-        className="mc-video-shell"
+        className={showVideoPlayPrompt ? 'mc-video-shell has-play-prompt' : 'mc-video-shell is-playing'}
         initial={{ opacity: 0, y: 60, scale: 0.985 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, amount: 0.35 }}
@@ -775,8 +791,24 @@ function ShowreelSection() {
           x5-playsinline="true"
           x5-video-player-type="h5"
           x5-video-player-fullscreen="false"
+          onCanPlay={playShowreelVideo}
+          onLoadedData={playShowreelVideo}
+          onPause={() => setShowVideoPlayPrompt(true)}
+          onPlay={() => setShowVideoPlayPrompt(false)}
+          onPlaying={() => setShowVideoPlayPrompt(false)}
           aria-label="AIGC visual studio motion bumper"
         />
+        {showVideoPlayPrompt && (
+          <button
+            className="mc-video-play"
+            type="button"
+            onClick={playShowreelVideo}
+            onPointerDown={playShowreelVideo}
+            aria-label="Play motion bumper"
+          >
+            <span aria-hidden="true" />
+          </button>
+        )}
       </motion.div>
     </section>
   )
