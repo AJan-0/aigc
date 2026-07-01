@@ -9,6 +9,7 @@ const glyphs = [
 
 const signals = ['ai film direction', 'scene systems', 'motion packaging']
 const heroLabel = 'AIGC Design Portfolio'
+const mobileHeroMaxWidth = 560
 
 export default function CanvasHeroTitle({ scrollYProgress }) {
   const canvasRef = useRef(null)
@@ -190,20 +191,25 @@ function renderHero(ctx, state, time) {
   const { width, height } = state.size
   if (!width || !height) return
 
+  const isMobile = width < mobileHeroMaxWidth
   const elapsed = time - state.startedAt
   const scroll = clamp(state.scroll, 0, 1)
   const pointer = state.pointer
+  const pointerCanvas = {
+    x: width * (0.5 + pointer.x * 0.5),
+    y: height * (0.5 + pointer.y * 0.5),
+  }
   const hover = state.hover
   const burstAge = time - state.burstAt
-  const burstProgress = clamp(burstAge / 1120, 0, 1)
+  const burstProgress = clamp(burstAge / 1240, 0, 1)
   const burst = burstAge >= 0 && burstAge <= 1120 ? Math.sin(burstProgress * Math.PI) * (1 - burstProgress * 0.12) : 0
   const unit = clamp(Math.min(width / 1120, height / 530), 0.36, 1.05)
-  const topSize = clamp(width * 0.178, 72, 184) * (width < 520 ? 0.95 : 1)
-  const designSize = topSize * (width < 520 ? 0.78 : 0.72)
-  const portfolioSize = topSize * (width < 520 ? 0.5 : 0.45)
+  const topSize = isMobile ? clamp(width * 0.225, 76, 106) : clamp(width * 0.178, 72, 194)
+  const designSize = topSize * (isMobile ? 0.5 : 0.7)
+  const portfolioSize = topSize * (isMobile ? 0.32 : 0.43)
   const centerX = width / 2
-  const centerY = height * (width < 520 ? 0.43 : 0.45)
-  const scrollLift = scroll * height * 0.08
+  const centerY = height * (isMobile ? 0.39 : 0.45)
+  const scrollLift = scroll * height * (isMobile ? 0.06 : 0.08)
   const compress = 1 - scroll * 0.1
   const idle = Math.sin(time / 1160)
   const idleSoft = Math.sin(time / 1680 + 0.8)
@@ -214,13 +220,13 @@ function renderHero(ctx, state, time) {
   ctx.translate(pointer.x * hover * 11, pointer.y * hover * 7 - scrollLift)
   ctx.scale(1 + hover * 0.008 - scroll * 0.012, compress)
 
-  const topY = centerY - topSize * 0.82
-  drawAigcLine(ctx, {
+  const topY = centerY - topSize * (isMobile ? 0.7 : 0.82)
+  drawRigPieces(ctx, {
     burst,
     centerX,
     elapsed,
     hover,
-    idle,
+    isMobile,
     pointer,
     seed: state.burstSeed,
     size: topSize,
@@ -229,26 +235,42 @@ function renderHero(ctx, state, time) {
     unit,
   })
 
-  drawWord(ctx, 'Design', {
-    alpha: easeOutCubic(clamp((elapsed - 420) / 820, 0, 1)),
-    baseline: centerY + designSize * 0.08 + idleSoft * unit * 3,
+  drawAigcLine(ctx, {
     burst,
+    centerX,
+    elapsed,
+    hover,
+    idle,
+    isMobile,
+    pointer,
+    pointerCanvas,
+    seed: state.burstSeed,
+    size: topSize,
+    time,
+    topY,
+    unit,
+  })
+
+  drawWord(ctx, 'Design', {
+    alpha: easeOutCubic(clamp((elapsed - (isMobile ? 780 : 520)) / (isMobile ? 920 : 980), 0, 1)),
+    baseline: isMobile ? centerY + topSize * 0.56 + idleSoft * unit * 2 : centerY + designSize * 0.08 + idleSoft * unit * 3,
+    burst: burst * (isMobile ? 0.72 : 1),
     centerX: centerX + pointer.x * hover * -8,
     color: '#fffdf7',
     fontSize: designSize,
-    scaleX: width < 520 ? 1.02 : 1.06,
+    scaleX: isMobile ? 1.02 : 1.06,
     seed: state.burstSeed + 11,
     shadow: topSize * 0.055,
   })
 
   drawWord(ctx, 'Portfolio', {
-    alpha: easeOutCubic(clamp((elapsed - 620) / 860, 0, 1)),
-    baseline: centerY + designSize * 0.78 + portfolioSize * 0.48 + idle * unit * 2,
+    alpha: easeOutCubic(clamp((elapsed - (isMobile ? 1080 : 820)) / (isMobile ? 960 : 1040), 0, 1)),
+    baseline: isMobile ? centerY + topSize * 1.08 + idle * unit * 1.5 : centerY + designSize * 0.78 + portfolioSize * 0.48 + idle * unit * 2,
     burst: burst * 0.55,
     centerX: centerX + pointer.x * hover * 5,
     color: '#fffdf7',
     fontSize: portfolioSize,
-    scaleX: width < 520 ? 0.9 : 0.86,
+    scaleX: isMobile ? 0.88 : 0.86,
     seed: state.burstSeed + 19,
     shadow: topSize * 0.036,
   })
@@ -275,6 +297,166 @@ function drawAmbient(ctx, width, height, pointer, hover, burst) {
   ctx.restore()
 }
 
+function drawRigPieces(ctx, props) {
+  const { burst, centerX, elapsed, hover, isMobile, pointer, seed, size, time, topY, unit } = props
+  const alpha = easeOutCubic(clamp((elapsed - 180) / 960, 0, 1))
+  if (!alpha) return
+
+  const rigAlpha = alpha * (isMobile ? 0.54 : 0.8)
+  const driftX = pointer.x * hover * unit * 11
+  const driftY = pointer.y * hover * unit * 7
+  const pulse = Math.sin(time / 680)
+  const burstSpread = burst * size * 0.12
+
+  ctx.save()
+  ctx.globalAlpha = rigAlpha
+
+  drawTileStrip(ctx, {
+    alpha,
+    cols: isMobile ? 4 : 5,
+    height: size * (isMobile ? 0.13 : 0.15),
+    rotation: toRadians(-0.4 + pulse * 0.7 + burst * 2.2),
+    tile: size * (isMobile ? 0.16 : 0.15),
+    x: centerX + size * (isMobile ? 0.78 : 0.82) + driftX * 0.42 + burstSpread,
+    y: topY - size * (isMobile ? 0.43 : 0.46) + driftY * 0.2,
+  })
+
+  drawFloatingBlock(ctx, {
+    alpha,
+    color: '#ffc529',
+    height: size * 0.24,
+    rotation: toRadians(-1.5 + burst * 8),
+    width: size * 0.44,
+    x: centerX + size * (isMobile ? 1.07 : 1.22) + driftX * 0.32,
+    y: topY + size * (isMobile ? 0.27 : 0.34) + driftY * 0.26 - burstSpread * 0.4,
+  })
+
+  drawSpringCord(ctx, {
+    alpha,
+    burst,
+    hover,
+    isMobile,
+    pointer,
+    size,
+    time,
+    x: centerX + size * (isMobile ? 1.62 : 1.7) + driftX * 0.26,
+    y: topY - size * 0.05 + driftY * 0.14,
+  })
+
+  drawRigNodes(ctx, {
+    alpha,
+    burst,
+    centerX,
+    hover,
+    isMobile,
+    pointer,
+    seed,
+    size,
+    time,
+    topY,
+  })
+
+  ctx.restore()
+}
+
+function drawTileStrip(ctx, options) {
+  const { alpha, cols, height, rotation, tile, x, y } = options
+
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate(rotation)
+  ctx.globalAlpha *= alpha
+
+  for (let i = 0; i < cols; i += 1) {
+    const offset = i * tile
+    ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 197, 41, 0.5)' : 'rgba(255, 220, 72, 0.34)'
+    ctx.strokeStyle = 'rgba(255, 253, 250, 0.14)'
+    ctx.lineWidth = Math.max(1, tile * 0.035)
+    drawRoundedRect(ctx, offset, 0, tile * 0.95, height, tile * 0.04)
+    ctx.fill()
+    ctx.stroke()
+  }
+
+  ctx.restore()
+}
+
+function drawFloatingBlock(ctx, options) {
+  const { alpha, color, height, rotation, width, x, y } = options
+
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate(rotation)
+  ctx.globalAlpha *= alpha
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.24)'
+  drawRoundedRect(ctx, width * 0.08, height * 0.12, width, height, height * 0.08)
+  ctx.fill()
+  ctx.fillStyle = color
+  drawRoundedRect(ctx, 0, 0, width, height, height * 0.08)
+  ctx.fill()
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
+  drawRoundedRect(ctx, 0, 0, width * 0.48, height, height * 0.08)
+  ctx.fill()
+  ctx.restore()
+}
+
+function drawSpringCord(ctx, options) {
+  const { alpha, burst, hover, isMobile, pointer, size, time, x, y } = options
+  const cordLength = size * (isMobile ? 0.62 : 0.78)
+  const wave = Math.sin(time / 520) * size * 0.035
+
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.globalAlpha *= alpha * (0.78 + hover * 0.18)
+  ctx.strokeStyle = '#bfff00'
+  ctx.lineWidth = size * (isMobile ? 0.046 : 0.04)
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(0, -size * 0.12)
+  ctx.bezierCurveTo(
+    cordLength * 0.22 + pointer.x * hover * size * 0.05,
+    -size * 0.46 + wave,
+    cordLength * 0.44,
+    size * (0.34 + burst * 0.08),
+    cordLength * 0.7,
+    size * 0.02 - wave,
+  )
+  ctx.bezierCurveTo(
+    cordLength * 0.86,
+    -size * 0.18,
+    cordLength * 0.92 + pointer.y * hover * size * 0.08,
+    size * 0.35,
+    cordLength,
+    size * (0.12 - burst * 0.12),
+  )
+  ctx.stroke()
+  ctx.restore()
+}
+
+function drawRigNodes(ctx, options) {
+  const { alpha, burst, centerX, hover, isMobile, pointer, seed, size, time, topY } = options
+  const nodes = [
+    [-1.18, -0.52, 0.04],
+    [-0.56, 0.46, 0.032],
+    [0.18, -0.62, 0.028],
+    [1.36, 0.56, 0.035],
+  ]
+
+  ctx.save()
+  ctx.globalAlpha *= alpha * (isMobile ? 0.52 : 0.68)
+  nodes.forEach(([x, y, radius], index) => {
+    const jitter = (noise(seed, index + 70) - 0.5) * burst * size * 0.24
+    const orbit = Math.sin(time / (760 + index * 70) + index) * size * 0.018
+    const px = centerX + x * size + pointer.x * hover * size * 0.035 + jitter
+    const py = topY + y * size + pointer.y * hover * size * 0.025 + orbit - jitter * 0.4
+
+    ctx.fillStyle = index % 2 === 0 ? 'rgba(255, 253, 250, 0.86)' : 'rgba(191, 255, 0, 0.75)'
+    ctx.beginPath()
+    ctx.arc(px, py, size * radius * (1 + burst * 0.34), 0, Math.PI * 2)
+    ctx.fill()
+  })
+  ctx.restore()
+}
+
 function drawAigcLine(ctx, props) {
   const { centerX, size } = props
   const totalWidth = glyphs.reduce((sum, glyph) => sum + size * glyph.width, 0) + size * 0.06 * (glyphs.length - 1)
@@ -292,8 +474,10 @@ function drawAigcLine(ctx, props) {
 }
 
 function drawGlyph(ctx, glyph, props) {
-  const { burst, elapsed, hover, homeX, index, pointer, seed, size, time, topY, unit } = props
-  const localIntro = easeOutBack(clamp((elapsed - index * 105) / 980, 0, 1))
+  const { burst, elapsed, hover, homeX, index, isMobile, pointer, pointerCanvas, seed, size, time, topY, unit } = props
+  const localIntro = easeOutBack(clamp((elapsed - index * (isMobile ? 118 : 112)) / (isMobile ? 1160 : 1080), 0, 1))
+  const localDistance = Math.hypot((pointerCanvas.x - homeX) / (size * 0.78), (pointerCanvas.y - topY) / (size * 0.72))
+  const localHover = hover * clamp(1 - localDistance, 0, 1)
   const scatterX = (index - 1.5) * size * 0.52 + (noise(seed, index + 1) - 0.5) * size * 0.5
   const scatterY = -size * (0.84 + noise(seed, index + 5) * 0.52)
   const introX = mix(scatterX, 0, localIntro)
@@ -305,21 +489,21 @@ function drawGlyph(ctx, glyph, props) {
   const burstX = (noise(seed, index + 21) - 0.5) * burstKick
   const burstY = -(0.25 + noise(seed, index + 31)) * burstKick
   const burstRotate = (noise(seed, index + 41) - 0.5) * burst * 28
-  const x = homeX + introX + pointer.x * hover * unit * (index - 1.5) * 8 + burstX
-  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 + burstY
-  const scale = mix(0.58, 1, localIntro) + Math.sin(time / 840 + index) * 0.012 + burst * 0.12
+  const x = homeX + introX + pointer.x * hover * unit * (index - 1.5) * 8 + pointer.x * localHover * unit * 12 + burstX
+  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 - localHover * unit * 10 + burstY
+  const scale = mix(0.58, 1, localIntro) + Math.sin(time / 840 + index) * 0.012 + burst * 0.12 + localHover * 0.055
   const alpha = clamp(localIntro * 1.25, 0, 1)
 
   ctx.save()
   ctx.translate(x, y)
-  ctx.rotate(toRadians(glyph.rotate + idleRotate + burstRotate))
-  ctx.scale(scale * (1 + hover * 0.018), scale * (1 - burst * 0.035))
+  ctx.rotate(toRadians(glyph.rotate + idleRotate + burstRotate + localHover * (index - 1.5) * 3.4))
+  ctx.scale(scale * (1 + hover * 0.018), scale * (1 - burst * 0.035 + localHover * 0.018))
   ctx.globalAlpha = alpha
-  drawPlayfulLetter(ctx, glyph, size)
+  drawPlayfulLetter(ctx, glyph, size, { burst, localHover, pointer, time })
   ctx.restore()
 }
 
-function drawPlayfulLetter(ctx, glyph, size) {
+function drawPlayfulLetter(ctx, glyph, size, motion) {
   const font = `900 ${size}px 'Arial Black', 'Neue Regrade Extrabold', Impact, sans-serif`
   const gradient = ctx.createLinearGradient(-size * 0.42, -size * 0.55, size * 0.42, size * 0.48)
   gradient.addColorStop(0, glyph.fill[0])
@@ -342,13 +526,15 @@ function drawPlayfulLetter(ctx, glyph, size) {
   ctx.fillStyle = gradient
   ctx.fillText(glyph.char, 0, 0)
 
-  drawLetterHighlights(ctx, glyph.char, size)
+  drawLetterHighlights(ctx, glyph.char, size, motion)
 
-  if (glyph.char === 'C') drawFace(ctx, size)
+  if (glyph.char === 'C') drawFace(ctx, size, motion)
+  if (glyph.char === 'I') drawIAccent(ctx, size, motion)
+  if (glyph.char === 'G') drawGAccent(ctx, size, motion)
   ctx.restore()
 }
 
-function drawLetterHighlights(ctx, char, size) {
+function drawLetterHighlights(ctx, char, size, motion) {
   const highlights = {
     A: [[-0.08, -0.34, 0.06, 0.022, -0.38], [0.16, -0.31, 0.045, 0.02, 0.48]],
     G: [[-0.2, -0.31, 0.055, 0.023, -0.32], [0.08, -0.29, 0.047, 0.02, 0.38]],
@@ -361,25 +547,52 @@ function drawLetterHighlights(ctx, char, size) {
   ctx.globalAlpha = 0.9
   ctx.fillStyle = 'rgba(255, 255, 255, 0.86)'
   highlights.forEach(([x, y, rx, ry, rotation]) => {
+    const shimmer = Math.sin(motion.time / 520 + x * 8) * motion.localHover * size * 0.006
     ctx.beginPath()
-    ctx.ellipse(size * x, size * y, size * rx, size * ry, rotation, 0, Math.PI * 2)
+    ctx.ellipse(size * x + shimmer, size * y - shimmer, size * rx, size * ry, rotation, 0, Math.PI * 2)
     ctx.fill()
   })
   ctx.restore()
 }
 
-function drawFace(ctx, size) {
+function drawFace(ctx, size, motion) {
   ctx.save()
   ctx.translate(size * 0.05, -size * 0.05)
   ctx.fillStyle = '#171719'
   ctx.strokeStyle = '#171719'
   ctx.lineWidth = size * 0.025
+  const lookX = motion.pointer.x * motion.localHover * size * 0.018
+  const lookY = motion.pointer.y * motion.localHover * size * 0.014
   ctx.beginPath()
-  ctx.arc(-size * 0.08, -size * 0.06, size * 0.026, 0, Math.PI * 2)
-  ctx.arc(size * 0.08, -size * 0.06, size * 0.026, 0, Math.PI * 2)
+  ctx.arc(-size * 0.08 + lookX, -size * 0.06 + lookY, size * 0.026, 0, Math.PI * 2)
+  ctx.arc(size * 0.08 + lookX, -size * 0.06 + lookY, size * 0.026, 0, Math.PI * 2)
   ctx.fill()
   ctx.beginPath()
-  ctx.arc(0, size * 0.04, size * 0.11, 0.08 * Math.PI, 0.92 * Math.PI)
+  ctx.arc(0, size * (0.04 + motion.burst * 0.015), size * (0.11 + motion.localHover * 0.015), 0.08 * Math.PI, 0.92 * Math.PI)
+  ctx.stroke()
+  ctx.restore()
+}
+
+function drawIAccent(ctx, size, motion) {
+  ctx.save()
+  ctx.globalAlpha = 0.52 + motion.localHover * 0.22
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.58)'
+  ctx.lineWidth = size * 0.018
+  ctx.beginPath()
+  ctx.moveTo(-size * 0.03, -size * 0.42)
+  ctx.lineTo(size * (0.02 + motion.localHover * 0.05), size * 0.42)
+  ctx.stroke()
+  ctx.restore()
+}
+
+function drawGAccent(ctx, size, motion) {
+  ctx.save()
+  ctx.globalAlpha = 0.45 + motion.localHover * 0.28
+  ctx.strokeStyle = 'rgba(20, 20, 20, 0.52)'
+  ctx.lineWidth = size * (0.022 + motion.localHover * 0.008)
+  ctx.beginPath()
+  ctx.moveTo(size * 0.1, -size * 0.04)
+  ctx.quadraticCurveTo(size * 0.26, -size * 0.02, size * 0.31, size * 0.08)
   ctx.stroke()
   ctx.restore()
 }
@@ -445,6 +658,22 @@ function mix(from, to, amount) {
 function noise(seed, salt) {
   const raw = Math.sin((seed + 1.618) * (salt + 2.414) * 97.13) * 10000
   return raw - Math.floor(raw)
+}
+
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, Math.abs(width) / 2, Math.abs(height) / 2)
+
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.lineTo(x + width - r, y)
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r)
+  ctx.lineTo(x + width, y + height - r)
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height)
+  ctx.lineTo(x + r, y + height)
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r)
+  ctx.lineTo(x, y + r)
+  ctx.quadraticCurveTo(x, y, x + r, y)
+  ctx.closePath()
 }
 
 function toRadians(degrees) {
