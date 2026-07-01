@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "remotion:render-showreel": "remotion render remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper.mp4 --codec=h264 --pixel-format=yuv420p --browser-executable=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --overwrite",
-    "remotion:still-showreel": "remotion still remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper-poster.png --frame=42 --browser-executable=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --overwrite"
+    "remotion:still-showreel": "remotion still remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper-poster.png --frame=272 --browser-executable=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --overwrite"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.484",

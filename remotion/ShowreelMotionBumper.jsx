@@ -8,38 +8,51 @@ import {
 } from 'remotion'
 
 const palette = {
-  black: '#020204',
-  ink: '#f8f7f2',
-  muted: 'rgba(248,247,242,0.56)',
-  hairline: 'rgba(248,247,242,0.12)',
-  red: '#ff493f',
-  violet: '#8e56ff',
-  gold: '#f3bf38',
-  pink: '#f286d7',
-  blue: '#77c8ff',
-  acid: '#bfff00',
+  black: '#030304',
+  white: '#fffdf7',
+  paper: '#f5efe2',
+  ink: '#101010',
+  cyan: '#00d5ff',
+  blue: '#1b64ff',
+  magenta: '#ff2aa8',
+  red: '#ff3b30',
+  yellow: '#ffe23f',
+  green: '#25e66a',
+  orange: '#ff8a00',
+  violet: '#9b5cff',
 }
 
-const chroma = [palette.red, palette.violet, palette.gold, palette.blue, palette.pink, palette.acid]
-const tickerItems = ['color burst', 'light collision', 'chroma bloom', 'aigc visual', 'motion rhythm']
-const sceneWords = [
-  { frame: 52, title: 'COLOR BURST', meta: 'spectrum impact' },
-  { frame: 134, title: 'LIGHT COLLISION', meta: 'fast chroma bloom' },
-  { frame: 224, title: 'RADIANT FIELD', meta: 'clean motion surface' },
-  { frame: 314, title: 'AIGC VISUAL', meta: 'directed generative color' },
+const chroma = [
+  palette.cyan,
+  palette.magenta,
+  palette.yellow,
+  palette.blue,
+  palette.red,
+  palette.green,
+  palette.orange,
+  palette.violet,
 ]
-const impacts = [
-  { frame: 34, x: 0.34, y: 0.42, colorA: palette.red, colorB: palette.violet, size: 1.08 },
-  { frame: 86, x: 0.62, y: 0.36, colorA: palette.gold, colorB: palette.blue, size: 0.94 },
-  { frame: 144, x: 0.5, y: 0.55, colorA: palette.pink, colorB: palette.acid, size: 1.2 },
-  { frame: 214, x: 0.38, y: 0.48, colorA: palette.blue, colorB: palette.violet, size: 1.05 },
-  { frame: 286, x: 0.66, y: 0.44, colorA: palette.red, colorB: palette.gold, size: 1.1 },
-  { frame: 356, x: 0.5, y: 0.5, colorA: palette.ink, colorB: palette.acid, size: 1.28 },
+
+const collisions = [
+  { frame: 18, a: palette.magenta, b: palette.cyan, c: palette.yellow, axis: 'x', size: 500 },
+  { frame: 76, a: palette.yellow, b: palette.blue, c: palette.red, axis: 'y', size: 430 },
+  { frame: 132, a: palette.green, b: palette.magenta, c: palette.white, axis: 'diag', size: 560 },
+  { frame: 214, a: palette.red, b: palette.cyan, c: palette.violet, axis: 'x', size: 620 },
+  { frame: 292, a: palette.orange, b: palette.blue, c: palette.green, axis: 'diag', size: 520 },
+  { frame: 372, a: palette.white, b: palette.magenta, c: palette.yellow, axis: 'y', size: 600 },
+]
+
+const typeCuts = [
+  { frame: 42, label: 'CHROMA', sub: 'collision / 01', x: 112, y: 126, align: 'left', tone: 'dark' },
+  { frame: 112, label: 'POP FIELD', sub: 'hard cut geometry', x: 960, y: 640, align: 'center', tone: 'light' },
+  { frame: 198, label: 'IMPACT', sub: 'shape against shape', x: 1540, y: 172, align: 'right', tone: 'dark' },
+  { frame: 272, label: 'COLOR MASS', sub: 'clean burst system', x: 126, y: 736, align: 'left', tone: 'light' },
+  { frame: 338, label: 'KINETIC POP', sub: 'fast graphic rhythm', x: 960, y: 150, align: 'center', tone: 'dark' },
 ]
 
 export const showreelMotionDefaults = {
   title: 'AIGC',
-  subtitle: 'Design Portfolio',
+  subtitle: 'Color Motion System',
 }
 
 function clamp(value, min = 0, max = 1) {
@@ -54,21 +67,21 @@ function ease(frame, range, values, easing = Easing.bezier(0.16, 1, 0.3, 1)) {
   })
 }
 
+function progress(frame, start, duration) {
+  return clamp((frame - start) / duration)
+}
+
 function hit(frame, point, radius = 8) {
   return clamp(1 - Math.abs(frame - point) / radius)
 }
 
-function phase(frame, start, duration) {
-  return clamp((frame - start) / duration)
-}
-
-function inOut(frame, start, hold, enter = 14, exit = 12) {
+function sceneInOut(frame, start, hold, enter = 8, exit = 8) {
   const enterValue = ease(frame, [start, start + enter], [0, 1])
   const exitValue = ease(frame, [start + hold, start + hold + exit], [0, 1], Easing.in(Easing.cubic))
   return clamp(enterValue - exitValue)
 }
 
-function wave(frame, speed = 0.025, offset = 0) {
+function wave(frame, speed = 0.04, offset = 0) {
   return Math.sin(frame * speed + offset)
 }
 
@@ -77,95 +90,95 @@ export function ShowreelMotionBumper({
   subtitle = showreelMotionDefaults.subtitle,
 } = {}) {
   const frame = useCurrentFrame()
-  const { fps } = useVideoConfig()
-  const seconds = frame / fps
-  const flash = impacts.reduce((amount, impact) => Math.max(amount, hit(frame, impact.frame, 7)), 0)
+  const { durationInFrames } = useVideoConfig()
+  const impact = collisions.reduce((amount, item) => Math.max(amount, hit(frame, item.frame, 6)), 0)
+  const final = sceneInOut(frame, 350, durationInFrames - 370, 18, 20)
 
   return (
     <AbsoluteFill
       style={{
         overflow: 'hidden',
         background: palette.black,
-        color: palette.ink,
-        fontFamily: "'Arial Black', Impact, sans-serif",
+        color: palette.white,
+        fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
       }}
     >
-      <Backdrop frame={frame} flash={flash} />
-      <RibbonField frame={frame} flash={flash} />
-      <ImpactField frame={frame} />
-      <ParticleField frame={frame} seconds={seconds} />
-      <KineticTitle frame={frame} title={title} subtitle={subtitle} />
-      <SceneWords frame={frame} />
-      <FinalLock frame={frame} title={title} subtitle={subtitle} />
-      <Chrome frame={frame} />
-      <Grain frame={frame} />
+      <SnapBackground frame={frame} impact={impact} />
+      <HalftonePlates frame={frame} />
+      <StripeWipes frame={frame} />
+      <CollisionField frame={frame} />
+      <PopGeometry frame={frame} />
+      <TypeCuts frame={frame} />
+      <FinalLock frame={frame} title={title} subtitle={subtitle} opacity={final} />
+      <CutFlash frame={frame} impact={impact} />
+      <FilmSurface frame={frame} />
     </AbsoluteFill>
   )
 }
 
-function Backdrop({ frame, flash }) {
+function SnapBackground({ frame, impact }) {
+  const stage = Math.floor(frame / 56)
+  const isPaper = stage % 2 === 1
+  const wipe = progress(frame % 56, 0, 12)
+
   return (
     <AbsoluteFill
       style={{
-        background: `
-          radial-gradient(circle at ${50 + wave(frame, 0.01) * 6}% ${42 + wave(frame, 0.012, 2) * 5}%, rgba(255,255,255,${0.04 + flash * 0.08}), transparent 24%),
-          radial-gradient(circle at ${24 + wave(frame, 0.009, 1) * 9}% ${24 + wave(frame, 0.011, 3) * 7}%, rgba(142,86,255,0.16), transparent 28%),
-          radial-gradient(circle at ${76 + wave(frame, 0.011, 4) * 8}% ${70 + wave(frame, 0.01, 5) * 7}%, rgba(255,73,63,0.12), transparent 26%),
-          linear-gradient(180deg, #08080b 0%, #010102 76%)
-        `,
+        background: isPaper ? palette.paper : palette.black,
       }}
     >
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          opacity: 0.16 + flash * 0.12,
-          backgroundImage: `
-            linear-gradient(rgba(248,247,242,0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(248,247,242,0.028) 1px, transparent 1px)
-          `,
-          backgroundSize: '96px 96px',
-          transform: `translate(${-(frame % 96)}px, ${-(frame % 48)}px)`,
+          background: stage % 3 === 0
+            ? `linear-gradient(135deg, ${palette.black} 0%, #090909 50%, #151515 100%)`
+            : `linear-gradient(135deg, ${palette.paper} 0%, ${palette.white} 52%, #efe3cf 100%)`,
+          opacity: isPaper ? 0.76 : 0.62,
         }}
       />
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: `rgba(248,247,242,${flash * 0.08})`,
-          mixBlendMode: 'screen',
+          background: `linear-gradient(90deg, ${chroma[stage % chroma.length]}, ${chroma[(stage + 2) % chroma.length]})`,
+          clipPath: `inset(0 ${100 - wipe * 100}% 0 0)`,
+          opacity: 0.18 + impact * 0.18,
+          mixBlendMode: isPaper ? 'multiply' : 'screen',
         }}
       />
     </AbsoluteFill>
   )
 }
 
-function RibbonField({ frame, flash }) {
+function HalftonePlates({ frame }) {
   return (
     <AbsoluteFill>
-      {Array.from({ length: 9 }).map((_, index) => {
-        const color = chroma[index % chroma.length]
-        const y = 150 + index * 88 + wave(frame, 0.015 + index * 0.002, index) * 34
-        const travel = (frame * (9 + index * 0.8) + index * 170) % 2500
-        const x = travel - 420
-        const width = 420 + (index % 3) * 180
-        const opacity = 0.15 + hit(frame, 40 + index * 39, 28) * 0.38 + flash * 0.08
+      {[
+        { start: 54, x: 1160, y: 60, size: 520, color: palette.magenta, rotate: -8 },
+        { start: 122, x: 90, y: 530, size: 460, color: palette.blue, rotate: 12 },
+        { start: 246, x: 1110, y: 520, size: 560, color: palette.yellow, rotate: -16 },
+        { start: 310, x: 140, y: 80, size: 390, color: palette.green, rotate: 18 },
+      ].map((plate, index) => {
+        const p = sceneInOut(frame, plate.start, 78, 10, 10)
+        const scale = ease(p, [0, 1], [0.72, 1])
 
         return (
           <div
-            key={index}
+            key={plate.start}
             style={{
               position: 'absolute',
-              left: x,
-              top: y,
-              width,
-              height: 22 + (index % 4) * 7,
-              borderRadius: 999,
-              opacity,
-              background: `linear-gradient(90deg, transparent, ${color}, rgba(248,247,242,0.88), transparent)`,
-              filter: `blur(${index % 2 === 0 ? 9 : 15}px) saturate(${1.14 + flash * 0.3})`,
-              mixBlendMode: 'screen',
-              transform: `rotate(${-18 + index * 4 + wave(frame, 0.01, index) * 3}deg) scaleX(${1 + flash * 0.16})`,
+              left: plate.x,
+              top: plate.y,
+              width: plate.size,
+              height: plate.size,
+              opacity: p * 0.72,
+              borderRadius: index % 2 === 0 ? '50%' : 34,
+              backgroundColor: plate.color,
+              backgroundImage: `radial-gradient(${index % 2 ? palette.white : palette.black} 0 5px, transparent 6px)`,
+              backgroundSize: '28px 28px',
+              mixBlendMode: index % 2 ? 'screen' : 'multiply',
+              transform: `translate(${ease(p, [0, 1], [120, 0])}px, ${ease(p, [0, 1], [40, 0])}px) rotate(${plate.rotate + frame * 0.04}deg) scale(${scale})`,
             }}
           />
         )
@@ -174,286 +187,328 @@ function RibbonField({ frame, flash }) {
   )
 }
 
-function ImpactField({ frame }) {
+function StripeWipes({ frame }) {
   return (
     <AbsoluteFill>
-      {impacts.map((impact, index) => (
-        <ImpactBurst frame={frame} impact={impact} index={index} key={impact.frame} />
+      {[
+        { start: 86, color: palette.red, y: 90, height: 76, rotate: -10, dir: 1 },
+        { start: 164, color: palette.cyan, y: 820, height: 58, rotate: 8, dir: -1 },
+        { start: 236, color: palette.yellow, y: 448, height: 96, rotate: -16, dir: 1 },
+        { start: 326, color: palette.violet, y: 260, height: 68, rotate: 12, dir: -1 },
+      ].map(stripe => {
+        const p = sceneInOut(frame, stripe.start, 42, 6, 10)
+        const x = ease(p, [0, 1], [stripe.dir * -820, 0], Easing.bezier(0.2, 0.95, 0.14, 1))
+
+        return (
+          <div
+            key={stripe.start}
+            style={{
+              position: 'absolute',
+              left: -180,
+              top: stripe.y,
+              width: 2280,
+              height: stripe.height,
+              opacity: p,
+              background: `repeating-linear-gradient(90deg, ${stripe.color} 0 54px, ${palette.white} 54px 86px, ${palette.black} 86px 100px)`,
+              transform: `translateX(${x}px) rotate(${stripe.rotate}deg)`,
+              mixBlendMode: 'normal',
+            }}
+          />
+        )
+      })}
+    </AbsoluteFill>
+  )
+}
+
+function CollisionField({ frame }) {
+  return (
+    <AbsoluteFill>
+      {collisions.map((collision, index) => (
+        <Collision key={collision.frame} frame={frame} collision={collision} index={index} />
       ))}
     </AbsoluteFill>
   )
 }
 
-function ImpactBurst({ frame, impact, index }) {
-  const p = phase(frame, impact.frame, 74)
-  const active = frame >= impact.frame - 4 && frame <= impact.frame + 86
-  if (!active) return null
+function Collision({ frame, collision, index }) {
+  const p = progress(frame, collision.frame - 22, 78)
+  if (p <= 0 || p >= 1) return null
 
-  const snap = hit(frame, impact.frame, 5)
-  const ring = ease(p, [0, 1], [80, 940 * impact.size], Easing.out(Easing.cubic))
-  const bloom = Math.sin(p * Math.PI)
-  const x = impact.x * 1920
-  const y = impact.y * 1080
+  const arrive = ease(p, [0, 0.42], [0, 1], Easing.bezier(0.18, 0.9, 0.14, 1))
+  const burst = ease(p, [0.34, 1], [0, 1], Easing.out(Easing.cubic))
+  const snap = hit(frame, collision.frame, 6)
+  const centerX = 960 + wave(frame, 0.026, index) * 40
+  const centerY = 540 + wave(frame, 0.03, index + 2) * 34
+  const offset = ease(arrive, [0, 1], [820, 0])
+  const burstScale = 1 + snap * 0.18 + burst * 0.34
+  const width = collision.size * (1.04 + burst * 0.18)
+  const height = collision.size * (0.72 + snap * 0.2)
+  const aTransform = movement(collision.axis, centerX, centerY, -offset, index)
+  const bTransform = movement(collision.axis, centerX, centerY, offset, index + 1)
+
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <ShapeBlock
+        color={collision.a}
+        width={width}
+        height={height}
+        radius={index % 2 === 0 ? '50%' : 38}
+        transform={`${aTransform} rotate(${-12 + index * 9 + snap * 4}deg) scale(${burstScale})`}
+        opacity={clamp(1 - burst * 0.38)}
+      />
+      <ShapeBlock
+        color={collision.b}
+        width={width * 0.92}
+        height={height * 1.1}
+        radius={index % 2 === 0 ? 44 : '50%'}
+        transform={`${bTransform} rotate(${16 - index * 8 - snap * 6}deg) scale(${burstScale})`}
+        opacity={clamp(1 - burst * 0.38)}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: centerX,
+          top: centerY,
+          width: 0,
+          height: 0,
+          opacity: clamp((1 - burst) * 1.2),
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: -collision.size * (0.38 + burst * 0.82),
+            top: -collision.size * (0.38 + burst * 0.82),
+            width: collision.size * (0.76 + burst * 1.64),
+            height: collision.size * (0.76 + burst * 1.64),
+            borderRadius: '50%',
+            border: `${18 - burst * 12}px solid ${collision.c}`,
+            transform: `rotate(${frame * 0.8}deg)`,
+            mixBlendMode: 'screen',
+          }}
+        />
+        {[0, 1, 2, 3, 4, 5].map(bar => {
+          const angle = (Math.PI * 2 * bar) / 6 + index * 0.34
+          const distance = ease(burst, [0, 1], [40, 530], Easing.out(Easing.cubic))
+          const x = Math.cos(angle) * distance
+          const y = Math.sin(angle) * distance * 0.68
+
+          return (
+            <div
+              key={bar}
+              style={{
+                position: 'absolute',
+                left: x - 74,
+                top: y - 13,
+                width: 148,
+                height: 26,
+                background: chroma[(bar + index) % chroma.length],
+                borderRadius: 999,
+                opacity: clamp(0.9 - burst * 0.72),
+                transform: `rotate(${angle}rad) scaleX(${1 + burst * 1.7})`,
+              }}
+            />
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function movement(axis, centerX, centerY, offset, seed) {
+  if (axis === 'y') {
+    return `translate(${centerX - 260 + seed * 42}px, ${centerY - 210 + offset}px)`
+  }
+
+  if (axis === 'diag') {
+    return `translate(${centerX - 250 + offset * 0.8}px, ${centerY - 210 + offset * 0.44}px)`
+  }
+
+  return `translate(${centerX - 260 + offset}px, ${centerY - 210 + seed * 22}px)`
+}
+
+function ShapeBlock({ color, width, height, radius, transform, opacity }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        width,
+        height,
+        borderRadius: radius,
+        background: color,
+        boxShadow: `0 0 0 12px rgba(255,255,255,0.92) inset`,
+        opacity,
+        transform,
+        mixBlendMode: 'normal',
+      }}
+    />
+  )
+}
+
+function PopGeometry({ frame }) {
+  return (
+    <AbsoluteFill>
+      <CornerRings frame={frame} />
+      <ModularTiles frame={frame} />
+      <RadialSlices frame={frame} />
+    </AbsoluteFill>
+  )
+}
+
+function CornerRings({ frame }) {
+  return (
+    <>
+      {[
+        { start: 16, x: -120, y: 650, size: 460, color: palette.yellow },
+        { start: 150, x: 1390, y: -140, size: 520, color: palette.cyan },
+        { start: 278, x: 1340, y: 710, size: 430, color: palette.magenta },
+      ].map((ring, index) => {
+        const p = sceneInOut(frame, ring.start, 128, 12, 12)
+
+        return (
+          <div
+            key={ring.start}
+            style={{
+              position: 'absolute',
+              left: ring.x,
+              top: ring.y,
+              width: ring.size,
+              height: ring.size,
+              borderRadius: '50%',
+              border: `${34 + index * 8}px solid ${ring.color}`,
+              opacity: p * 0.88,
+              transform: `scale(${ease(p, [0, 1], [0.68, 1])}) rotate(${frame * (0.18 + index * 0.08)}deg)`,
+              background: `conic-gradient(from ${frame * 1.2}deg, transparent 0 18deg, rgba(255,255,255,0.72) 18deg 32deg, transparent 32deg 58deg)`,
+              mixBlendMode: 'screen',
+            }}
+          />
+        )
+      })}
+    </>
+  )
+}
+
+function ModularTiles({ frame }) {
+  const p = sceneInOut(frame, 90, 200, 12, 18)
+  const columns = 5
+  const rows = 3
 
   return (
     <div
       style={{
         position: 'absolute',
-        left: x,
-        top: y,
-        width: 0,
-        height: 0,
-        opacity: clamp((1 - p) * 1.2),
-        mixBlendMode: 'screen',
+        left: 390,
+        top: 248,
+        width: 1160,
+        height: 560,
+        opacity: p * 0.78,
+        transform: `translateY(${ease(p, [0, 1], [60, 0])}px) rotate(${-2 + wave(frame, 0.012) * 1.4}deg)`,
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          left: -ring / 2,
-          top: -ring / 2,
-          width: ring,
-          height: ring,
-          borderRadius: '50%',
-          border: `${Math.max(3, 18 * (1 - p))}px solid ${impact.colorA}`,
-          opacity: 0.56 + snap * 0.34,
-          filter: `blur(${6 + p * 16}px)`,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          left: -ring * 0.35,
-          top: -ring * 0.35,
-          width: ring * 0.7,
-          height: ring * 0.7,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, rgba(248,247,242,0.95), ${impact.colorB} 28%, transparent 68%)`,
-          opacity: bloom,
-          filter: `blur(${16 + p * 30}px)`,
-          transform: `scale(${0.32 + p * 1.35})`,
-        }}
-      />
-      {Array.from({ length: 18 }).map((_, particle) => {
-        const angle = (Math.PI * 2 * particle) / 18 + index * 0.33
-        const distance = ease(p, [0, 1], [10, 520 + (particle % 5) * 76], Easing.out(Easing.cubic))
-        const px = Math.cos(angle) * distance
-        const py = Math.sin(angle) * distance * 0.62
-        const color = particle % 2 === 0 ? impact.colorA : impact.colorB
-
-        return (
-          <div
-            key={particle}
-            style={{
-              position: 'absolute',
-              left: px,
-              top: py,
-              width: 54 - p * 32,
-              height: 10 + (particle % 3) * 6,
-              borderRadius: 999,
-              background: color,
-              opacity: clamp((1 - p) * (0.88 + snap * 0.4)),
-              filter: 'blur(4px)',
-              transform: `rotate(${angle}rad) scaleX(${1 + p * 1.8})`,
-            }}
-          />
-        )
-      })}
-    </div>
-  )
-}
-
-function ParticleField({ frame, seconds }) {
-  return (
-    <AbsoluteFill>
-      {Array.from({ length: 48 }).map((_, index) => {
-        const loop = ((frame + index * 17) % 150) / 150
-        const drift = ease(loop, [0, 1], [0, 1], Easing.linear)
-        const baseX = ((index * 137) % 1920) + wave(frame, 0.007, index) * 60
-        const baseY = ((index * 83) % 900) + 80
-        const x = baseX + Math.cos(index * 1.7) * drift * 140
-        const y = baseY - drift * 90 + Math.sin(seconds * 1.8 + index) * 22
-        const size = 5 + (index % 7) * 3
+      {Array.from({ length: columns * rows }).map((_, index) => {
+        const col = index % columns
+        const row = Math.floor(index / columns)
+        const local = ease(frame, [100 + index * 2, 132 + index * 2], [0, 1], Easing.bezier(0.2, 1, 0.18, 1))
+        const color = chroma[(index + row) % chroma.length]
+        const isRound = (index + row) % 3 === 0
 
         return (
           <div
             key={index}
             style={{
               position: 'absolute',
-              left: x,
-              top: y,
-              width: size,
-              height: size,
-              borderRadius: index % 3 === 0 ? 2 : 999,
-              background: chroma[index % chroma.length],
-              opacity: 0.12 + (1 - drift) * 0.34,
-              filter: 'blur(0.4px)',
-              mixBlendMode: 'screen',
-              transform: `rotate(${index * 21 + frame * 1.2}deg)`,
+              left: col * 230,
+              top: row * 178,
+              width: 178,
+              height: 134,
+              borderRadius: isRound ? 999 : 22,
+              background: color,
+              opacity: p,
+              transform: `translateY(${(1 - local) * 68}px) scale(${0.74 + local * 0.26}) rotate(${(col - row) * 6 + frame * 0.08}deg)`,
+              boxShadow: `0 0 0 11px ${palette.white} inset`,
             }}
           />
         )
       })}
-    </AbsoluteFill>
-  )
-}
-
-function KineticTitle({ frame, title, subtitle }) {
-  const p = inOut(frame, 0, 120, 22, 16)
-  const burst = Math.max(hit(frame, 34, 10), hit(frame, 86, 8))
-  const y = ease(p, [0, 1], [90, 0])
-
-  return (
-    <AbsoluteFill style={{ opacity: p }}>
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 220 + y,
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 18,
-          transform: `translateY(${burst * -18}px) scale(${0.92 + p * 0.08 + burst * 0.02})`,
-        }}
-      >
-        {title.split('').map((letter, index) => (
-          <HeroLetter key={`${letter}-${index}`} letter={letter} index={index} frame={frame} />
-        ))}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 554 + y * 0.24,
-          textAlign: 'center',
-          color: palette.ink,
-          fontSize: 84,
-          lineHeight: 1,
-          letterSpacing: 0,
-          transform: `translateY(${burst * -8}px)`,
-        }}
-      >
-        {subtitle}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 678,
-          textAlign: 'center',
-          color: palette.muted,
-          fontSize: 22,
-          lineHeight: 1,
-          letterSpacing: 0,
-          textTransform: 'lowercase',
-        }}
-      >
-        color systems in motion
-      </div>
-    </AbsoluteFill>
-  )
-}
-
-function HeroLetter({ letter, index, frame }) {
-  const p = ease(frame, [index * 6, index * 6 + 24], [0, 1], Easing.bezier(0.2, 1, 0.22, 1))
-  const impact = Math.max(hit(frame, 34 + index * 8, 8), hit(frame, 86 - index * 4, 8))
-  const color = chroma[index % chroma.length]
-
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: index === 1 ? 128 : 186,
-        height: 202,
-        display: 'grid',
-        placeItems: 'center',
-        color: index === 2 ? palette.black : palette.ink,
-        background: `linear-gradient(145deg, ${color}, rgba(248,247,242,0.92))`,
-        border: `5px solid rgba(248,247,242,${0.82 + impact * 0.12})`,
-        borderRadius: [42, 10, 18, 90][index],
-        fontSize: 168,
-        lineHeight: 1,
-        letterSpacing: 0,
-        overflow: 'hidden',
-        transform: `translateY(${ease(p, [0, 1], [130, 0]) + wave(frame, 0.06, index) * 3 - impact * 18}px) rotate(${[-5, 0, -1, 6][index]}deg) scale(${0.76 + p * 0.24 + impact * 0.035})`,
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          inset: -60,
-          opacity: 0.36 + impact * 0.28,
-          background: `radial-gradient(circle at ${40 + wave(frame, 0.03, index) * 28}% 42%, rgba(255,255,255,0.9), transparent 18%)`,
-          mixBlendMode: 'screen',
-        }}
-      />
-      <span style={{ position: 'relative' }}>{letter}</span>
     </div>
   )
 }
 
-function SceneWords({ frame }) {
+function RadialSlices({ frame }) {
+  const p = sceneInOut(frame, 230, 132, 10, 12)
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 530,
+        top: 156,
+        width: 860,
+        height: 860,
+        opacity: p,
+        borderRadius: '50%',
+        background: `conic-gradient(from ${frame * 3.2}deg, ${palette.cyan} 0 32deg, ${palette.black} 32deg 48deg, ${palette.yellow} 48deg 86deg, ${palette.magenta} 86deg 138deg, ${palette.white} 138deg 162deg, ${palette.blue} 162deg 220deg, ${palette.red} 220deg 292deg, ${palette.green} 292deg 360deg)`,
+        transform: `scale(${ease(p, [0, 1], [0.34, 1.1])}) rotate(${frame * -0.32}deg)`,
+        boxShadow: `0 0 0 28px ${palette.white} inset, 0 0 0 54px ${palette.black} inset`,
+        mixBlendMode: 'normal',
+      }}
+    />
+  )
+}
+
+function TypeCuts({ frame }) {
   return (
     <AbsoluteFill>
-      {sceneWords.map((word, index) => {
-        const p = inOut(frame, word.frame, 46, 8, 10)
-        const accent = chroma[index % chroma.length]
-        const scan = ease(frame, [word.frame, word.frame + 48], [-260, 260], Easing.out(Easing.cubic))
+      {typeCuts.map((cut, index) => {
+        const p = sceneInOut(frame, cut.frame, 36, 5, 8)
+        const textColor = cut.tone === 'light' ? palette.ink : palette.white
+        const subColor = cut.tone === 'light' ? 'rgba(16,16,16,0.62)' : 'rgba(255,253,247,0.62)'
 
         return (
           <div
-            key={word.title}
+            key={cut.label}
             style={{
               position: 'absolute',
-              left: 132,
-              top: 168 + index * 126,
+              left: cut.x,
+              top: cut.y,
               width: 760,
-              height: 108,
-              overflow: 'hidden',
               opacity: p,
-              transform: `translateX(${ease(p, [0, 1], [-60, 0])}px)`,
+              textAlign: cut.align,
+              color: textColor,
+              transform: `translate(${cut.align === 'center' ? '-50%' : cut.align === 'right' ? '-100%' : '0'}, ${ease(p, [0, 1], [38, 0])}px)`,
             }}
           >
             <div
               style={{
-                color: palette.ink,
-                fontSize: 62,
-                lineHeight: 0.94,
+                display: 'inline-block',
+                padding: '10px 18px 12px',
+                background: cut.tone === 'light' ? palette.white : palette.black,
+                color: textColor,
+                fontSize: 92,
+                fontWeight: 900,
+                lineHeight: 0.88,
+                letterSpacing: 0,
+                textTransform: 'uppercase',
+                whiteSpace: 'nowrap',
+                border: `4px solid ${textColor}`,
+                transform: `skewX(${(index % 2 === 0 ? -1 : 1) * 5}deg) scaleX(${1 + hit(frame, cut.frame, 5) * 0.04})`,
+              }}
+            >
+              {cut.label}
+            </div>
+            <div
+              style={{
+                marginTop: 12,
+                color: subColor,
+                fontSize: 24,
+                fontWeight: 800,
+                lineHeight: 1,
                 letterSpacing: 0,
                 textTransform: 'uppercase',
               }}
             >
-              {word.title}
+              {cut.sub}
             </div>
-            <div
-              style={{
-                marginTop: 14,
-                color: palette.muted,
-                fontSize: 22,
-                lineHeight: 1,
-                letterSpacing: 0,
-                textTransform: 'lowercase',
-              }}
-            >
-              {word.meta}
-            </div>
-            <div
-              style={{
-                position: 'absolute',
-                left: scan,
-                top: 0,
-                width: 150,
-                height: '100%',
-                background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
-                opacity: 0.64,
-                filter: 'blur(10px)',
-                transform: 'skewX(-18deg)',
-                mixBlendMode: 'screen',
-              }}
-            />
           </div>
         )
       })}
@@ -461,216 +516,119 @@ function SceneWords({ frame }) {
   )
 }
 
-function FinalLock({ frame, title, subtitle }) {
-  const p = inOut(frame, 348, 88, 18, 14)
-  const split = Math.max(hit(frame, 356, 11), hit(frame, 398, 10))
+function FinalLock({ frame, title, subtitle, opacity }) {
+  const snap = Math.max(hit(frame, 372, 8), hit(frame, 410, 10))
+  const exit = ease(frame, [430, 450], [0, 1], Easing.in(Easing.cubic))
 
   return (
-    <AbsoluteFill style={{ opacity: p }}>
+    <AbsoluteFill
+      style={{
+        opacity: clamp(opacity - exit),
+        background: palette.black,
+      }}
+    >
       <div
         style={{
           position: 'absolute',
           left: 0,
           right: 0,
-          top: 292,
-          textAlign: 'center',
-          color: palette.ink,
-          fontSize: 178,
-          lineHeight: 0.85,
-          letterSpacing: 0,
-          transform: `translateY(${ease(p, [0, 1], [72, 0])}px) scale(${1 + split * 0.018})`,
+          top: 0,
+          height: '100%',
+          background: `radial-gradient(circle at ${50 + wave(frame, 0.04) * 10}% 50%, rgba(255,255,255,0.13), transparent 25%)`,
         }}
-      >
-        <span
-          style={{
-            display: 'inline-block',
-            color: palette.ink,
-            WebkitTextStroke: `2px rgba(248,247,242,${0.28 + split * 0.42})`,
-          }}
-        >
-          {title}
-        </span>
-      </div>
+      />
       <div
         style={{
           position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 476,
-          textAlign: 'center',
-          color: palette.ink,
-          fontSize: 76,
-          lineHeight: 1,
-          letterSpacing: 0,
-        }}
-      >
-        {subtitle}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 642,
-          width: 420,
-          height: 92,
+          left: 180,
+          right: 180,
+          top: 220,
+          height: 506,
           display: 'grid',
           placeItems: 'center',
-          color: palette.black,
-          background: palette.ink,
-          fontSize: 40,
-          lineHeight: 1,
-          letterSpacing: 0,
-          whiteSpace: 'nowrap',
-          transform: `translateX(-50%) translateY(${ease(p, [0, 1], [38, 0])}px)`,
-        }}
-      >
-        play the color
-      </div>
-    </AbsoluteFill>
-  )
-}
-
-function Chrome({ frame }) {
-  const navIn = ease(frame, [0, 24], [0, 1])
-  const tickerX = -((frame * 5.8) % 760)
-
-  return (
-    <AbsoluteFill>
-      <div
-        style={{
-          position: 'absolute',
-          left: 64,
-          top: 46,
-          width: 52,
-          height: 52,
-          opacity: navIn,
-          transform: `translateY(${ease(navIn, [0, 1], [-18, 0])}px)`,
-        }}
-      >
-        <LogoMark />
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          right: 74,
-          top: 56,
-          display: 'flex',
-          gap: 42,
-          opacity: navIn,
-          color: palette.ink,
-          fontSize: 25,
-          lineHeight: 1,
-          letterSpacing: 0,
-          textTransform: 'lowercase',
-        }}
-      >
-        <span>work</span>
-        <span>about</span>
-        <span>contact</span>
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 118,
-          height: 100,
           overflow: 'hidden',
-          borderTop: `1px solid ${palette.hairline}`,
-          borderBottom: `1px solid ${palette.hairline}`,
-          background: 'rgba(2,2,4,0.62)',
+          background: palette.white,
+          color: palette.black,
+          transform: `translateY(${ease(opacity, [0, 1], [80, 0])}px) scale(${1 + snap * 0.018})`,
         }}
       >
         <div
           style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 52,
-            color: palette.ink,
-            fontSize: 36,
-            lineHeight: 1.12,
-            letterSpacing: 0,
-            transform: `translateX(${tickerX}px)`,
-            whiteSpace: 'nowrap',
+            position: 'absolute',
+            inset: 0,
+            opacity: 0.98,
+            background: `linear-gradient(90deg, ${palette.cyan} 0 18%, ${palette.yellow} 18% 34%, ${palette.magenta} 34% 52%, ${palette.green} 52% 66%, ${palette.blue} 66% 83%, ${palette.red} 83% 100%)`,
+            clipPath: `polygon(0 ${52 + wave(frame, 0.05) * 5}%, 100% ${38 + wave(frame, 0.06, 2) * 6}%, 100% 100%, 0% 100%)`,
+          }}
+        />
+        <div
+          style={{
+            position: 'relative',
+            textAlign: 'center',
+            transform: `translateY(${-18 + snap * -8}px)`,
           }}
         >
-          {Array.from({ length: 5 }).flatMap(() => tickerItems).map((item, index) => (
-            <React.Fragment key={`${item}-${index}`}>
-              <span style={{ color: index % 3 === 0 ? 'rgba(248,247,242,0.68)' : palette.ink }}>{item}</span>
-              <span
-                style={{
-                  width: 12,
-                  height: 12,
-                  display: 'inline-block',
-                  background: chroma[index % chroma.length],
-                  transform: 'rotate(45deg)',
-                }}
-              />
-            </React.Fragment>
-          ))}
+          <div
+            style={{
+              fontSize: 178,
+              fontWeight: 950,
+              lineHeight: 0.86,
+              letterSpacing: 0,
+              color: palette.black,
+            }}
+          >
+            {title}
+          </div>
+          <div
+            style={{
+              marginTop: 26,
+              fontSize: 38,
+              fontWeight: 900,
+              lineHeight: 1,
+              letterSpacing: 0,
+              textTransform: 'uppercase',
+              color: palette.black,
+            }}
+          >
+            {subtitle}
+          </div>
         </div>
       </div>
     </AbsoluteFill>
   )
 }
 
-function LogoMark() {
-  return (
-    <div style={{ position: 'relative', width: 52, height: 52 }}>
-      {[0, 1, 2].map(index => (
-        <span
-          key={index}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 4 + index * 17,
-            width: 14,
-            height: 14,
-            background: palette.ink,
-            borderRadius: index === 1 ? 0 : 7,
-          }}
-        />
-      ))}
-      <span
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 4,
-          width: 32,
-          height: 18,
-          background: palette.ink,
-          borderRadius: '14px 2px 2px 14px',
-        }}
-      />
-      <span
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 4,
-          width: 32,
-          height: 18,
-          background: palette.ink,
-          borderRadius: '14px 2px 2px 14px',
-        }}
-      />
-    </div>
-  )
-}
+function CutFlash({ frame, impact }) {
+  const cutFlash = [56, 112, 168, 224, 280, 336, 392].reduce((amount, point) => Math.max(amount, hit(frame, point, 3)), 0)
+  const amount = Math.max(impact, cutFlash)
 
-function Grain({ frame }) {
-  const flicker = frame % 5 < 2 ? 0.1 : 0.055
   return (
     <AbsoluteFill
       style={{
-        opacity: flicker,
         pointerEvents: 'none',
-        backgroundImage: `
-          radial-gradient(circle at ${(frame * 13) % 100}% ${(frame * 29) % 100}%, rgba(255,255,255,0.15) 0 1px, transparent 1px),
-          radial-gradient(circle at ${(frame * 31) % 100}% ${(frame * 17) % 100}%, rgba(255,255,255,0.1) 0 1px, transparent 1px)
-        `,
-        backgroundSize: '34px 34px, 57px 57px',
+        background: palette.white,
+        opacity: amount * 0.24,
         mixBlendMode: 'screen',
+      }}
+    />
+  )
+}
+
+function FilmSurface({ frame }) {
+  const flicker = frame % 7 < 2 ? 0.06 : 0.035
+
+  return (
+    <AbsoluteFill
+      style={{
+        pointerEvents: 'none',
+        opacity: flicker,
+        backgroundImage: `
+          linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)
+        `,
+        backgroundSize: '42px 42px, 42px 42px',
+        transform: `translate(${-(frame % 42)}px, ${-(frame % 21)}px)`,
+        mixBlendMode: 'overlay',
       }}
     />
   )
