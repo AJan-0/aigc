@@ -24,6 +24,13 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     targetPointer: { x: 0, y: 0 },
     hover: 0,
     targetHover: 0,
+    morph: 0,
+    morphDirection: 0,
+    morphDuration: 1320,
+    morphFrom: 0,
+    morphQueuedTarget: null,
+    morphStartedAt: 0,
+    morphTo: 0,
     scroll: 0,
     size: { width: 0, height: 0, dpr: 1 },
   })
@@ -34,6 +41,7 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     if (!canvas || !container) return
 
     const state = stateRef.current
+    updateMorphPlayback(state, time)
     state.pointer.x = damp(state.pointer.x, state.targetPointer.x, 0.12)
     state.pointer.y = damp(state.pointer.y, state.targetPointer.y, 0.12)
     state.hover = damp(state.hover, state.targetHover, 0.1)
@@ -82,6 +90,18 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     stateRef.current.burstSeed += 1
   }, [])
 
+  const requestMorph = useCallback(target => {
+    const now = window.performance?.now?.() ?? Date.now()
+    const state = stateRef.current
+
+    if (state.morphDirection !== 0) {
+      state.morphQueuedTarget = target
+      return
+    }
+
+    startMorphPlayback(state, target, now)
+  }, [])
+
   useEffect(() => {
     resize()
     stateRef.current.startedAt = window.performance?.now?.() ?? Date.now()
@@ -128,6 +148,7 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
 
     stateRef.current.targetHover = 1
+    requestMorph(1)
     updatePointer(event)
   }
 
@@ -138,6 +159,7 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
   const handlePointerLeave = () => {
     stateRef.current.targetHover = 0
     stateRef.current.targetPointer = { x: 0, y: 0 }
+    requestMorph(0)
   }
 
   const handlePointerDown = event => {
@@ -161,6 +183,17 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     triggerBurst()
   }
 
+  const handleFocus = () => {
+    stateRef.current.targetHover = 1
+    requestMorph(1)
+  }
+
+  const handleBlur = () => {
+    stateRef.current.targetHover = 0
+    stateRef.current.targetPointer = { x: 0, y: 0 }
+    requestMorph(0)
+  }
+
   return (
     <div
       ref={containerRef}
@@ -174,6 +207,8 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
       <canvas className="mc-canvas-hero-canvas" ref={canvasRef} aria-hidden="true" />
       <h1 className="mc-screen-reader-only">{heroLabel}</h1>
@@ -185,6 +220,40 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
       </div>
     </div>
   )
+}
+
+function startMorphPlayback(state, target, time) {
+  if (Math.abs(state.morph - target) < 0.001) {
+    state.morph = target
+    state.morphDirection = 0
+    state.morphQueuedTarget = null
+    return
+  }
+
+  state.morphFrom = state.morph
+  state.morphTo = target
+  state.morphStartedAt = time
+  state.morphDuration = target > state.morph ? 1320 : 1120
+  state.morphDirection = target > state.morph ? 1 : -1
+}
+
+function updateMorphPlayback(state, time) {
+  if (state.morphDirection === 0) return
+
+  const progress = clamp((time - state.morphStartedAt) / state.morphDuration, 0, 1)
+  state.morph = mix(state.morphFrom, state.morphTo, easeInOutCubic(progress))
+
+  if (progress < 1) return
+
+  state.morph = state.morphTo
+  state.morphDirection = 0
+
+  const queuedTarget = state.morphQueuedTarget
+  state.morphQueuedTarget = null
+
+  if (queuedTarget === null || Math.abs(state.morph - queuedTarget) < 0.001) return
+
+  startMorphPlayback(state, queuedTarget, time)
 }
 
 function renderHero(ctx, state, time) {
@@ -200,6 +269,7 @@ function renderHero(ctx, state, time) {
     y: height * (0.5 + pointer.y * 0.5),
   }
   const hover = state.hover
+  const morph = state.morph
   const burstAge = time - state.burstAt
   const burstProgress = clamp(burstAge / 1240, 0, 1)
   const burst = burstAge >= 0 && burstAge <= 1120 ? Math.sin(burstProgress * Math.PI) * (1 - burstProgress * 0.12) : 0
@@ -214,10 +284,10 @@ function renderHero(ctx, state, time) {
   const idle = Math.sin(time / 1160)
   const idleSoft = Math.sin(time / 1680 + 0.8)
 
-  drawAmbient(ctx, width, height, pointer, hover, burst)
+  drawAmbient(ctx, width, height, pointer, hover, burst, morph)
 
   ctx.save()
-  ctx.translate(pointer.x * hover * 11, pointer.y * hover * 7 - scrollLift)
+  ctx.translate(pointer.x * hover * 11, pointer.y * hover * 7 - scrollLift + morph * topSize * (isMobile ? 0.06 : 0.16))
   ctx.scale(1 + hover * 0.008 - scroll * 0.012, compress)
 
   const topY = centerY - topSize * (isMobile ? 0.7 : 0.82)
@@ -227,6 +297,7 @@ function renderHero(ctx, state, time) {
     elapsed,
     hover,
     isMobile,
+    morph,
     pointer,
     seed: state.burstSeed,
     size: topSize,
@@ -242,6 +313,7 @@ function renderHero(ctx, state, time) {
     hover,
     idle,
     isMobile,
+    morph,
     pointer,
     pointerCanvas,
     seed: state.burstSeed,
@@ -278,9 +350,9 @@ function renderHero(ctx, state, time) {
   ctx.restore()
 }
 
-function drawAmbient(ctx, width, height, pointer, hover, burst) {
+function drawAmbient(ctx, width, height, pointer, hover, burst, morph) {
   ctx.save()
-  ctx.globalAlpha = 0.3 + hover * 0.26 + burst * 0.16
+  ctx.globalAlpha = 0.3 + hover * 0.2 + burst * 0.16 + morph * 0.12
   const gradient = ctx.createRadialGradient(
     width * (0.5 + pointer.x * 0.12),
     height * (0.42 + pointer.y * 0.08),
@@ -298,11 +370,11 @@ function drawAmbient(ctx, width, height, pointer, hover, burst) {
 }
 
 function drawRigPieces(ctx, props) {
-  const { burst, centerX, elapsed, hover, isMobile, pointer, seed, size, time, topY, unit } = props
+  const { burst, centerX, elapsed, hover, isMobile, morph, pointer, seed, size, time, topY, unit } = props
   const alpha = easeOutCubic(clamp((elapsed - 180) / 960, 0, 1))
   if (!alpha) return
 
-  const rigAlpha = alpha * (isMobile ? 0.54 : 0.8)
+  const rigAlpha = alpha * (isMobile ? 0.54 : 0.8) * (1 - morph * 0.34)
   const driftX = pointer.x * hover * unit * 11
   const driftY = pointer.y * hover * unit * 7
   const pulse = Math.sin(time / 680)
@@ -336,6 +408,7 @@ function drawRigPieces(ctx, props) {
     burst,
     hover,
     isMobile,
+    morph,
     pointer,
     size,
     time,
@@ -400,15 +473,15 @@ function drawFloatingBlock(ctx, options) {
 }
 
 function drawSpringCord(ctx, options) {
-  const { alpha, burst, hover, isMobile, pointer, size, time, x, y } = options
+  const { alpha, burst, hover, isMobile, morph, pointer, size, time, x, y } = options
   const cordLength = size * (isMobile ? 0.62 : 0.78)
   const wave = Math.sin(time / 520) * size * 0.035
 
   ctx.save()
   ctx.translate(x, y)
   ctx.globalAlpha *= alpha * (0.78 + hover * 0.18)
-  ctx.strokeStyle = '#bfff00'
-  ctx.lineWidth = size * (isMobile ? 0.046 : 0.04)
+  ctx.strokeStyle = morph > 0.72 ? 'rgba(255, 253, 250, 0.82)' : '#bfff00'
+  ctx.lineWidth = size * (isMobile ? 0.046 : 0.04) * (1 - morph * 0.24)
   ctx.lineCap = 'round'
   ctx.beginPath()
   ctx.moveTo(0, -size * 0.12)
@@ -474,10 +547,16 @@ function drawAigcLine(ctx, props) {
 }
 
 function drawGlyph(ctx, glyph, props) {
-  const { burst, elapsed, hover, homeX, index, isMobile, pointer, pointerCanvas, seed, size, time, topY, unit } = props
+  const { burst, elapsed, hover, homeX, index, isMobile, morph, pointer, pointerCanvas, seed, size, time, topY, unit } = props
   const localIntro = easeOutBack(clamp((elapsed - index * (isMobile ? 118 : 112)) / (isMobile ? 1160 : 1080), 0, 1))
   const localDistance = Math.hypot((pointerCanvas.x - homeX) / (size * 0.78), (pointerCanvas.y - topY) / (size * 0.72))
   const localHover = hover * clamp(1 - localDistance, 0, 1)
+  const localMorph = staggerMorph(morph, index, glyphs.length)
+  const activationJump = Math.sin(easeOutCubic(clamp(localMorph / 0.24, 0, 1)) * Math.PI) * size * 0.16
+  const roll = easeInOutCubic(clamp((localMorph - 0.12) / 0.42, 0, 1))
+  const colorFlow = easeInOutCubic(clamp((localMorph - 0.48) / 0.28, 0, 1))
+  const outlineMix = easeInOutCubic(clamp((localMorph - 0.66) / 0.3, 0, 1))
+  const settleLift = outlineMix * size * 0.006
   const scatterX = (index - 1.5) * size * 0.52 + (noise(seed, index + 1) - 0.5) * size * 0.5
   const scatterY = -size * (0.84 + noise(seed, index + 5) * 0.52)
   const introX = mix(scatterX, 0, localIntro)
@@ -490,24 +569,40 @@ function drawGlyph(ctx, glyph, props) {
   const burstY = -(0.25 + noise(seed, index + 31)) * burstKick
   const burstRotate = (noise(seed, index + 41) - 0.5) * burst * 28
   const x = homeX + introX + pointer.x * hover * unit * (index - 1.5) * 8 + pointer.x * localHover * unit * 12 + burstX
-  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 - localHover * unit * 10 + burstY
-  const scale = mix(0.58, 1, localIntro) + Math.sin(time / 840 + index) * 0.012 + burst * 0.12 + localHover * 0.055
+  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 - localHover * unit * 10 + burstY - activationJump - settleLift
+  const morphSquash = Math.sin(clamp(localMorph / 0.32, 0, 1) * Math.PI)
+  const morphShrink = outlineMix * 0.055
+  const scale = mix(0.58, 1, localIntro) + Math.sin(time / 840 + index) * 0.012 + burst * 0.12 + localHover * 0.055 - morphShrink
   const alpha = clamp(localIntro * 1.25, 0, 1)
 
   ctx.save()
   ctx.translate(x, y)
-  ctx.rotate(toRadians(glyph.rotate + idleRotate + burstRotate + localHover * (index - 1.5) * 3.4))
-  ctx.scale(scale * (1 + hover * 0.018), scale * (1 - burst * 0.035 + localHover * 0.018))
+  ctx.rotate(toRadians(glyph.rotate + idleRotate + burstRotate + localHover * (index - 1.5) * 3.4 + roll * 360))
+  ctx.scale(
+    scale * (1 + hover * 0.018 + morphSquash * 0.035),
+    scale * (1 - burst * 0.035 + localHover * 0.018 - morphSquash * 0.04),
+  )
   ctx.globalAlpha = alpha
-  drawPlayfulLetter(ctx, glyph, size, { burst, localHover, pointer, time })
+  drawPlayfulLetter(ctx, glyph, size, {
+    burst,
+    colorFlow,
+    lineReveal: easeOutCubic(clamp((localMorph - 0.72) / 0.28, 0, 1)),
+    localHover,
+    localMorph,
+    outlineMix,
+    pointer,
+    time,
+  })
   ctx.restore()
 }
 
 function drawPlayfulLetter(ctx, glyph, size, motion) {
   const font = `900 ${size}px 'Arial Black', 'Neue Regrade Extrabold', Impact, sans-serif`
-  const gradient = ctx.createLinearGradient(-size * 0.42, -size * 0.55, size * 0.42, size * 0.48)
+  const flowShift = (motion.colorFlow - 0.5) * size * 0.22
+  const gradient = ctx.createLinearGradient(-size * 0.42 + flowShift, -size * 0.55, size * 0.42 - flowShift, size * 0.48)
   gradient.addColorStop(0, glyph.fill[0])
   gradient.addColorStop(1, glyph.fill[1])
+  const colorAlpha = 1 - motion.outlineMix
 
   ctx.save()
   ctx.textAlign = 'center'
@@ -516,21 +611,47 @@ function drawPlayfulLetter(ctx, glyph, size, motion) {
   ctx.lineJoin = 'round'
   ctx.miterLimit = 2
 
+  ctx.save()
+  ctx.globalAlpha *= colorAlpha
+  ctx.translate(0, -size * motion.outlineMix * 0.045)
+  ctx.scale(1 + motion.outlineMix * 0.035, 1 - motion.outlineMix * 0.035)
+
   ctx.fillStyle = 'rgba(0, 0, 0, 0.38)'
   ctx.fillText(glyph.char, 0, size * 0.1)
 
-  ctx.lineWidth = size * 0.08
+  ctx.lineWidth = size * mix(0.08, 0.035, motion.outlineMix)
   ctx.strokeStyle = glyph.stroke
   ctx.strokeText(glyph.char, 0, 0)
 
   ctx.fillStyle = gradient
   ctx.fillText(glyph.char, 0, 0)
 
+  if (motion.colorFlow > 0) {
+    ctx.save()
+    ctx.globalAlpha *= motion.colorFlow * 0.28
+    ctx.fillStyle = 'rgba(255, 253, 250, 0.86)'
+    ctx.fillText(glyph.char, 0, 0)
+    ctx.restore()
+  }
+
   drawLetterHighlights(ctx, glyph.char, size, motion)
 
   if (glyph.char === 'C') drawFace(ctx, size, motion)
   if (glyph.char === 'I') drawIAccent(ctx, size, motion)
   if (glyph.char === 'G') drawGAccent(ctx, size, motion)
+
+  ctx.restore()
+
+  ctx.save()
+  ctx.globalAlpha *= motion.outlineMix
+  ctx.lineWidth = size * mix(0.02, 0.052, motion.lineReveal)
+  ctx.strokeStyle = 'rgba(255, 253, 250, 0.96)'
+  ctx.shadowColor = 'rgba(255, 253, 250, 0.14)'
+  ctx.shadowBlur = size * 0.035
+  ctx.strokeText(glyph.char, 0, 0)
+  drawLetterSkeleton(ctx, glyph.char, size, motion)
+  ctx.restore()
+
   ctx.restore()
 }
 
@@ -597,6 +718,57 @@ function drawGAccent(ctx, size, motion) {
   ctx.restore()
 }
 
+function drawLetterSkeleton(ctx, char, size, motion) {
+  if (!motion.lineReveal) return
+
+  ctx.save()
+  ctx.globalAlpha *= motion.lineReveal
+  ctx.strokeStyle = 'rgba(255, 253, 250, 0.88)'
+  ctx.lineWidth = size * 0.018
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.setLineDash([size * (0.12 + motion.lineReveal * 1.25), size * 1.6])
+  ctx.lineDashOffset = size * (1 - motion.lineReveal) * 1.2
+
+  if (char === 'A') {
+    ctx.beginPath()
+    ctx.moveTo(-size * 0.22, size * 0.27)
+    ctx.lineTo(0, -size * 0.42)
+    ctx.lineTo(size * 0.22, size * 0.27)
+    ctx.moveTo(-size * 0.11, size * 0.04)
+    ctx.lineTo(size * 0.12, size * 0.04)
+    ctx.stroke()
+  }
+
+  if (char === 'I') {
+    ctx.beginPath()
+    ctx.moveTo(0, -size * 0.42)
+    ctx.lineTo(0, size * 0.42)
+    ctx.moveTo(-size * 0.12, -size * 0.42)
+    ctx.lineTo(size * 0.12, -size * 0.42)
+    ctx.moveTo(-size * 0.12, size * 0.42)
+    ctx.lineTo(size * 0.12, size * 0.42)
+    ctx.stroke()
+  }
+
+  if (char === 'G') {
+    ctx.beginPath()
+    ctx.arc(0, 0, size * 0.31, 0.16 * Math.PI, 1.86 * Math.PI)
+    ctx.moveTo(size * 0.08, size * 0.02)
+    ctx.lineTo(size * 0.3, size * 0.02)
+    ctx.stroke()
+  }
+
+  if (char === 'C') {
+    ctx.beginPath()
+    ctx.arc(size * 0.02, 0, size * 0.31, 0.2 * Math.PI, 1.78 * Math.PI)
+    ctx.stroke()
+  }
+
+  ctx.setLineDash([])
+  ctx.restore()
+}
+
 function drawWord(ctx, text, options) {
   const {
     alpha,
@@ -644,6 +816,13 @@ function easeOutCubic(value) {
   return 1 - Math.pow(1 - t, 3)
 }
 
+function easeInOutCubic(value) {
+  const t = clamp(value, 0, 1)
+  return t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
 function easeOutBack(value) {
   const t = clamp(value, 0, 1)
   const c1 = 1.70158
@@ -653,6 +832,12 @@ function easeOutBack(value) {
 
 function mix(from, to, amount) {
   return from + (to - from) * amount
+}
+
+function staggerMorph(value, index, count) {
+  const delay = count <= 1 ? 0 : index * 0.055
+  const range = 1 - (count - 1) * 0.055
+  return clamp((value - delay) / range, 0, 1)
 }
 
 function noise(seed, salt) {
