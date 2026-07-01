@@ -629,9 +629,9 @@ function HeroMark() {
                 const raw = Math.sin((burstId + 1) * (glyphIndex + 2) * (salt + 3.73)) * 10000
                 return raw - Math.floor(raw)
               }
-              const jumpRange = lineIndex === 0 ? 72 : 42
+              const jumpRange = lineIndex === 0 ? 46 : 30
               const jumpX = Math.round((randomUnit(1) - 0.5) * jumpRange)
-              const jumpY = Math.round((randomUnit(2) - 0.72) * (lineIndex === 0 ? 96 : 54))
+              const jumpY = Math.round((randomUnit(2) - 0.58) * (lineIndex === 0 ? 58 : 34))
               const jumpRotation = Math.round((randomUnit(3) - 0.5) * (lineIndex === 0 ? 28 : 16))
               const jumpSkew = Math.round((randomUnit(4) - 0.5) * 14)
               const jumpScaleX = Number((0.88 + randomUnit(5) * 0.34).toFixed(2))
@@ -644,7 +644,7 @@ function HeroMark() {
               const phaseRotationSnap = Number((phaseRotationSoft * 1.4).toFixed(2))
               const jumpXSnap = Math.round(jumpX * -0.2)
               const jumpXReverse = Math.round(jumpX * -0.72)
-              const jumpYPop = Math.round(jumpY - 20)
+              const jumpYPop = Math.round(jumpY - 12)
               const jumpYSoft = Math.round(jumpY * 0.42)
               const jumpRotationSnap = Number((jumpRotation * -0.32).toFixed(2))
               const jumpRotationReturn = Number((jumpRotation * -0.46).toFixed(2))
@@ -1068,12 +1068,6 @@ function useAutoplayVideo(resetKey) {
       video.setAttribute('x5-video-player-type', 'h5')
       video.setAttribute('x5-video-player-fullscreen', 'false')
       video.preload = 'auto'
-
-      try {
-        video.currentTime = 0
-      } catch {
-        // Some mobile browsers block seeking until metadata is ready.
-      }
 
       const playPromise = video.play()
       if (playPromise?.catch) {

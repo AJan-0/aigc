@@ -273,13 +273,13 @@ function renderHero(ctx, state, time) {
   const burstAge = time - state.burstAt
   const burstProgress = clamp(burstAge / 1240, 0, 1)
   const burst = burstAge >= 0 && burstAge <= 1120 ? Math.sin(burstProgress * Math.PI) * (1 - burstProgress * 0.12) : 0
-  const unit = clamp(Math.min(width / 1120, height / 530), 0.36, 1.05)
-  const topSize = isMobile ? clamp(width * 0.225, 76, 106) : clamp(width * 0.178, 72, 194)
+  const unit = clamp(Math.min(width / 1120, height / 590), 0.36, 1.05)
+  const topSize = isMobile ? clamp(width * 0.218, 74, 100) : clamp(width * 0.166, 72, 178)
   const designSize = topSize * (isMobile ? 0.5 : 0.7)
   const portfolioSize = topSize * (isMobile ? 0.32 : 0.43)
   const centerX = width / 2
-  const centerY = height * (isMobile ? 0.39 : 0.45)
-  const scrollLift = scroll * height * (isMobile ? 0.06 : 0.08)
+  const centerY = height * (isMobile ? 0.43 : 0.49)
+  const scrollLift = scroll * height * (isMobile ? 0.04 : 0.055)
   const compress = 1 - scroll * 0.1
   const idle = Math.sin(time / 1160)
   const idleSoft = Math.sin(time / 1680 + 0.8)
@@ -290,7 +290,7 @@ function renderHero(ctx, state, time) {
   ctx.translate(pointer.x * hover * 11, pointer.y * hover * 7 - scrollLift + morph * topSize * (isMobile ? 0.06 : 0.16))
   ctx.scale(1 + hover * 0.008 - scroll * 0.012, compress)
 
-  const topY = centerY - topSize * (isMobile ? 0.7 : 0.82)
+  const topY = centerY - topSize * (isMobile ? 0.64 : 0.72)
   drawRigPieces(ctx, {
     burst,
     centerX,
@@ -559,15 +559,15 @@ function drawGlyph(ctx, glyph, props) {
   const dissolve = Math.sin(clamp((localMorph - 0.38) / 0.46, 0, 1) * Math.PI)
   const settleLift = outlineMix * size * 0.006
   const scatterX = (index - 1.5) * size * 0.52 + (noise(seed, index + 1) - 0.5) * size * 0.5
-  const scatterY = -size * (0.84 + noise(seed, index + 5) * 0.52)
+  const scatterY = -size * (0.54 + noise(seed, index + 5) * 0.32)
   const introX = mix(scatterX, 0, localIntro)
   const introY = mix(scatterY, 0, localIntro)
   const overshoot = Math.sin(localIntro * Math.PI) * (1 - localIntro) * size * 0.08
   const idleY = Math.sin(time / 720 + glyph.seed * 12) * unit * 5
   const idleRotate = Math.sin(time / 1320 + glyph.seed * 9) * 2.1
-  const burstKick = burst * size * 0.35
+  const burstKick = burst * size * 0.22
   const burstX = (noise(seed, index + 21) - 0.5) * burstKick
-  const burstY = -(0.25 + noise(seed, index + 31)) * burstKick
+  const burstY = -(0.14 + noise(seed, index + 31) * 0.52) * burstKick
   const burstRotate = (noise(seed, index + 41) - 0.5) * burst * 28
   const scatterDriftX = (noise(seed, index + 61) - 0.5) * dissolve * size * 0.12
   const scatterDriftY = -dissolve * size * (0.05 + noise(seed, index + 62) * 0.08)
