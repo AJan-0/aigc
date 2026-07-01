@@ -20,7 +20,13 @@ const navItems = [
   { id: 'contact', label: 'contact', shortLabel: 'c' },
 ]
 
-const tickerItems = ['aigc visual', 'ajan studio', 'ai drama', 'motion system', 'vertical reels']
+const tickerItems = [
+  { label: 'aigc visual', meta: 'portfolio', tone: 'acid' },
+  { label: 'ajan studio', meta: 'direction', tone: 'ink' },
+  { label: 'ai drama', meta: 'short reels', tone: 'lavender' },
+  { label: 'motion system', meta: 'packaging', tone: 'yellow' },
+  { label: 'vertical reels', meta: 'delivery', tone: 'red' },
+]
 const brandItems = [
   { label: 'COMFYUI', role: 'node graph / shot DNA', accent: '#bfff00', span: 'wide' },
   { label: 'RUNWAY', role: 'motion draft', accent: '#fa340c' },
@@ -33,6 +39,7 @@ const brandItems = [
 ]
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
+const isRiveHeroEnabled = import.meta.env.VITE_ENABLE_RIVE_HERO === 'true'
 const RiveHeroTitle = lazy(() => import('./RiveHeroTitle'))
 const optionalRiveAssetCache = new Map()
 
@@ -360,7 +367,7 @@ function NavWord({ label, active }) {
 }
 
 function HeroExperience({ shouldReduceMotion, scrollYProgress }) {
-  const assetStatus = useOptionalRiveAsset(riveHeroSrc)
+  const assetStatus = useOptionalRiveAsset(riveHeroSrc, isRiveHeroEnabled)
   const [runtimeUnavailable, setRuntimeUnavailable] = useState(false)
 
   useEffect(() => {
@@ -386,11 +393,13 @@ function HeroExperience({ shouldReduceMotion, scrollYProgress }) {
   )
 }
 
-function useOptionalRiveAsset(src) {
-  const [status, setStatus] = useState(() => optionalRiveAssetCache.get(src)?.status ?? 'checking')
+function useOptionalRiveAsset(src, enabled) {
+  const [status, setStatus] = useState(() => (
+    enabled ? optionalRiveAssetCache.get(src)?.status ?? 'checking' : 'unavailable'
+  ))
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!enabled || typeof window === 'undefined') {
       setStatus('unavailable')
       return undefined
     }
@@ -434,7 +443,7 @@ function useOptionalRiveAsset(src) {
     return () => {
       isActive = false
     }
-  }, [src])
+  }, [enabled, src])
 
   return status
 }
@@ -737,7 +746,15 @@ function HeroTicker() {
     <div className="mc-ticker" aria-hidden="true">
       <div className="mc-ticker-track">
         {content.map((item, index) => (
-          <span className="mc-ticker-item" key={`${item}-${index}`}>{item}</span>
+          <span
+            className={`mc-ticker-item is-${item.tone}`}
+            data-label={item.label}
+            key={`${item.label}-${index}`}
+          >
+            <small>{String((index % tickerItems.length) + 1).padStart(2, '0')}</small>
+            <strong>{item.label}</strong>
+            <em>{item.meta}</em>
+          </span>
         ))}
       </div>
     </div>

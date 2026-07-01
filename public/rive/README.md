@@ -6,16 +6,24 @@ Place the production hero asset at:
 public/rive/hero-title.riv
 ```
 
-The site will automatically use this file when it exists. If the file is absent
-or fails to load, the homepage uses the local canvas motion hero as a production
-fallback. Visitors with reduced motion enabled receive the DOM/CSS hero.
+Enable it with:
+
+```text
+VITE_ENABLE_RIVE_HERO=true
+```
+
+When the flag is not enabled, the homepage uses the local canvas motion hero and
+does not probe for a missing `.riv` file. If the flag is enabled but the asset is
+absent or fails to load, the homepage falls back to the canvas motion hero.
+Visitors with reduced motion enabled receive the DOM/CSS hero.
 
 Runtime order:
 
 ```text
-hero-title.riv available -> Rive WebGL2 state machine
-hero-title.riv missing   -> local canvas motion hero
-reduced motion enabled   -> DOM/CSS hero
+flag off                 -> local canvas motion hero
+flag on + asset available -> Rive WebGL2 state machine
+flag on + asset missing   -> local canvas motion hero
+reduced motion enabled    -> DOM/CSS hero
 ```
 
 ## Rive Setup

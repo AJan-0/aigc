@@ -556,6 +556,7 @@ function drawGlyph(ctx, glyph, props) {
   const roll = easeInOutCubic(clamp((localMorph - 0.12) / 0.42, 0, 1))
   const colorFlow = easeInOutCubic(clamp((localMorph - 0.48) / 0.28, 0, 1))
   const outlineMix = easeInOutCubic(clamp((localMorph - 0.66) / 0.3, 0, 1))
+  const dissolve = Math.sin(clamp((localMorph - 0.38) / 0.46, 0, 1) * Math.PI)
   const settleLift = outlineMix * size * 0.006
   const scatterX = (index - 1.5) * size * 0.52 + (noise(seed, index + 1) - 0.5) * size * 0.5
   const scatterY = -size * (0.84 + noise(seed, index + 5) * 0.52)
@@ -568,8 +569,10 @@ function drawGlyph(ctx, glyph, props) {
   const burstX = (noise(seed, index + 21) - 0.5) * burstKick
   const burstY = -(0.25 + noise(seed, index + 31)) * burstKick
   const burstRotate = (noise(seed, index + 41) - 0.5) * burst * 28
-  const x = homeX + introX + pointer.x * hover * unit * (index - 1.5) * 8 + pointer.x * localHover * unit * 12 + burstX
-  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 - localHover * unit * 10 + burstY - activationJump - settleLift
+  const scatterDriftX = (noise(seed, index + 61) - 0.5) * dissolve * size * 0.12
+  const scatterDriftY = -dissolve * size * (0.05 + noise(seed, index + 62) * 0.08)
+  const x = homeX + introX + pointer.x * hover * unit * (index - 1.5) * 8 + pointer.x * localHover * unit * 12 + burstX + scatterDriftX
+  const y = topY + introY + idleY - overshoot + pointer.y * hover * unit * 9 - localHover * unit * 10 + burstY - activationJump - settleLift + scatterDriftY
   const morphSquash = Math.sin(clamp(localMorph / 0.32, 0, 1) * Math.PI)
   const morphShrink = outlineMix * 0.055
   const scale = mix(0.58, 1, localIntro) + Math.sin(time / 840 + index) * 0.012 + burst * 0.12 + localHover * 0.055 - morphShrink
@@ -586,6 +589,8 @@ function drawGlyph(ctx, glyph, props) {
   drawPlayfulLetter(ctx, glyph, size, {
     burst,
     colorFlow,
+    dissolve,
+    index,
     lineReveal: easeOutCubic(clamp((localMorph - 0.72) / 0.28, 0, 1)),
     localHover,
     localMorph,
@@ -625,6 +630,7 @@ function drawPlayfulLetter(ctx, glyph, size, motion) {
 
   ctx.fillStyle = gradient
   ctx.fillText(glyph.char, 0, 0)
+  drawShellBreakaway(ctx, glyph, size, motion, gradient)
 
   if (motion.colorFlow > 0) {
     ctx.save()
@@ -634,7 +640,9 @@ function drawPlayfulLetter(ctx, glyph, size, motion) {
     ctx.restore()
   }
 
+  drawRotatingShellEcho(ctx, glyph, size, motion)
   drawLetterHighlights(ctx, glyph.char, size, motion)
+  drawDissolveFragments(ctx, glyph, size, motion, 'inside')
 
   if (glyph.char === 'C') drawFace(ctx, size, motion)
   if (glyph.char === 'I') drawIAccent(ctx, size, motion)
@@ -649,9 +657,11 @@ function drawPlayfulLetter(ctx, glyph, size, motion) {
   ctx.shadowColor = 'rgba(255, 253, 250, 0.14)'
   ctx.shadowBlur = size * 0.035
   ctx.strokeText(glyph.char, 0, 0)
+  drawOrbitingTrace(ctx, glyph, size, motion)
   drawLetterSkeleton(ctx, glyph.char, size, motion)
   ctx.restore()
 
+  drawDissolveFragments(ctx, glyph, size, motion, 'outside')
   ctx.restore()
 }
 
@@ -715,6 +725,152 @@ function drawGAccent(ctx, size, motion) {
   ctx.moveTo(size * 0.1, -size * 0.04)
   ctx.quadraticCurveTo(size * 0.26, -size * 0.02, size * 0.31, size * 0.08)
   ctx.stroke()
+  ctx.restore()
+}
+
+function drawShellBreakaway(ctx, glyph, size, motion, fillStyle) {
+  const split = motion.dissolve * (1 - motion.outlineMix * 0.3)
+  if (split <= 0.02) return
+
+  ctx.save()
+  ctx.globalAlpha *= split * 0.46
+
+  for (let i = 0; i < 5; i += 1) {
+    const salt = motion.index * 17 + i
+    const bandY = size * mix(-0.43, 0.33, i / 4)
+    const bandHeight = size * (0.045 + noise(glyph.seed, salt + 2) * 0.04)
+    const direction = i % 2 === 0 ? -1 : 1
+    const drift = direction * size * split * (0.08 + noise(glyph.seed, salt + 4) * 0.14)
+    const lift = -size * split * (0.025 + noise(glyph.seed, salt + 6) * 0.075)
+    const spin = toRadians(direction * (3 + noise(glyph.seed, salt + 8) * 9) * split)
+
+    ctx.save()
+    ctx.translate(drift, lift)
+    ctx.rotate(spin)
+    ctx.beginPath()
+    ctx.rect(-size * 0.52, bandY, size * 1.04, bandHeight)
+    ctx.clip()
+    ctx.lineWidth = size * 0.035
+    ctx.strokeStyle = glyph.stroke
+    ctx.strokeText(glyph.char, 0, 0)
+    ctx.fillStyle = fillStyle
+    ctx.fillText(glyph.char, 0, 0)
+    ctx.restore()
+
+    ctx.save()
+    ctx.translate(drift * 1.08, bandY + bandHeight * 0.9 + lift)
+    ctx.rotate(spin * 1.8)
+    ctx.globalAlpha *= 0.55
+    ctx.strokeStyle = i % 2 === 0 ? glyph.fill[0] : glyph.fill[1]
+    ctx.lineWidth = Math.max(1, size * 0.008)
+    ctx.beginPath()
+    ctx.moveTo(-size * (0.12 + noise(glyph.seed, salt + 10) * 0.18), 0)
+    ctx.lineTo(size * (0.12 + noise(glyph.seed, salt + 12) * 0.24), 0)
+    ctx.stroke()
+    ctx.restore()
+  }
+
+  ctx.restore()
+}
+
+function drawRotatingShellEcho(ctx, glyph, size, motion) {
+  const echo = motion.dissolve * (1 - motion.outlineMix * 0.5)
+  if (echo <= 0.01) return
+
+  ctx.save()
+  ctx.globalAlpha *= echo * 0.28
+  ctx.rotate(toRadians(8 + motion.index * 5 + motion.localMorph * 28))
+  ctx.scale(1 + echo * 0.08, 1 - echo * 0.035)
+  ctx.lineWidth = size * 0.022
+  ctx.strokeStyle = glyph.fill[0]
+  ctx.strokeText(glyph.char, size * 0.018, -size * 0.018)
+  ctx.strokeStyle = glyph.fill[1]
+  ctx.strokeText(glyph.char, -size * 0.02, size * 0.02)
+  ctx.restore()
+}
+
+function drawDissolveFragments(ctx, glyph, size, motion, layer) {
+  const dissolve = motion.dissolve + motion.burst * 0.45
+  if (dissolve <= 0.01) return
+
+  const fragmentCount = layer === 'inside' ? 12 : 18
+  const baseAlpha = layer === 'inside'
+    ? (1 - motion.outlineMix) * 0.42
+    : (0.46 + motion.outlineMix * 0.3)
+  const shellAlpha = clamp(dissolve * baseAlpha, 0, 0.72)
+  if (shellAlpha <= 0.01) return
+
+  ctx.save()
+  ctx.globalAlpha *= shellAlpha
+
+  for (let i = 0; i < fragmentCount; i += 1) {
+    const salt = motion.index * 19 + i
+    const angle = noise(glyph.seed, salt + 0.5) * Math.PI * 2 + motion.localMorph * Math.PI * (layer === 'inside' ? 0.45 : 0.9)
+    const radius = size * (layer === 'inside'
+      ? 0.14 + noise(glyph.seed, salt + 4) * 0.24
+      : 0.34 + noise(glyph.seed, salt + 5) * 0.46)
+    const scatter = size * dissolve * (layer === 'inside' ? 0.1 : 0.32)
+    const x = Math.cos(angle) * (radius + scatter)
+    const y = Math.sin(angle) * (radius * 0.76 + scatter * 0.58) - size * dissolve * 0.06
+    const w = size * (0.026 + noise(glyph.seed, salt + 8) * 0.036) * (1 + dissolve * 0.5)
+    const h = size * (0.008 + noise(glyph.seed, salt + 11) * 0.018)
+    const spin = angle + motion.localMorph * Math.PI * 1.6 + noise(glyph.seed, salt + 13) * Math.PI
+
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.rotate(spin)
+    ctx.fillStyle = i % 3 === 0
+      ? 'rgba(255, 253, 250, 0.88)'
+      : i % 2 === 0
+        ? glyph.fill[0]
+        : glyph.fill[1]
+    drawRoundedRect(ctx, -w / 2, -h / 2, w, h, h * 0.45)
+    ctx.fill()
+
+    if (layer === 'outside' && i % 5 === 1) {
+      ctx.strokeStyle = i % 2 === 0 ? glyph.fill[1] : 'rgba(255, 253, 250, 0.72)'
+      ctx.lineWidth = Math.max(1, size * 0.0055)
+      ctx.beginPath()
+      ctx.moveTo(-w * 1.1, 0)
+      ctx.lineTo(w * (1.4 + dissolve), 0)
+      ctx.stroke()
+    }
+
+    if (layer === 'outside' && i % 4 === 0) {
+      ctx.strokeStyle = 'rgba(255, 253, 250, 0.7)'
+      ctx.lineWidth = Math.max(1, size * 0.006)
+      ctx.beginPath()
+      ctx.arc(0, 0, w * 0.8, -Math.PI * 0.1, Math.PI * 0.9)
+      ctx.stroke()
+    }
+
+    ctx.restore()
+  }
+
+  ctx.restore()
+}
+
+function drawOrbitingTrace(ctx, glyph, size, motion) {
+  const trace = clamp(motion.dissolve * 0.75 + motion.lineReveal * 0.38, 0, 1)
+  if (trace <= 0.02) return
+
+  ctx.save()
+  ctx.globalAlpha *= trace * 0.32
+  ctx.rotate(toRadians(motion.index * 17 - 8) + motion.localMorph * Math.PI * 0.55)
+  ctx.scale(1.04 + trace * 0.06, 0.62 + trace * 0.08)
+  ctx.lineWidth = Math.max(1, size * 0.006)
+  ctx.lineCap = 'round'
+
+  for (let i = 0; i < 3; i += 1) {
+    const radius = size * (0.34 + i * 0.085 + noise(glyph.seed, motion.index + i + 40) * 0.025)
+    const start = -Math.PI * (0.08 + i * 0.18) + motion.localMorph * (i % 2 === 0 ? 0.6 : -0.45)
+    const end = start + Math.PI * (0.42 + trace * 0.25)
+    ctx.strokeStyle = i === 1 ? glyph.fill[1] : 'rgba(255, 253, 250, 0.76)'
+    ctx.beginPath()
+    ctx.arc(0, 0, radius, start, end)
+    ctx.stroke()
+  }
+
   ctx.restore()
 }
 
