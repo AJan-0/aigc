@@ -1,6 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import Lenis from 'lenis'
+import CanvasHeroTitle from './CanvasHeroTitle'
 import v1Video from '../../../v1_mobile.mp4'
 import v1Cover from '../../../v1_cover.jpg'
 import betrayalVideo from '../../../429.mp4'
@@ -366,8 +367,12 @@ function HeroExperience({ shouldReduceMotion, scrollYProgress }) {
     setRuntimeUnavailable(false)
   }, [assetStatus])
 
-  if (shouldReduceMotion || assetStatus !== 'available' || runtimeUnavailable) {
+  if (shouldReduceMotion) {
     return <HeroMark />
+  }
+
+  if (assetStatus !== 'available' || runtimeUnavailable) {
+    return <CanvasHeroTitle scrollYProgress={scrollYProgress} />
   }
 
   return (

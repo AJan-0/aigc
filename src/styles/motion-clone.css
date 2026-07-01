@@ -3923,6 +3923,21 @@ html.mc-native-scroll .motion-clone-page {
   overflow: visible;
 }
 
+.motion-clone-page .mc-canvas-hero-mark {
+  overflow: visible;
+}
+
+.motion-clone-page .mc-canvas-hero-canvas {
+  position: absolute;
+  inset: -3% -2%;
+  z-index: 2;
+  width: 104%;
+  height: 106%;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+
 .motion-clone-page .mc-rive-hero-canvas {
   position: absolute;
   inset: 0;

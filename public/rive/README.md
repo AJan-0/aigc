@@ -7,7 +7,16 @@ public/rive/hero-title.riv
 ```
 
 The site will automatically use this file when it exists. If the file is absent
-or fails to load, the DOM/CSS hero remains the fallback.
+or fails to load, the homepage uses the local canvas motion hero as a production
+fallback. Visitors with reduced motion enabled receive the DOM/CSS hero.
+
+Runtime order:
+
+```text
+hero-title.riv available -> Rive WebGL2 state machine
+hero-title.riv missing   -> local canvas motion hero
+reduced motion enabled   -> DOM/CSS hero
+```
 
 ## Rive Setup
 
