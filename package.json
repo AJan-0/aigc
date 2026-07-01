@@ -23,6 +23,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/noto-sans-sc": "^5.2.9",
     "@fontsource/space-grotesk": "^5.2.10",
+    "@rive-app/react-webgl2": "^4.29.3",
     "@supabase/supabase-js": "^2.108.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.0.28",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import Lenis from 'lenis'
 import v1Video from '../../../v1_mobile.mp4'
@@ -31,6 +31,9 @@ const brandItems = [
   { label: 'AIGC', role: 'portfolio system', accent: '#bfff00' },
 ]
 const contactEmail = '1248567324@qq.com'
+const riveHeroSrc = '/rive/hero-title.riv'
+const RiveHeroTitle = lazy(() => import('./RiveHeroTitle'))
+const optionalRiveAssetCache = new Map()
 
 const heroTitleLines = [
   [
@@ -190,7 +193,7 @@ export default function MotionCloneExperience() {
 
       <section className="mc-hero" id="home" aria-label="AIGC Design Portfolio hero">
         <div className={shouldReduceMotion ? 'mc-hero-stage' : 'mc-hero-stage has-entry-motion'}>
-          <HeroMark />
+          <HeroExperience shouldReduceMotion={shouldReduceMotion} scrollYProgress={scrollYProgress} />
         </div>
       </section>
 
@@ -353,6 +356,89 @@ function NavWord({ label, active }) {
       <span aria-hidden="true">{label}</span>
     </span>
   )
+}
+
+function HeroExperience({ shouldReduceMotion, scrollYProgress }) {
+  const assetStatus = useOptionalRiveAsset(riveHeroSrc)
+  const [runtimeUnavailable, setRuntimeUnavailable] = useState(false)
+
+  useEffect(() => {
+    setRuntimeUnavailable(false)
+  }, [assetStatus])
+
+  if (shouldReduceMotion || assetStatus !== 'available' || runtimeUnavailable) {
+    return <HeroMark />
+  }
+
+  return (
+    <Suspense fallback={<HeroMark />}>
+      <RiveHeroTitle
+        src={riveHeroSrc}
+        scrollYProgress={scrollYProgress}
+        onUnavailable={() => setRuntimeUnavailable(true)}
+      />
+    </Suspense>
+  )
+}
+
+function useOptionalRiveAsset(src) {
+  const [status, setStatus] = useState(() => optionalRiveAssetCache.get(src)?.status ?? 'checking')
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      setStatus('unavailable')
+      return undefined
+    }
+
+    let isActive = true
+    let assetEntry = optionalRiveAssetCache.get(src)
+
+    if (assetEntry?.status && assetEntry.status !== 'checking') {
+      setStatus(assetEntry.status)
+      return () => {
+        isActive = false
+      }
+    }
+
+    if (!assetEntry?.promise) {
+      const promise = fetch(src, {
+        method: 'HEAD',
+        cache: 'no-store',
+        headers: {
+          Accept: 'application/octet-stream',
+        },
+      }).then(response => (
+        isRiveAssetResponse(response) ? 'available' : 'unavailable'
+      )).catch(() => (
+        'unavailable'
+      )).then(nextStatus => {
+        optionalRiveAssetCache.set(src, { status: nextStatus })
+        return nextStatus
+      })
+
+      assetEntry = { status: 'checking', promise }
+      optionalRiveAssetCache.set(src, assetEntry)
+    }
+
+    setStatus('checking')
+
+    assetEntry.promise.then(nextStatus => {
+      if (isActive) setStatus(nextStatus)
+    })
+
+    return () => {
+      isActive = false
+    }
+  }, [src])
+
+  return status
+}
+
+function isRiveAssetResponse(response) {
+  if (!response.ok) return false
+
+  const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+  return !contentType.includes('text/html')
 }
 
 function HeroMark() {
