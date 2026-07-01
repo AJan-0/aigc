@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "remotion:render-showreel": "remotion render remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper.mp4 --codec=h264 --overwrite && ffmpeg -y -i public/motion/showreel-motion-bumper.mp4 -an -c:v copy public/motion/showreel-motion-bumper.silent.mp4 && node -e \"const fs=require('fs');fs.copyFileSync('public/motion/showreel-motion-bumper.silent.mp4','public/motion/showreel-motion-bumper.mp4');fs.rmSync('public/motion/showreel-motion-bumper.silent.mp4',{force:true})\"",
-    "remotion:still-showreel": "remotion still remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper-poster.png --frame=54 --overwrite"
+    "remotion:still-showreel": "remotion still remotion/index.jsx ShowreelMotionBumper public/motion/showreel-motion-bumper-poster.png --frame=42 --overwrite"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.484",
