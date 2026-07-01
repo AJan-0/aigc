@@ -358,7 +358,12 @@ function NavWord({ label, active }) {
 function HeroMark() {
   const [burstId, setBurstId] = useState(0)
   const [isBursting, setIsBursting] = useState(false)
+  const [isPointerActive, setIsPointerActive] = useState(false)
+  const markRef = useRef(null)
   const lastBurstRef = useRef(0)
+  const lastTouchBurstRef = useRef(0)
+  const pointerFrameRef = useRef(0)
+  const pendingPointerRef = useRef(null)
 
   const triggerBurst = useCallback((force = false) => {
     const now = window.performance?.now?.() ?? Date.now()
@@ -379,12 +384,95 @@ function HeroMark() {
     return () => window.clearTimeout(timeoutId)
   }, [burstId, isBursting])
 
+  useEffect(() => () => {
+    if (pointerFrameRef.current) cancelAnimationFrame(pointerFrameRef.current)
+  }, [])
+
+  const commitPointerVars = useCallback(() => {
+    pointerFrameRef.current = 0
+
+    const mark = markRef.current
+    const nextPointer = pendingPointerRef.current
+    if (!mark || !nextPointer) return
+
+    mark.style.setProperty('--title-x', `${nextPointer.titleX}px`)
+    mark.style.setProperty('--title-y', `${nextPointer.titleY}px`)
+    mark.style.setProperty('--tilt-x', `${nextPointer.tiltX}deg`)
+    mark.style.setProperty('--tilt-y', `${nextPointer.tiltY}deg`)
+    mark.style.setProperty('--spot-x', `${nextPointer.spotX}%`)
+    mark.style.setProperty('--spot-y', `${nextPointer.spotY}%`)
+    mark.style.setProperty('--drift-x-pointer', `${nextPointer.driftX}px`)
+    mark.style.setProperty('--drift-y-pointer', `${nextPointer.driftY}px`)
+  }, [])
+
+  const updatePointerVars = useCallback(event => {
+    const mark = markRef.current
+    if (!mark) return
+
+    const rect = mark.getBoundingClientRect()
+    const x = clamp((event.clientX - rect.left) / rect.width * 2 - 1, -1, 1)
+    const y = clamp((event.clientY - rect.top) / rect.height * 2 - 1, -1, 1)
+
+    pendingPointerRef.current = {
+      titleX: Math.round(x * 18),
+      titleY: Math.round(y * 12),
+      tiltX: Number((-y * 1.8).toFixed(2)),
+      tiltY: Number((x * 2.4).toFixed(2)),
+      spotX: Number((50 + x * 18).toFixed(2)),
+      spotY: Number((48 + y * 16).toFixed(2)),
+      driftX: Math.round(x * -16),
+      driftY: Math.round(y * -12),
+    }
+
+    if (!pointerFrameRef.current) {
+      pointerFrameRef.current = requestAnimationFrame(commitPointerVars)
+    }
+  }, [commitPointerVars])
+
+  const resetPointerVars = useCallback(() => {
+    const mark = markRef.current
+    if (!mark) return
+
+    mark.style.setProperty('--title-x', '0px')
+    mark.style.setProperty('--title-y', '0px')
+    mark.style.setProperty('--tilt-x', '0deg')
+    mark.style.setProperty('--tilt-y', '0deg')
+    mark.style.setProperty('--spot-x', '50%')
+    mark.style.setProperty('--spot-y', '48%')
+    mark.style.setProperty('--drift-x-pointer', '0px')
+    mark.style.setProperty('--drift-y-pointer', '0px')
+  }, [])
+
   const handlePointerEnter = event => {
-    if (event.pointerType === 'mouse' || event.pointerType === 'pen') triggerBurst(true)
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+      setIsPointerActive(true)
+      updatePointerVars(event)
+      triggerBurst(true)
+    }
   }
 
   const handlePointerMove = event => {
-    if (event.pointerType === 'mouse') triggerBurst(false)
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') updatePointerVars(event)
+  }
+
+  const handlePointerLeave = () => {
+    setIsPointerActive(false)
+    pendingPointerRef.current = null
+    resetPointerVars()
+  }
+
+  const handlePointerDown = event => {
+    if (event.pointerType === 'mouse') return
+
+    lastTouchBurstRef.current = window.performance?.now?.() ?? Date.now()
+    triggerBurst(true)
+  }
+
+  const handleClick = () => {
+    const now = window.performance?.now?.() ?? Date.now()
+    if (now - lastTouchBurstRef.current < 420) return
+
+    triggerBurst(true)
   }
 
   const handleKeyDown = event => {
@@ -394,16 +482,25 @@ function HeroMark() {
     triggerBurst(true)
   }
 
+  const markClassName = [
+    'mc-hero-mark',
+    isBursting ? `is-chaos-${burstId % 2 === 0 ? 'a' : 'b'}` : '',
+    isPointerActive ? 'is-pointer-active' : '',
+  ].filter(Boolean).join(' ')
+
   return (
     <div
-      className={isBursting ? `mc-hero-mark is-chaos-${burstId % 2 === 0 ? 'a' : 'b'}` : 'mc-hero-mark'}
+      ref={markRef}
+      className={markClassName}
       aria-label="AIGC Design Portfolio"
       role="button"
       tabIndex={0}
-      onClick={() => triggerBurst(true)}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
       onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
     >
       <h1 className="mc-hero-title" aria-label="AIGC Design Portfolio">
         {heroTitleLines.map((line, lineIndex) => (
@@ -533,6 +630,11 @@ function HeroMark() {
       <p className="mc-hero-caption">
         AIGC Design Portfolio. AI film direction, short drama hooks and finished motion packaging.
       </p>
+      <div className="mc-hero-signal" aria-hidden="true">
+        <span>ai film direction</span>
+        <span>scene systems</span>
+        <span>motion packaging</span>
+      </div>
     </div>
   )
 }
@@ -1124,6 +1226,10 @@ function NoiseLayer() {
 
 function wrap(value, length) {
   return ((value % length) + length) % length
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max)
 }
 
 function toggleInlineVideo(video) {

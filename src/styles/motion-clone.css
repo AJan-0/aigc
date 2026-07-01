@@ -3866,3 +3866,409 @@ html.mc-native-scroll .motion-clone-page {
     --line-size: 42px;
   }
 }
+
+/* Production interaction pass: Rive-like states without losing DOM text quality. */
+.motion-clone-page .mc-hero-mark {
+  --title-x: 0px;
+  --title-y: 0px;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --spot-x: 50%;
+  --spot-y: 48%;
+  --drift-x-pointer: 0px;
+  --drift-y-pointer: 0px;
+  isolation: isolate;
+  perspective: 1200px;
+}
+
+.motion-clone-page .mc-hero-mark::before {
+  content: '';
+  position: absolute;
+  inset: -16%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.52;
+  background:
+    radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 48%), rgba(191, 255, 0, 0.09), transparent 16%),
+    radial-gradient(circle at calc(var(--spot-x, 50%) + 14%) calc(var(--spot-y, 48%) - 10%), rgba(250, 52, 12, 0.07), transparent 18%),
+    radial-gradient(circle at calc(var(--spot-x, 50%) - 18%) calc(var(--spot-y, 48%) + 12%), rgba(179, 159, 227, 0.06), transparent 20%);
+  filter: blur(0.2px);
+  transform: translate3d(var(--drift-x-pointer, 0px), var(--drift-y-pointer, 0px), 0) scale(1);
+  transition:
+    opacity 620ms ease,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-clone-page .mc-hero-mark.is-pointer-active::before {
+  opacity: 0.9;
+  transform: translate3d(var(--drift-x-pointer, 0px), var(--drift-y-pointer, 0px), 0) scale(1.035);
+  transition-duration: 180ms;
+}
+
+.motion-clone-page .mc-hero-title {
+  transform:
+    translate3d(var(--title-x, 0px), var(--title-y, 0px), 0)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.motion-clone-page .mc-hero-mark.is-pointer-active .mc-hero-title {
+  transition-duration: 160ms;
+}
+
+.motion-clone-page .mc-hero-line {
+  animation: mcHeroLineRegroupSilk 8.8s cubic-bezier(0.55, 0, 0.18, 1) infinite;
+  animation-delay: var(--line-loop-delay, 0ms);
+  filter: none;
+  will-change: transform;
+}
+
+.motion-clone-page .mc-hero-line-1 {
+  --line-rest: translateX(-0.35%) rotate(-0.65deg);
+  --line-scatter: translate3d(-12px, -9px, 0) rotate(-1.7deg) scaleX(1.018);
+  --line-gather: translate3d(8px, 7px, 0) rotate(1.05deg) scaleX(0.985);
+  --line-snap: translate3d(-3px, 2px, 0) rotate(-0.28deg) scaleX(1.006);
+}
+
+.motion-clone-page .mc-hero-line-2 {
+  --plain-scale-x: 1.03;
+  --plain-rotate: 0.2deg;
+  --plain-x: 6px;
+  --plain-y: -5px;
+}
+
+.motion-clone-page .mc-hero-line-3 {
+  --plain-scale-x: 0.86;
+  --plain-rotate: 0deg;
+  --plain-x: -5px;
+  --plain-y: 5px;
+}
+
+.motion-clone-page .mc-hero-glyph {
+  will-change: transform;
+  filter:
+    drop-shadow(0 10px 0 rgba(0, 0, 0, 0.18))
+    drop-shadow(0 0 12px rgba(255, 253, 250, 0.035));
+  animation:
+    mcGlyphEnter 720ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    mcGlyphMicroFloat 5.8s ease-in-out infinite;
+  animation-delay:
+    var(--glyph-delay, 0ms),
+    calc(var(--glyph-loop-delay, 1080ms) + 820ms);
+}
+
+.motion-clone-page .mc-glyph-balloon {
+  filter:
+    drop-shadow(0 12px 0 rgba(0, 0, 0, 0.26))
+    saturate(1.12);
+  animation-name: mcBalloonEnter, mcBalloonIdleSilk;
+  animation-duration: 760ms, 4.9s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), ease-in-out;
+  animation-delay:
+    var(--glyph-delay, 0ms),
+    calc(var(--glyph-loop-delay, 1080ms) + 820ms);
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: both, none;
+}
+
+.motion-clone-page .mc-glyph-balloon::before {
+  filter: blur(0.4px);
+  animation: mcBalloonGlint 3.4s ease-in-out infinite;
+  animation-delay: calc(var(--glyph-loop-delay, 1080ms) + 1200ms);
+}
+
+.motion-clone-page .mc-hero-plain-line {
+  animation:
+    mcWordEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    mcPlainLineBreath 6.6s ease-in-out infinite;
+  animation-delay: 180ms, 1280ms;
+}
+
+.motion-clone-page .mc-hero-line-3.mc-hero-plain-line {
+  animation-delay: 270ms, 1480ms;
+}
+
+.motion-clone-page .mc-hero-drifters {
+  transform: translate3d(var(--drift-x-pointer, 0px), var(--drift-y-pointer, 0px), 0);
+  transition: transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.motion-clone-page .mc-hero-mark.is-pointer-active .mc-hero-drifters {
+  transition-duration: 180ms;
+}
+
+.motion-clone-page .mc-hero-signal {
+  position: absolute;
+  left: clamp(18px, 4vw, 58px);
+  right: clamp(18px, 4vw, 58px);
+  bottom: clamp(12px, 2.2vw, 24px);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px clamp(16px, 2.4vw, 32px);
+  color: rgba(255, 253, 250, 0.58);
+  font-family: 'Neue Regrade Medium', Arial, sans-serif;
+  font-size: clamp(10px, 0.8vw, 13px);
+  line-height: 1;
+  text-transform: lowercase;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: mcSignalEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) 940ms both;
+}
+
+.motion-clone-page .mc-hero-signal span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.motion-clone-page .mc-hero-signal span::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.motion-clone-page .mc-hero-mark.is-chaos-a .mc-hero-line,
+.motion-clone-page .mc-hero-mark.is-chaos-b .mc-hero-line {
+  animation-duration: 4.4s;
+}
+
+.motion-clone-page .mc-hero-mark.is-chaos-a .mc-hero-glyph {
+  animation: mcGlyphRandomJumpA 920ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+  filter:
+    drop-shadow(0 15px 0 rgba(0, 0, 0, 0.26))
+    drop-shadow(0 0 20px rgba(255, 253, 250, 0.11));
+}
+
+.motion-clone-page .mc-hero-mark.is-chaos-b .mc-hero-glyph {
+  animation: mcGlyphRandomJumpB 860ms cubic-bezier(0.2, 1.28, 0.34, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+  filter:
+    drop-shadow(0 18px 0 rgba(0, 0, 0, 0.22))
+    drop-shadow(0 0 24px rgba(250, 52, 12, 0.12));
+}
+
+.motion-clone-page .mc-hero-mark.is-chaos-a .mc-glyph-balloon,
+.motion-clone-page .mc-hero-mark.is-chaos-b .mc-glyph-balloon {
+  filter:
+    drop-shadow(0 16px 0 rgba(0, 0, 0, 0.34))
+    drop-shadow(0 0 18px rgba(255, 253, 250, 0.18))
+    saturate(1.32);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motion-clone-page .mc-hero:hover .mc-hero-line,
+  .motion-clone-page .mc-hero:hover .mc-hero-glyph {
+    filter:
+      drop-shadow(0 12px 0 rgba(0, 0, 0, 0.2))
+      drop-shadow(0 0 18px rgba(255, 253, 250, 0.055));
+  }
+
+  .motion-clone-page .mc-hero-mark.is-pointer-active:not(.is-chaos-a):not(.is-chaos-b) .mc-hero-glyph {
+    animation-duration: 720ms, 3.9s;
+  }
+}
+
+@media (max-width: 808px) {
+  html.mc-native-scroll .motion-clone-page {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: clip;
+  }
+
+  .motion-clone-page .mc-hero,
+  .motion-clone-page .mc-ticker,
+  .motion-clone-page .mc-showreel,
+  .motion-clone-page .mc-work,
+  .motion-clone-page .mc-about,
+  .motion-clone-page .mc-brands,
+  .motion-clone-page .mc-contact {
+    max-width: 100vw;
+  }
+
+  .motion-clone-page .mc-ticker {
+    contain: paint;
+  }
+
+  .motion-clone-page .mc-nav {
+    padding: 0 14px;
+  }
+
+  .motion-clone-page .mc-nav-links {
+    gap: 14px;
+    max-width: calc(100vw - 78px);
+  }
+
+  .motion-clone-page .mc-nav-links button {
+    width: auto;
+    min-width: 0;
+    height: 36px;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .motion-clone-page .mc-nav-links button::before {
+    content: none;
+  }
+
+  .motion-clone-page .mc-nav-word {
+    position: relative;
+    width: auto;
+    height: 34px;
+    clip: auto;
+    overflow: hidden;
+    color: var(--mc-ink);
+    font-size: 15px;
+    line-height: 34px;
+  }
+
+  .motion-clone-page .mc-nav-links button:hover .mc-nav-word span,
+  .motion-clone-page .mc-nav-links button:focus-visible .mc-nav-word span,
+  .motion-clone-page .mc-nav-links button.is-active .mc-nav-word span {
+    transform: translateY(-34px);
+  }
+
+  .motion-clone-page .mc-hero-line-1 {
+    --line-rest: translateX(-0.45%) rotate(-0.55deg);
+    --line-scatter: translate3d(-7px, -5px, 0) rotate(-1.1deg) scaleX(1.012);
+    --line-gather: translate3d(5px, 4px, 0) rotate(0.72deg) scaleX(0.99);
+    --line-snap: translate3d(-2px, 1px, 0) rotate(-0.22deg) scaleX(1.004);
+  }
+
+  .motion-clone-page .mc-hero-line-2 {
+    --plain-scale-x: 1.02;
+    --plain-x: 3px;
+    --plain-y: -3px;
+  }
+
+  .motion-clone-page .mc-hero-line-3 {
+    --plain-scale-x: 0.9;
+    --plain-x: -3px;
+    --plain-y: 3px;
+  }
+
+  .motion-clone-page .mc-hero-signal {
+    bottom: 6px;
+    gap: 7px 12px;
+    font-size: 10px;
+  }
+
+  .motion-clone-page .mc-hero-signal span::before {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .motion-clone-page .mc-nav-links {
+    gap: 11px;
+  }
+
+  .motion-clone-page .mc-nav-word {
+    font-size: 14px;
+  }
+
+  .motion-clone-page .mc-hero-signal span:nth-child(2) {
+    display: none;
+  }
+}
+
+@keyframes mcHeroLineRegroupSilk {
+  0%, 14%, 100% {
+    transform: var(--line-rest);
+  }
+  36% {
+    transform: var(--line-scatter);
+  }
+  58% {
+    transform: var(--line-gather);
+  }
+  76% {
+    transform: var(--line-snap);
+  }
+}
+
+@keyframes mcGlyphMicroFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-0.35deg) scale(1);
+  }
+  34% {
+    transform: translate3d(var(--settle-x, -2px), -7px, 0) rotate(var(--phase-rotation-soft, 1.2deg)) scale(1.018, 0.99);
+  }
+  62% {
+    transform: translate3d(var(--counter-x, 2px), 4px, 0) rotate(var(--phase-rotation-counter, -0.8deg)) scale(0.988, 1.018);
+  }
+  82% {
+    transform: translate3d(var(--gather-x, 1px), -2px, 0) rotate(0.45deg) scale(1.006);
+  }
+}
+
+@keyframes mcBalloonIdleSilk {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-0.45deg) scale(1);
+  }
+  30% {
+    transform: translate3d(var(--settle-x, -2px), -8px, 0) rotate(var(--phase-rotation-soft, 1.6deg)) scale(1.026, 0.982);
+  }
+  58% {
+    transform: translate3d(var(--counter-x, 3px), 5px, 0) rotate(var(--phase-rotation-counter, -1.1deg)) scale(0.976, 1.03);
+  }
+  78% {
+    transform: translate3d(var(--gather-x, 1px), -3px, 0) rotate(0.7deg) scale(1.01, 0.996);
+  }
+}
+
+@keyframes mcPlainLineBreath {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(var(--plain-rotate, 0deg)) scaleX(var(--plain-scale-x, 1));
+  }
+  34% {
+    transform: translate3d(var(--plain-x, 4px), var(--plain-y, -4px), 0) rotate(calc(var(--plain-rotate, 0deg) + 0.42deg)) scaleX(calc(var(--plain-scale-x, 1) + 0.018));
+  }
+  62% {
+    transform: translate3d(-3px, 2px, 0) rotate(calc(var(--plain-rotate, 0deg) - 0.28deg)) scaleX(calc(var(--plain-scale-x, 1) - 0.01));
+  }
+  82% {
+    transform: translate3d(1px, -1px, 0) rotate(var(--plain-rotate, 0deg)) scaleX(calc(var(--plain-scale-x, 1) + 0.006));
+  }
+}
+
+@keyframes mcSignalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-clone-page .mc-hero-line,
+  .motion-clone-page .mc-hero-glyph,
+  .motion-clone-page .mc-glyph-balloon,
+  .motion-clone-page .mc-glyph-balloon::before,
+  .motion-clone-page .mc-hero-plain-line,
+  .motion-clone-page .mc-hero-signal {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .motion-clone-page .mc-hero-title,
+  .motion-clone-page .mc-hero-drifters {
+    transform: none !important;
+    transition-duration: 0.001ms !important;
+  }
+}
