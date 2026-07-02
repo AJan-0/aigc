@@ -278,6 +278,7 @@ function renderHero(ctx, state, time) {
   const designSize = topSize * (isMobile ? 0.66 : 0.7)
   const portfolioSize = topSize * (isMobile ? 0.46 : 0.43)
   const centerX = width / 2
+  const visualCenterX = centerX + (isMobile ? 0 : width * 0.04)
   const centerY = height * (isMobile ? 0.45 : 0.49)
   const scrollLift = scroll * height * (isMobile ? 0.04 : 0.055)
   const compress = 1 - scroll * 0.1
@@ -293,7 +294,7 @@ function renderHero(ctx, state, time) {
   const topY = centerY - topSize * (isMobile ? 0.64 : 0.72)
   drawRigPieces(ctx, {
     burst,
-    centerX,
+    centerX: visualCenterX,
     elapsed,
     hover,
     isMobile,
@@ -308,7 +309,7 @@ function renderHero(ctx, state, time) {
 
   drawAigcLine(ctx, {
     burst,
-    centerX,
+    centerX: visualCenterX,
     elapsed,
     hover,
     idle,
@@ -327,7 +328,7 @@ function renderHero(ctx, state, time) {
     alpha: easeOutCubic(clamp((elapsed - (isMobile ? 780 : 520)) / (isMobile ? 920 : 980), 0, 1)),
     baseline: isMobile ? centerY + topSize * 0.56 + idleSoft * unit * 2 : centerY + designSize * 0.08 + idleSoft * unit * 3,
     burst: burst * (isMobile ? 0.72 : 1),
-    centerX: centerX + pointer.x * hover * -8,
+    centerX: visualCenterX + pointer.x * hover * -8,
     color: '#fffdf7',
     fontSize: designSize,
     scaleX: isMobile ? 1.02 : 1.06,
@@ -339,7 +340,7 @@ function renderHero(ctx, state, time) {
     alpha: easeOutCubic(clamp((elapsed - (isMobile ? 1080 : 820)) / (isMobile ? 960 : 1040), 0, 1)),
     baseline: isMobile ? centerY + topSize * 1.08 + idle * unit * 1.5 : centerY + designSize * 0.78 + portfolioSize * 0.48 + idle * unit * 2,
     burst: burst * 0.55,
-    centerX: centerX + pointer.x * hover * 5,
+    centerX: visualCenterX + pointer.x * hover * 5,
     color: '#fffdf7',
     fontSize: portfolioSize,
     scaleX: isMobile ? 0.88 : 0.86,
@@ -403,21 +404,6 @@ function drawRigPieces(ctx, props) {
     y: topY + size * (isMobile ? 0.27 : 0.34) + driftY * 0.26 - burstSpread * 0.4,
   })
 
-  if (!isMobile) {
-    drawSpringCord(ctx, {
-      alpha,
-      burst,
-      hover,
-      isMobile,
-      morph,
-      pointer,
-      size,
-      time,
-      x: centerX + size * 1.7 + driftX * 0.26,
-      y: topY - size * 0.05 + driftY * 0.14,
-    })
-  }
-
   drawRigNodes(ctx, {
     alpha,
     burst,
@@ -471,39 +457,6 @@ function drawFloatingBlock(ctx, options) {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
   drawRoundedRect(ctx, 0, 0, width * 0.48, height, height * 0.08)
   ctx.fill()
-  ctx.restore()
-}
-
-function drawSpringCord(ctx, options) {
-  const { alpha, burst, hover, isMobile, morph, pointer, size, time, x, y } = options
-  const cordLength = size * (isMobile ? 0.62 : 0.78)
-  const wave = Math.sin(time / 520) * size * 0.035
-
-  ctx.save()
-  ctx.translate(x, y)
-  ctx.globalAlpha *= alpha * (0.78 + hover * 0.18)
-  ctx.strokeStyle = morph > 0.72 ? 'rgba(255, 253, 250, 0.82)' : '#bfff00'
-  ctx.lineWidth = size * (isMobile ? 0.046 : 0.04) * (1 - morph * 0.24)
-  ctx.lineCap = 'round'
-  ctx.beginPath()
-  ctx.moveTo(0, -size * 0.12)
-  ctx.bezierCurveTo(
-    cordLength * 0.22 + pointer.x * hover * size * 0.05,
-    -size * 0.46 + wave,
-    cordLength * 0.44,
-    size * (0.34 + burst * 0.08),
-    cordLength * 0.7,
-    size * 0.02 - wave,
-  )
-  ctx.bezierCurveTo(
-    cordLength * 0.86,
-    -size * 0.18,
-    cordLength * 0.92 + pointer.y * hover * size * 0.08,
-    size * 0.35,
-    cordLength,
-    size * (0.12 - burst * 0.12),
-  )
-  ctx.stroke()
   ctx.restore()
 }
 
