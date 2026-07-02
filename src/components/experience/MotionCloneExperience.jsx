@@ -1144,6 +1144,7 @@ function useAutoplayVideo(resetKey) {
 }
 
 function AboutSection() {
+  const aboutTitleWords = ['Not', 'generated', 'shots.', 'A', 'working', 'motion', 'system.']
   const principles = [
     ['Hook', 'Compress story intent into a visual first impression.'],
     ['Continuity', 'Keep character, costume, lighting and scene DNA aligned.'],
@@ -1160,7 +1161,19 @@ function AboutSection() {
         viewport={{ once: true, amount: 0.42 }}
       >
         <p className="mc-kicker">about</p>
-        <h2>Not generated shots. A working motion system.</h2>
+        <h2 className="mc-about-title" aria-label="Not generated shots. A working motion system." tabIndex={0}>
+          {aboutTitleWords.map((word, index) => (
+            <span
+              className="mc-about-word"
+              data-word={word}
+              aria-hidden="true"
+              key={word + '-' + index}
+              style={{ '--word-index': index }}
+            >
+              {word}
+            </span>
+          ))}
+        </h2>
         <p>
           AJan builds AIGC short-drama reels around hooks, scene rules, character consistency and final packaging.
           The page mirrors that process with fixed motion navigation, kinetic type, auto-playing previews and fast project switching.
