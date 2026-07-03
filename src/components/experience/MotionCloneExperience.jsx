@@ -22,14 +22,14 @@ const navItems = [
 
 const tickerItems = ['aigc visual', 'ajan studio', 'ai drama', 'motion system', 'vertical reels']
 const brandItems = [
-  { label: 'COMFYUI', role: 'node graph / shot DNA', accent: '#bfff00', span: 'wide' },
-  { label: 'RUNWAY', role: 'motion draft', accent: '#fa340c' },
-  { label: 'KLING', role: 'video generation', accent: '#f7e40f' },
-  { label: 'SDXL', role: 'character base', accent: '#b39fe3' },
-  { label: 'DAVINCI', role: 'grade / final edit', accent: '#fffdfa', span: 'tall' },
-  { label: 'LORA', role: 'identity lock', accent: '#fa7575' },
-  { label: 'CONTROLNET', role: 'pose / framing', accent: '#9b30ff', span: 'wide' },
-  { label: 'AIGC', role: 'portfolio system', accent: '#bfff00' },
+  { label: 'COMFYUI', role: 'node graph workflow / visual pipeline', accent: '#bfff00', span: 'wide' },
+  { label: 'SEEDANCE 2.0', role: 'cinematic video generation / motion design', accent: '#fa340c' },
+  { label: 'GPT IMAGE', role: 'concept visual / image refinement', accent: '#f7e40f' },
+  { label: 'STORYBOARD SYSTEM', role: 'shot planning / scene breakdown', accent: '#b39fe3', span: 'wide' },
+  { label: 'LORA TRAINING', role: 'character consistency / custom style model', accent: '#fa75f0' },
+  { label: 'VIBE CODING', role: 'ai-assisted tool and interface prototyping', accent: '#9b30ff' },
+  { label: 'POST-PRODUCTION PIPELINE', role: 'editing / sound / color / delivery', accent: '#fffdfa', span: 'wide' },
+  { label: 'ASSET SYSTEM', role: 'reusable IP assets / production library', accent: '#bfff00', span: 'wide' },
 ]
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
@@ -1209,7 +1209,7 @@ function BrandSection() {
         viewport={{ once: true, amount: 0.5 }}
       >
         <p className="mc-kicker">system</p>
-        <h2>Tools, models and delivery marks.</h2>
+        <h2>AI production stack and asset pipeline.</h2>
       </motion.div>
       <motion.div
         className="mc-brand-grid"
