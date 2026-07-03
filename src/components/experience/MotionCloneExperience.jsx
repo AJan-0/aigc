@@ -1144,56 +1144,129 @@ function useAutoplayVideo(resetKey) {
 }
 
 function AboutSection() {
-  const aboutTitleWords = ['Not', 'generated', 'shots.', 'A', 'working', 'motion', 'system.']
+  const [activePrinciple, setActivePrinciple] = useState(0)
+  const aboutTitleWords = ['Quiet', 'observer.', 'Relentless', 'maker.']
   const principles = [
-    ['Hook', 'Compress story intent into a visual first impression.'],
-    ['Continuity', 'Keep character, costume, lighting and scene DNA aligned.'],
-    ['Delivery', 'Package the reel for platform pacing and review.'],
+    {
+      title: 'Observation',
+      body: 'I catch subtle emotions, visual tension and story signals before the first frame.',
+      signal: 'INFJ lens',
+      accent: 'var(--mc-lavender)',
+    },
+    {
+      title: 'Drive',
+      body: 'I move from curiosity to tests, from tests to finished AI video output.',
+      signal: 'self-driven',
+      accent: 'var(--mc-acid)',
+    },
+    {
+      title: 'Continuity',
+      body: 'I keep character, scene, style and rhythm aligned across generated shots.',
+      signal: 'character lock',
+      accent: 'var(--mc-pink)',
+    },
+    {
+      title: 'Pipeline',
+      body: 'I turn prompts, models, edits and assets into reusable production systems.',
+      signal: 'AIGC system',
+      accent: 'var(--mc-red)',
+    },
   ]
+  const active = principles[activePrinciple]
 
   return (
     <section className="mc-about mc-section" id="about" aria-label="About AJan">
       <motion.div
-        className="mc-about-copy"
+        className="mc-about-main"
         variants={reveal}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.42 }}
       >
-        <p className="mc-kicker">about</p>
-        <h2 className="mc-about-title" aria-label="Not generated shots. A working motion system." tabIndex={0}>
-          {aboutTitleWords.map((word, index) => (
-            <span
-              className="mc-about-word"
-              data-word={word}
-              aria-hidden="true"
-              key={word + '-' + index}
-              style={{ '--word-index': index }}
+        <div className="mc-about-copy">
+          <p className="mc-kicker">about</p>
+          <h2 className="mc-about-title" aria-label="Quiet observer. Relentless maker." tabIndex={0}>
+            {aboutTitleWords.map((word, index) => (
+              <span
+                className="mc-about-word"
+                data-word={word}
+                aria-hidden="true"
+                key={word + '-' + index}
+                style={{ '--word-index': index }}
+              >
+                {word}
+              </span>
+            ))}
+          </h2>
+          <p>
+            I am a self-driven 2026 graduate focused on AIGC video and short-drama production. I connect story hooks,
+            visual direction, model workflows, character consistency, motion generation and post-production into a
+            repeatable creative pipeline.
+          </p>
+        </div>
+
+        <motion.div
+          className="mc-principles"
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          aria-label="Creative principles"
+        >
+          {principles.map((item, index) => (
+            <motion.button
+              type="button"
+              className={`mc-principle-card${activePrinciple === index ? ' is-active' : ''}`}
+              key={item.title}
+              variants={reveal}
+              whileHover={{ y: -8 }}
+              whileFocus={{ y: -8 }}
+              onClick={() => setActivePrinciple(index)}
+              onFocus={() => setActivePrinciple(index)}
+              onMouseEnter={() => setActivePrinciple(index)}
+              aria-pressed={activePrinciple === index}
+              aria-controls="about-portrait-note"
+              style={{ '--principle-accent': item.accent }}
             >
-              {word}
-            </span>
+              <span className="mc-principle-index">{String(index + 1).padStart(2, '0')}</span>
+              <SimpleBadge label={item.title} />
+              <p>{item.body}</p>
+              <small>{item.signal}</small>
+            </motion.button>
           ))}
-        </h2>
-        <p>
-          AJan builds AIGC short-drama reels around hooks, scene rules, character consistency and final packaging.
-          The page mirrors that process with fixed motion navigation, kinetic type, auto-playing previews and fast project switching.
-        </p>
+        </motion.div>
       </motion.div>
 
-      <motion.div
-        className="mc-principles"
-        variants={stagger}
+      <motion.figure
+        className="mc-about-portrait"
+        style={{ '--portrait-accent': active.accent }}
+        variants={reveal}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.35 }}
       >
-        {principles.map(([title, body]) => (
-          <motion.article key={title} variants={reveal} whileHover={{ y: -8 }}>
-            <SimpleBadge label={title} />
-            <p>{body}</p>
-          </motion.article>
-        ))}
-      </motion.div>
+        <img src="/ajan-about-portrait.jpg" alt="Portrait of AJan" loading="lazy" />
+        <div className="mc-about-portrait-meta" aria-hidden="true">
+          <span>2026 grad</span>
+          <span>INFJ</span>
+          <span>self-driven</span>
+        </div>
+        <figcaption id="about-portrait-note">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.title}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span>{active.signal}</span>
+              <strong>{active.title}</strong>
+              <p>{active.body}</p>
+            </motion.div>
+          </AnimatePresence>
+        </figcaption>
+      </motion.figure>
     </section>
   )
 }
