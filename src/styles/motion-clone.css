@@ -2639,7 +2639,7 @@ html.mc-native-scroll .motion-clone-page {
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 2;
+  z-index: 8;
   width: 42px;
   height: 42px;
   border: 1px solid rgba(255,255,255,0.2);
@@ -2932,6 +2932,10 @@ html.mc-native-scroll .motion-clone-page {
   display: grid;
   gap: 6px;
   padding: 14px 12px;
+}
+
+.mc-modal-metrics div:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .mc-modal-metrics span {
@@ -4003,6 +4007,12 @@ html.mc-native-scroll .motion-clone-page {
     max-height: 100dvh;
     min-height: 100dvh;
     border-inline: 0;
+  }
+
+  .mc-modal-close {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    z-index: 10;
   }
 
   .mc-modal-media {
