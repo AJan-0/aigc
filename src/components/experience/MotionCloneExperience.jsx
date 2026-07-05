@@ -1395,7 +1395,11 @@ function SimpleBadge({ label }) {
 }
 
 function ProjectModal({ project, onClose }) {
-  const videoRef = useAutoplayVideo(project?.slug)
+  const videoRef = useRef(null)
+  const playRequestIdRef = useRef(0)
+  const userPausedRef = useRef(false)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [isVideoWaiting, setIsVideoWaiting] = useState(false)
   const metaItems = [
     ['Role', project?.role],
     ['Duration', project?.duration],
@@ -1409,6 +1413,87 @@ function ProjectModal({ project, onClose }) {
     ['Outcome', project?.outcome],
   ].filter(([, value]) => Boolean(value))
   const metrics = Array.isArray(project?.metrics) ? project.metrics : []
+
+  const syncVideoState = useCallback(video => {
+    if (!video) return
+    setIsVideoPlaying(!video.paused && !video.ended)
+    setIsVideoWaiting(video.readyState < 3 && !video.paused && !video.ended)
+  }, [])
+
+  const playModalVideo = useCallback((video, { force = false } = {}) => {
+    if (!video) return Promise.resolve(false)
+
+    if (force) userPausedRef.current = false
+    if (userPausedRef.current) {
+      syncVideoState(video)
+      return Promise.resolve(false)
+    }
+
+    if (!video.paused && !video.ended) {
+      syncVideoState(video)
+      return Promise.resolve(true)
+    }
+
+    const requestId = playRequestIdRef.current + 1
+    playRequestIdRef.current = requestId
+    setIsVideoWaiting(true)
+
+    const canContinue = () => (
+      playRequestIdRef.current === requestId
+      && !userPausedRef.current
+      && videoRef.current === video
+    )
+
+    return requestInlineVideoPlay(video, canContinue)
+      .then(played => {
+        if (!canContinue()) {
+          if (userPausedRef.current && !video.paused) video.pause()
+          return false
+        }
+
+        syncVideoState(video)
+        if (!played) setIsVideoWaiting(false)
+        return played
+      })
+      .catch(() => {
+        if (canContinue()) setIsVideoWaiting(false)
+        return false
+      })
+  }, [syncVideoState])
+
+  const handleVideoToggle = useCallback(event => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const video = videoRef.current
+    if (!video) return
+
+    if (!video.paused && !video.ended) {
+      userPausedRef.current = true
+      playRequestIdRef.current += 1
+      setIsVideoWaiting(false)
+      video.pause()
+      syncVideoState(video)
+      return
+    }
+
+    userPausedRef.current = false
+    if (video.ended) video.currentTime = 0
+    playModalVideo(video, { force: true })
+  }, [playModalVideo, syncVideoState])
+
+  const handleVideoFullscreen = useCallback(event => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const video = videoRef.current
+    if (!video) return
+
+    userPausedRef.current = false
+    playRequestIdRef.current += 1
+    requestInlineVideoFullscreen(video)
+    syncVideoState(video)
+  }, [syncVideoState])
 
   useEffect(() => {
     if (!project) return undefined
@@ -1425,6 +1510,49 @@ function ProjectModal({ project, onClose }) {
       document.body.style.overflow = originalOverflow
     }
   }, [onClose, project])
+
+  useEffect(() => {
+    userPausedRef.current = false
+    playRequestIdRef.current += 1
+    setIsVideoPlaying(false)
+    setIsVideoWaiting(false)
+
+    const video = videoRef.current
+    if (!project || !video) return undefined
+
+    const playWhenReady = () => {
+      if (userPausedRef.current) return
+      playModalVideo(video)
+    }
+
+    if (video.readyState < 1) {
+      try {
+        video.load()
+      } catch {}
+    }
+    playWhenReady()
+
+    const handleVisibility = () => {
+      if (!document.hidden && video.paused && !userPausedRef.current) playWhenReady()
+    }
+
+    video.addEventListener('loadedmetadata', playWhenReady)
+    video.addEventListener('loadeddata', playWhenReady)
+    video.addEventListener('canplay', playWhenReady)
+    video.addEventListener('canplaythrough', playWhenReady)
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      userPausedRef.current = true
+      playRequestIdRef.current += 1
+      video.removeEventListener('loadedmetadata', playWhenReady)
+      video.removeEventListener('loadeddata', playWhenReady)
+      video.removeEventListener('canplay', playWhenReady)
+      video.removeEventListener('canplaythrough', playWhenReady)
+      document.removeEventListener('visibilitychange', handleVisibility)
+      video.pause()
+    }
+  }, [playModalVideo, project])
 
   return (
     <AnimatePresence>
@@ -1449,13 +1577,12 @@ function ProjectModal({ project, onClose }) {
             <button className="mc-modal-close" type="button" onClick={onClose} aria-label="Close project details">
               <span aria-hidden="true" />
             </button>
-            <div className="mc-modal-media">
+            <div className={isVideoPlaying ? 'mc-modal-media is-playing' : 'mc-modal-media is-paused'}>
               <video
                 ref={videoRef}
                 src={project.video}
                 poster={project.cover}
                 muted
-                controls
                 autoPlay
                 playsInline
                 preload="auto"
@@ -1463,15 +1590,36 @@ function ProjectModal({ project, onClose }) {
                 x5-playsinline="true"
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="false"
-                onLoadedData={event => requestInlineVideoPlay(event.currentTarget)}
-                onCanPlay={event => requestInlineVideoPlay(event.currentTarget)}
-                onPointerDown={event => {
-                  if (event.pointerType === 'touch' || event.pointerType === 'pen') {
-                    handleInlineVideoPlaybackIntent(event.currentTarget)
-                  }
-                }}
-                onClick={event => handleInlineVideoPlaybackIntent(event.currentTarget)}
+                aria-label={`${project.titleEn} video`}
+                onLoadedData={event => syncVideoState(event.currentTarget)}
+                onCanPlay={event => syncVideoState(event.currentTarget)}
+                onCanPlayThrough={event => syncVideoState(event.currentTarget)}
+                onPlay={event => syncVideoState(event.currentTarget)}
+                onPlaying={event => syncVideoState(event.currentTarget)}
+                onPause={event => syncVideoState(event.currentTarget)}
+                onEnded={event => syncVideoState(event.currentTarget)}
+                onWaiting={() => setIsVideoWaiting(true)}
               />
+              <button
+                className={[
+                  'mc-modal-video-toggle',
+                  isVideoPlaying ? 'is-playing' : 'is-paused',
+                  isVideoWaiting ? 'is-waiting' : '',
+                ].filter(Boolean).join(' ')}
+                type="button"
+                onClick={handleVideoToggle}
+                aria-label={isVideoPlaying ? 'Pause video' : 'Play video'}
+              >
+                <span aria-hidden="true" />
+              </button>
+              <button
+                className="mc-modal-video-fullscreen"
+                type="button"
+                onClick={handleVideoFullscreen}
+                aria-label="Open fullscreen video"
+              >
+                <span aria-hidden="true" />
+              </button>
             </div>
             <div className="mc-modal-copy" tabIndex={0} aria-label={`${project.titleEn} project details`}>
               <header className="mc-modal-copy-head">
@@ -1542,43 +1690,41 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max)
 }
 
-function handleInlineVideoPlaybackIntent(video) {
-  if (!video) return
-
-  if (video.paused || video.ended || video.readyState < 2) {
-    if (video.ended) video.currentTime = 0
-    requestInlineVideoPlay(video).catch(() => {})
-  }
-}
-
-function requestInlineVideoPlay(video) {
-  if (!video) return Promise.resolve(false)
+function requestInlineVideoPlay(video, shouldContinue = () => true) {
+  if (!video || !shouldContinue()) return Promise.resolve(false)
 
   prepareInlineVideo(video)
+  if (!shouldContinue()) return Promise.resolve(false)
 
   if (video.ended) video.currentTime = 0
-  if (video.readyState < 1) {
+  if (video.readyState < 1 && shouldContinue()) {
     try {
       video.load()
     } catch {}
   }
 
   const attemptPlay = () => {
-    const playPromise = video.play()
-    if (playPromise?.then) {
-      return playPromise.then(() => true).catch(() => false)
+    if (!shouldContinue()) return Promise.resolve(false)
+
+    try {
+      const playPromise = video.play()
+      if (playPromise?.then) {
+        return playPromise.then(() => shouldContinue()).catch(() => false)
+      }
+      return Promise.resolve(!video.paused && shouldContinue())
+    } catch {
+      return Promise.resolve(false)
     }
-    return Promise.resolve(!video.paused)
   }
 
   return attemptPlay().then(played => {
-    if (played) return true
+    if (played || !shouldContinue()) return played && shouldContinue()
 
     return new Promise(resolve => {
       let settled = false
       let retryTimer = 0
 
-      const cleanup = () => {
+      const finish = played => {
         if (settled) return
         settled = true
         if (retryTimer) window.clearTimeout(retryTimer)
@@ -1586,13 +1732,23 @@ function requestInlineVideoPlay(video) {
         video.removeEventListener('loadeddata', retry)
         video.removeEventListener('canplay', retry)
         video.removeEventListener('canplaythrough', retry)
+        resolve(played)
       }
 
       const retry = () => {
+        if (!shouldContinue()) {
+          finish(false)
+          return
+        }
+
         attemptPlay().then(ok => {
-          if (!ok) return
-          cleanup()
-          resolve(true)
+          if (!shouldContinue()) {
+            if (!video.paused) video.pause()
+            finish(false)
+            return
+          }
+
+          if (ok) finish(true)
         })
       }
 
@@ -1603,11 +1759,29 @@ function requestInlineVideoPlay(video) {
 
       retryTimer = window.setTimeout(() => {
         attemptPlay().then(ok => {
-          cleanup()
-          resolve(ok)
+          finish(ok && shouldContinue())
         })
       }, 300)
     })
+  })
+}
+
+function requestInlineVideoFullscreen(video) {
+  if (!video) return
+
+  prepareInlineVideo(video)
+
+  const requestFullscreen = video.requestFullscreen
+    || video.webkitRequestFullscreen
+    || video.webkitEnterFullscreen
+    || video.msRequestFullscreen
+
+  requestInlineVideoPlay(video).finally(() => {
+    if (!requestFullscreen) return
+
+    try {
+      requestFullscreen.call(video)
+    } catch {}
   })
 }
 

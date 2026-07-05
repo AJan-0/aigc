@@ -2699,6 +2699,133 @@ html.mc-native-scroll .motion-clone-page {
   background: #000;
 }
 
+.mc-modal-video-toggle,
+.mc-modal-video-fullscreen {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.28);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--mc-ink);
+  background: rgba(0,0,0,0.44);
+  backdrop-filter: blur(10px);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.mc-modal-video-toggle {
+  left: 50%;
+  top: 50%;
+  width: clamp(72px, 8vw, 104px);
+  height: clamp(72px, 8vw, 104px);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mc-modal-video-toggle:hover,
+.mc-modal-video-toggle:focus-visible,
+.mc-modal-video-fullscreen:hover,
+.mc-modal-video-fullscreen:focus-visible {
+  border-color: rgba(255,255,255,0.52);
+  background: rgba(0,0,0,0.62);
+}
+
+.mc-modal-video-toggle:hover,
+.mc-modal-video-toggle:focus-visible {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.mc-modal-media.is-playing .mc-modal-video-toggle:not(:hover):not(:focus-visible) {
+  opacity: 0;
+}
+
+.mc-modal-media.is-playing:hover .mc-modal-video-toggle {
+  opacity: 1;
+}
+
+.mc-modal-video-toggle span {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 36px;
+}
+
+.mc-modal-video-toggle.is-paused span::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 24px solid currentColor;
+}
+
+.mc-modal-video-toggle.is-playing span::before,
+.mc-modal-video-toggle.is-playing span::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 10px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.mc-modal-video-toggle.is-playing span::before {
+  left: 3px;
+}
+
+.mc-modal-video-toggle.is-playing span::after {
+  right: 3px;
+}
+
+.mc-modal-video-toggle.is-waiting::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-top-color: var(--mc-ink);
+  border-radius: 50%;
+  animation: mcSpin 0.9s linear infinite;
+}
+
+.mc-modal-video-fullscreen {
+  left: 16px;
+  top: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.mc-modal-video-fullscreen span,
+.mc-modal-video-fullscreen span::before,
+.mc-modal-video-fullscreen span::after {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+}
+
+.mc-modal-video-fullscreen span::before,
+.mc-modal-video-fullscreen span::after {
+  content: '';
+  inset: 0;
+  border-color: currentColor;
+  border-style: solid;
+}
+
+.mc-modal-video-fullscreen span::before {
+  border-width: 2px 0 0 2px;
+  transform: translate(-4px, -4px);
+}
+
+.mc-modal-video-fullscreen span::after {
+  border-width: 0 2px 2px 0;
+  transform: translate(4px, 4px);
+}
+
 .mc-modal-copy {
   min-width: 0;
   min-height: 0;
@@ -2853,6 +2980,12 @@ html.mc-native-scroll .motion-clone-page {
 @keyframes mcTicker {
   to {
     transform: translateX(-33.333%);
+  }
+}
+
+@keyframes mcSpin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -3863,6 +3996,29 @@ html.mc-native-scroll .motion-clone-page {
   .mc-modal-media {
     height: clamp(340px, 68dvh, 620px);
     min-height: 0;
+  }
+
+  .mc-modal-media.is-playing .mc-modal-video-toggle:not(:hover):not(:focus-visible) {
+    opacity: 0.92;
+  }
+
+  .mc-modal-video-toggle {
+    width: 84px;
+    height: 84px;
+    border-width: 0;
+    background: rgba(0,0,0,0.38);
+  }
+
+  .mc-modal-video-toggle span {
+    width: 28px;
+    height: 34px;
+  }
+
+  .mc-modal-video-fullscreen {
+    left: max(14px, env(safe-area-inset-left));
+    top: max(14px, env(safe-area-inset-top));
+    width: 46px;
+    height: 46px;
   }
 
   .mc-modal-copy {
