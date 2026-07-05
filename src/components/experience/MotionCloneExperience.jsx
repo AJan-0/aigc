@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+﻿import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import Lenis from 'lenis'
 import CanvasHeroTitle from './CanvasHeroTitle'
@@ -78,7 +78,23 @@ const motionProjects = [
     cover: v1Cover,
     video: v1Video,
     duration: '0:52',
+    year: '2026',
+    role: 'AI Director / Workflow Designer',
     tools: ['SDXL', 'ComfyUI', 'LoRA', 'Runway', 'DaVinci Resolve'],
+    tags: ['AI drama', 'Wolf romance', 'Vertical reel'],
+    hook: 'Fate-driven wolf romance',
+    value: 'Fast emotional hook',
+    challenge:
+      'The opening needs to translate a very abstract feeling of fate into frames that make the audience stop, understand the relationship and want the next beat.',
+    approach:
+      'I compressed the first act into a rhythm of close-ups, low light, body language and vertical framing so the romance premise lands before the lore expands.',
+    outcome:
+      'A repeatable first-look template for vertical AI romance reels with a clear emotional entry point.',
+    metrics: [
+      { label: 'Shots', value: '42' },
+      { label: 'Iterations', value: '237' },
+      { label: 'Format', value: '9:16' },
+    ],
   },
   {
     id: '02',
@@ -89,7 +105,23 @@ const motionProjects = [
     cover: betrayalCover,
     video: betrayalVideo,
     duration: '2:24',
+    year: '2026',
+    role: 'AI Drama Visual Direction',
     tools: ['SDXL', 'RealisticVision', 'ControlNet', 'Sound Design'],
+    tags: ['Betrayal', 'Character continuity', 'Overseas drama'],
+    hook: 'Betrayal to possession',
+    value: 'High-emotion continuity',
+    challenge:
+      'Short drama depends on immediate betrayal, pressure and attraction, while generated faces and micro-expressions can easily break the emotional line.',
+    approach:
+      'I used composition, posture, lighting and sound design to hold emotional pressure even when individual generated moments needed cleanup.',
+    outcome:
+      'A controlled atmosphere method for high-emotion AI short-drama scenes.',
+    metrics: [
+      { label: 'Shots', value: '38' },
+      { label: 'Duration', value: '2:24' },
+      { label: 'Mood', value: 'Betrayal' },
+    ],
   },
   {
     id: '03',
@@ -100,7 +132,23 @@ const motionProjects = [
     cover: curseCover,
     video: curseVideo,
     duration: '1:39',
+    year: '2026',
+    role: 'Continuity Workflow',
     tools: ['SDXL', 'ControlNet', 'Img2Img', 'Prompt System'],
+    tags: ['Supernatural romance', 'Continuity', 'Scene DNA'],
+    hook: 'Curse-led intimacy',
+    value: 'Consistent scene DNA',
+    challenge:
+      'Multiple generated shots need to feel like they belong to the same film, not a set of similar posters.',
+    approach:
+      'I locked color, light source, wardrobe logic and scene rules, then edited around the strongest continuity anchors.',
+    outcome:
+      'A scene-DNA rule set for moody supernatural romance packaging.',
+    metrics: [
+      { label: 'Shots', value: '56' },
+      { label: 'Duration', value: '1:39' },
+      { label: 'System', value: 'DNA' },
+    ],
   },
   {
     id: '04',
@@ -111,7 +159,23 @@ const motionProjects = [
     cover: rebornCover,
     video: rebornVideo,
     duration: '1:24',
+    year: '2026',
+    role: 'AI Short Drama Packaging',
     tools: ['ComfyUI', 'LoRA', 'Kling', 'DaVinci Resolve'],
+    tags: ['Rebirth revenge', 'Noir romance', 'English short drama'],
+    hook: 'Revenge romance switch',
+    value: 'Noir trailer pacing',
+    challenge:
+      'The rebirth revenge premise needs identity, danger and choice to become readable fast without becoming only mood imagery.',
+    approach:
+      'I used blocking, contrast, edit rhythm and noir color to separate power positions and make the relationship stakes legible.',
+    outcome:
+      'A compact noir-romance trailer system for AI-generated drama concepts.',
+    metrics: [
+      { label: 'Duration', value: '1:24' },
+      { label: 'Tone', value: 'Noir' },
+      { label: 'Format', value: 'Drama' },
+    ],
   },
   {
     id: '05',
@@ -122,7 +186,23 @@ const motionProjects = [
     cover: pickingCover,
     video: pickingVideo,
     duration: '1:46',
+    year: '2026',
+    role: 'Concept Trailer Direction',
     tools: ['SDXL', 'Video Generation', 'Editing', 'Color Grade'],
+    tags: ['Absurd premise', 'Power reversal', 'Concept trailer'],
+    hook: 'Street-level power reversal',
+    value: 'Concept trailer clarity',
+    challenge:
+      'The absurd premise can float away unless the street realism and the identity reversal feel grounded at the same time.',
+    approach:
+      'I kept the environment tactile and the costume hierarchy clear, using contrast as the engine of the concept.',
+    outcome:
+      'A grounded high-concept test for short-drama pitch reels.',
+    metrics: [
+      { label: 'Duration', value: '1:46' },
+      { label: 'Hook', value: 'Power' },
+      { label: 'Style', value: 'Street' },
+    ],
   },
 ]
 
@@ -1341,6 +1421,19 @@ function SimpleBadge({ label }) {
 
 function ProjectModal({ project, onClose }) {
   const videoRef = useAutoplayVideo(project?.slug)
+  const metaItems = [
+    ['Role', project?.role],
+    ['Duration', project?.duration],
+    ['Year', project?.year],
+    ['Hook', project?.hook],
+    ['Value', project?.value],
+  ].filter(([, value]) => Boolean(value))
+  const detailSections = [
+    ['Challenge', project?.challenge],
+    ['Approach', project?.approach],
+    ['Outcome', project?.outcome],
+  ].filter(([, value]) => Boolean(value))
+  const metrics = Array.isArray(project?.metrics) ? project.metrics : []
 
   useEffect(() => {
     if (!project) return undefined
@@ -1398,11 +1491,53 @@ function ProjectModal({ project, onClose }) {
                 onClick={event => toggleInlineVideo(event.currentTarget)}
               />
             </div>
-            <div className="mc-modal-copy">
-              <p className="mc-kicker">{project.type}</p>
-              <h2>{project.titleEn}</h2>
-              <p>{project.introEn}</p>
-              <div>
+            <div className="mc-modal-copy" tabIndex={0} aria-label={`${project.titleEn} project details`}>
+              <header className="mc-modal-copy-head">
+                <p className="mc-kicker">{project.type}</p>
+                <h2>{project.titleEn}</h2>
+                <p className="mc-modal-summary">{project.introEn}</p>
+              </header>
+
+              {metaItems.length > 0 && (
+                <dl className="mc-modal-meta" aria-label="Project metadata">
+                  {metaItems.map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+
+              {metrics.length > 0 && (
+                <div className="mc-modal-metrics" aria-label="Project metrics">
+                  {metrics.map(metric => (
+                    <div key={metric.label}>
+                      <span>{metric.label}</span>
+                      <strong>{metric.value}</strong>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {detailSections.length > 0 && (
+                <div className="mc-modal-sections">
+                  {detailSections.map(([label, value]) => (
+                    <section key={label}>
+                      <h3>{label}</h3>
+                      <p>{value}</p>
+                    </section>
+                  ))}
+                </div>
+              )}
+
+              {project.tags?.length > 0 && (
+                <div className="mc-modal-tags" aria-label="Project tags">
+                  {project.tags.map(tag => <span key={tag}>{tag}</span>)}
+                </div>
+              )}
+
+              <div className="mc-modal-tools" aria-label="Project tools">
                 {project.tools.map(tool => <span key={tool}>{tool}</span>)}
               </div>
             </div>

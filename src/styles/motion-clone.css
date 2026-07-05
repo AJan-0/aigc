@@ -2605,7 +2605,7 @@ html.mc-native-scroll .motion-clone-page {
   z-index: 200;
   display: grid;
   place-items: center;
-  padding: 12px;
+  padding: clamp(10px, 2vw, 24px);
 }
 
 .mc-modal-scrim {
@@ -2617,13 +2617,22 @@ html.mc-native-scroll .motion-clone-page {
 .mc-project-modal {
   position: relative;
   z-index: 1;
-  width: min(1120px, 100%);
-  max-height: min(760px, calc(100vh - 24px));
-  overflow: auto;
+  width: min(1280px, calc(100vw - clamp(20px, 4vw, 48px)));
+  height: min(820px, calc(100dvh - clamp(20px, 4vw, 48px)));
+  max-height: calc(100dvh - clamp(20px, 4vw, 48px));
+  overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(280px, 0.55fr) minmax(0, 0.45fr);
+  grid-template-columns: minmax(0, 0.58fr) minmax(360px, 0.42fr);
   border: 1px solid var(--mc-border);
   background: var(--mc-bg);
+  box-shadow: 0 28px 90px rgba(0,0,0,0.62);
+}
+
+@supports not (height: 100dvh) {
+  .mc-project-modal {
+    height: min(820px, calc(100vh - clamp(20px, 4vw, 48px)));
+    max-height: calc(100vh - clamp(20px, 4vw, 48px));
+  }
 }
 
 .mc-modal-close {
@@ -2636,6 +2645,16 @@ html.mc-native-scroll .motion-clone-page {
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 50%;
   background: rgba(0,0,0,0.54);
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.mc-modal-close:hover,
+.mc-modal-close:focus-visible {
+  transform: scale(1.06);
+  border-color: rgba(255,255,255,0.42);
+  background: rgba(0,0,0,0.72);
 }
 
 .mc-modal-close span::before,
@@ -2658,7 +2677,11 @@ html.mc-native-scroll .motion-clone-page {
 }
 
 .mc-modal-media {
-  min-height: 520px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
   background: #000;
 }
 
@@ -2668,33 +2691,154 @@ html.mc-native-scroll .motion-clone-page {
   display: block;
   object-fit: contain;
   cursor: pointer;
+  background: #000;
 }
 
 .mc-modal-copy {
-  padding: clamp(24px, 4vw, 48px);
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.4vw, 28px);
+  padding: clamp(54px, 5vw, 70px) clamp(24px, 4vw, 52px) clamp(28px, 4vw, 54px);
+}
+
+.mc-modal-copy:focus {
+  outline: none;
+}
+
+.mc-modal-copy-head {
+  display: grid;
+  gap: 14px;
 }
 
 .mc-modal-copy h2 {
-  font-size: clamp(2.2rem, 4.6vw, 5rem);
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(2.3rem, 4.1vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
-.mc-modal-copy p:not(.mc-kicker) {
+.mc-modal-summary,
+.mc-modal-sections p {
+  margin: 0;
   color: var(--mc-muted);
   line-height: 1.5;
 }
 
-.mc-modal-copy div {
+.mc-modal-summary {
+  max-width: 54ch;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+}
+
+.mc-modal-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-border);
+}
+
+.mc-modal-meta div,
+.mc-modal-metrics div {
+  min-width: 0;
+  background: var(--mc-bg);
+}
+
+.mc-modal-meta div {
+  padding: 12px;
+}
+
+.mc-modal-meta dt {
+  margin-bottom: 7px;
+  color: var(--mc-soft);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mc-modal-meta dd {
+  margin: 0;
+  color: var(--mc-ink);
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.35;
+}
+
+.mc-modal-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-border);
+}
+
+.mc-modal-metrics div {
+  display: grid;
+  gap: 6px;
+  padding: 14px 12px;
+}
+
+.mc-modal-metrics span {
+  color: var(--mc-soft);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mc-modal-metrics strong {
+  font-family: 'Neue Regrade Bold', Inter, sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1;
+}
+
+.mc-modal-sections {
+  display: grid;
+  gap: 18px;
+}
+
+.mc-modal-sections section {
+  padding-top: 18px;
+  border-top: 1px solid var(--mc-border);
+}
+
+.mc-modal-sections h3 {
+  margin: 0 0 8px;
+  color: var(--mc-ink);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mc-modal-tags,
+.mc-modal-tools {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 24px;
 }
 
-.mc-modal-copy div span {
+.mc-modal-tags span,
+.mc-modal-tools span {
   border: 1px solid var(--mc-border);
   padding: 7px 10px;
-  color: var(--mc-muted);
   font-size: 12px;
+  line-height: 1;
+}
+
+.mc-modal-tags span {
+  color: var(--mc-ink);
+  background: rgba(255,253,250,0.07);
+}
+
+.mc-modal-tools span {
+  color: var(--mc-muted);
 }
 
 @keyframes mcTicker {
@@ -3271,6 +3415,21 @@ html.mc-native-scroll .motion-clone-page {
     grid-template-columns: 1fr;
   }
 
+  .mc-project-modal {
+    height: min(860px, calc(100dvh - 24px));
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+
+  .mc-modal-media {
+    height: clamp(280px, 46vh, 430px);
+  }
+
+  .mc-modal-copy {
+    height: auto;
+    overflow: visible;
+  }
+
   .mc-work-preview {
     position: relative;
     top: auto;
@@ -3684,13 +3843,30 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .mc-project-modal {
-    max-height: 100vh;
-    min-height: 100vh;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 100dvh;
     border-inline: 0;
   }
 
   .mc-modal-media {
-    min-height: 46vh;
+    height: 42vh;
+    min-height: 300px;
+  }
+
+  .mc-modal-copy {
+    padding: 58px 18px max(28px, env(safe-area-inset-bottom));
+  }
+
+  .mc-modal-copy h2 {
+    max-width: 12ch;
+    font-size: clamp(2.35rem, 13vw, 4.25rem);
+  }
+
+  .mc-modal-meta,
+  .mc-modal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
