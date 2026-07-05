@@ -2699,6 +2699,18 @@ html.mc-native-scroll .motion-clone-page {
   background: #000;
 }
 
+.mc-modal-video-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .mc-modal-video-toggle,
 .mc-modal-video-fullscreen {
   position: absolute;
@@ -2721,6 +2733,8 @@ html.mc-native-scroll .motion-clone-page {
   height: clamp(72px, 8vw, 104px);
   border-radius: 50%;
   transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .mc-modal-video-toggle:hover,
@@ -2736,12 +2750,10 @@ html.mc-native-scroll .motion-clone-page {
   transform: translate(-50%, -50%) scale(1.05);
 }
 
-.mc-modal-media.is-playing .mc-modal-video-toggle:not(:hover):not(:focus-visible) {
-  opacity: 0;
-}
-
-.mc-modal-media.is-playing:hover .mc-modal-video-toggle {
+.mc-modal-media.is-controls-visible .mc-modal-video-toggle,
+.mc-modal-video-toggle:focus-visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .mc-modal-video-toggle span {
@@ -3998,9 +4010,6 @@ html.mc-native-scroll .motion-clone-page {
     min-height: 0;
   }
 
-  .mc-modal-media.is-playing .mc-modal-video-toggle:not(:hover):not(:focus-visible) {
-    opacity: 0.92;
-  }
 
   .mc-modal-video-toggle {
     width: 84px;

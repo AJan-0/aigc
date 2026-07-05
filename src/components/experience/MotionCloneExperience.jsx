@@ -1398,8 +1398,10 @@ function ProjectModal({ project, onClose }) {
   const videoRef = useRef(null)
   const playRequestIdRef = useRef(0)
   const userPausedRef = useRef(false)
+  const controlsHideTimerRef = useRef(0)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isVideoWaiting, setIsVideoWaiting] = useState(false)
+  const [isVideoControlsVisible, setIsVideoControlsVisible] = useState(false)
   const metaItems = [
     ['Role', project?.role],
     ['Duration', project?.duration],
@@ -1420,23 +1422,49 @@ function ProjectModal({ project, onClose }) {
     setIsVideoWaiting(video.readyState < 3 && !video.paused && !video.ended)
   }, [])
 
+  const clearVideoControlsTimer = useCallback(() => {
+    if (!controlsHideTimerRef.current) return
+    window.clearTimeout(controlsHideTimerRef.current)
+    controlsHideTimerRef.current = 0
+  }, [])
+
+  const showVideoControls = useCallback(({ autoHide = false } = {}) => {
+    clearVideoControlsTimer()
+    setIsVideoControlsVisible(true)
+
+    if (!autoHide) return
+
+    controlsHideTimerRef.current = window.setTimeout(() => {
+      setIsVideoControlsVisible(false)
+      controlsHideTimerRef.current = 0
+    }, 900)
+  }, [clearVideoControlsTimer])
+
+  const hideVideoControls = useCallback(() => {
+    clearVideoControlsTimer()
+    setIsVideoControlsVisible(false)
+  }, [clearVideoControlsTimer])
+
   const playModalVideo = useCallback((video, { force = false } = {}) => {
     if (!video) return Promise.resolve(false)
 
     if (force) userPausedRef.current = false
     if (userPausedRef.current) {
       syncVideoState(video)
+      showVideoControls()
       return Promise.resolve(false)
     }
 
     if (!video.paused && !video.ended) {
       syncVideoState(video)
+      hideVideoControls()
       return Promise.resolve(true)
     }
 
     const requestId = playRequestIdRef.current + 1
     playRequestIdRef.current = requestId
     setIsVideoWaiting(true)
+    showVideoControls()
 
     const canContinue = () => (
       playRequestIdRef.current === requestId
@@ -1452,14 +1480,22 @@ function ProjectModal({ project, onClose }) {
         }
 
         syncVideoState(video)
-        if (!played) setIsVideoWaiting(false)
+        if (played) {
+          hideVideoControls()
+        } else {
+          setIsVideoWaiting(false)
+          showVideoControls()
+        }
         return played
       })
       .catch(() => {
-        if (canContinue()) setIsVideoWaiting(false)
+        if (canContinue()) {
+          setIsVideoWaiting(false)
+          showVideoControls()
+        }
         return false
       })
-  }, [syncVideoState])
+  }, [hideVideoControls, showVideoControls, syncVideoState])
 
   const handleVideoToggle = useCallback(event => {
     event.preventDefault()
@@ -1474,13 +1510,22 @@ function ProjectModal({ project, onClose }) {
       setIsVideoWaiting(false)
       video.pause()
       syncVideoState(video)
+      showVideoControls()
       return
     }
 
     userPausedRef.current = false
     if (video.ended) video.currentTime = 0
+    showVideoControls()
     playModalVideo(video, { force: true })
-  }, [playModalVideo, syncVideoState])
+  }, [playModalVideo, showVideoControls, syncVideoState])
+  const handleVideoControlReveal = useCallback(() => {
+    const video = videoRef.current
+    if (!video || video.paused || video.ended) return
+
+    showVideoControls({ autoHide: true })
+  }, [showVideoControls])
+
 
   const handleVideoFullscreen = useCallback(event => {
     event.preventDefault()
@@ -1516,6 +1561,7 @@ function ProjectModal({ project, onClose }) {
     playRequestIdRef.current += 1
     setIsVideoPlaying(false)
     setIsVideoWaiting(false)
+    setIsVideoControlsVisible(false)
 
     const video = videoRef.current
     if (!project || !video) return undefined
@@ -1550,9 +1596,18 @@ function ProjectModal({ project, onClose }) {
       video.removeEventListener('canplay', playWhenReady)
       video.removeEventListener('canplaythrough', playWhenReady)
       document.removeEventListener('visibilitychange', handleVisibility)
+      clearVideoControlsTimer()
       video.pause()
     }
-  }, [playModalVideo, project])
+  }, [clearVideoControlsTimer, playModalVideo, project])
+
+  const isVideoControlButtonVisible = isVideoWaiting || !isVideoPlaying || isVideoControlsVisible
+  const modalMediaClassName = [
+    'mc-modal-media',
+    isVideoPlaying ? 'is-playing' : 'is-paused',
+    isVideoWaiting ? 'is-waiting' : '',
+    isVideoControlButtonVisible ? 'is-controls-visible' : '',
+  ].filter(Boolean).join(' ')
 
   return (
     <AnimatePresence>
@@ -1577,7 +1632,7 @@ function ProjectModal({ project, onClose }) {
             <button className="mc-modal-close" type="button" onClick={onClose} aria-label="Close project details">
               <span aria-hidden="true" />
             </button>
-            <div className={isVideoPlaying ? 'mc-modal-media is-playing' : 'mc-modal-media is-paused'}>
+            <div className={modalMediaClassName} onPointerMove={handleVideoControlReveal}>
               <video
                 ref={videoRef}
                 src={project.video}
@@ -1592,13 +1647,43 @@ function ProjectModal({ project, onClose }) {
                 x5-video-player-fullscreen="false"
                 aria-label={`${project.titleEn} video`}
                 onLoadedData={event => syncVideoState(event.currentTarget)}
-                onCanPlay={event => syncVideoState(event.currentTarget)}
-                onCanPlayThrough={event => syncVideoState(event.currentTarget)}
-                onPlay={event => syncVideoState(event.currentTarget)}
-                onPlaying={event => syncVideoState(event.currentTarget)}
-                onPause={event => syncVideoState(event.currentTarget)}
-                onEnded={event => syncVideoState(event.currentTarget)}
-                onWaiting={() => setIsVideoWaiting(true)}
+                onCanPlay={event => {
+                  syncVideoState(event.currentTarget)
+                  if (!event.currentTarget.paused && !event.currentTarget.ended) hideVideoControls()
+                }}
+                onCanPlayThrough={event => {
+                  syncVideoState(event.currentTarget)
+                  if (!event.currentTarget.paused && !event.currentTarget.ended) hideVideoControls()
+                }}
+                onPlay={event => {
+                  syncVideoState(event.currentTarget)
+                  hideVideoControls()
+                }}
+                onPlaying={event => {
+                  syncVideoState(event.currentTarget)
+                  hideVideoControls()
+                }}
+                onPause={event => {
+                  syncVideoState(event.currentTarget)
+                  showVideoControls()
+                }}
+                onEnded={event => {
+                  syncVideoState(event.currentTarget)
+                  showVideoControls()
+                }}
+                onWaiting={event => {
+                  syncVideoState(event.currentTarget)
+                  setIsVideoWaiting(true)
+                  showVideoControls()
+                }}
+              />
+              <button
+                className="mc-modal-video-surface"
+                type="button"
+                onClick={handleVideoToggle}
+                onPointerDown={handleVideoControlReveal}
+                tabIndex={-1}
+                aria-hidden="true"
               />
               <button
                 className={[
@@ -1609,6 +1694,8 @@ function ProjectModal({ project, onClose }) {
                 type="button"
                 onClick={handleVideoToggle}
                 aria-label={isVideoPlaying ? 'Pause video' : 'Play video'}
+                tabIndex={isVideoControlButtonVisible ? 0 : -1}
+                aria-hidden={isVideoControlButtonVisible ? undefined : true}
               >
                 <span aria-hidden="true" />
               </button>
