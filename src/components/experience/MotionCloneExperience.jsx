@@ -838,13 +838,8 @@ function ShowreelSection() {
     const video = videoRef.current
     if (!video) return
 
-    video.muted = true
-    video.defaultMuted = true
-    video.volume = 0
-    video.playsInline = true
-
-    video.play()
-      .then(() => setShowVideoPlayPrompt(false))
+    requestInlineVideoPlay(video)
+      .then(played => setShowVideoPlayPrompt(!played))
       .catch(() => setShowVideoPlayPrompt(true))
   }, [videoRef])
 
@@ -1164,32 +1159,11 @@ function useAutoplayVideo(resetKey) {
     if (!video) return
 
     let disposed = false
-    let retryTimer = 0
 
     const playMuted = () => {
       if (disposed || !video) return
 
-      video.muted = true
-      video.defaultMuted = true
-      video.volume = 0
-      video.playsInline = true
-      video.setAttribute('muted', '')
-      video.setAttribute('playsinline', '')
-      video.setAttribute('webkit-playsinline', 'true')
-      video.setAttribute('x5-playsinline', 'true')
-      video.setAttribute('x5-video-player-type', 'h5')
-      video.setAttribute('x5-video-player-fullscreen', 'false')
-      video.preload = 'auto'
-
-      const playPromise = video.play()
-      if (playPromise?.catch) {
-        playPromise.catch(() => {
-          if (disposed) return
-          retryTimer = window.setTimeout(() => {
-            if (!disposed) video.play().catch(() => {})
-          }, 220)
-        })
-      }
+      requestInlineVideoPlay(video).catch(() => {})
     }
 
     const handleReady = () => playMuted()
@@ -1204,17 +1178,18 @@ function useAutoplayVideo(resetKey) {
       playMuted()
     }
 
+    video.addEventListener('loadedmetadata', handleReady)
     video.addEventListener('loadeddata', handleReady)
     video.addEventListener('canplay', handleReady)
-    video.addEventListener('error', handleReady)
+    video.addEventListener('canplaythrough', handleReady)
     document.addEventListener('visibilitychange', handleVisibility)
 
     return () => {
       disposed = true
-      if (retryTimer) window.clearTimeout(retryTimer)
+      video.removeEventListener('loadedmetadata', handleReady)
       video.removeEventListener('loadeddata', handleReady)
       video.removeEventListener('canplay', handleReady)
-      video.removeEventListener('error', handleReady)
+      video.removeEventListener('canplaythrough', handleReady)
       document.removeEventListener('visibilitychange', handleVisibility)
       video.pause()
     }
@@ -1488,7 +1463,14 @@ function ProjectModal({ project, onClose }) {
                 x5-playsinline="true"
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="false"
-                onClick={event => toggleInlineVideo(event.currentTarget)}
+                onLoadedData={event => requestInlineVideoPlay(event.currentTarget)}
+                onCanPlay={event => requestInlineVideoPlay(event.currentTarget)}
+                onPointerDown={event => {
+                  if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+                    handleInlineVideoPlaybackIntent(event.currentTarget)
+                  }
+                }}
+                onClick={event => handleInlineVideoPlaybackIntent(event.currentTarget)}
               />
             </div>
             <div className="mc-modal-copy" tabIndex={0} aria-label={`${project.titleEn} project details`}>
@@ -1560,14 +1542,85 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max)
 }
 
-function toggleInlineVideo(video) {
+function handleInlineVideoPlaybackIntent(video) {
   if (!video) return
 
-  if (video.paused || video.ended) {
+  if (video.paused || video.ended || video.readyState < 2) {
     if (video.ended) video.currentTime = 0
-    video.play().catch(() => {})
-    return
+    requestInlineVideoPlay(video).catch(() => {})
+  }
+}
+
+function requestInlineVideoPlay(video) {
+  if (!video) return Promise.resolve(false)
+
+  prepareInlineVideo(video)
+
+  if (video.ended) video.currentTime = 0
+  if (video.readyState < 1) {
+    try {
+      video.load()
+    } catch {}
   }
 
-  video.pause()
+  const attemptPlay = () => {
+    const playPromise = video.play()
+    if (playPromise?.then) {
+      return playPromise.then(() => true).catch(() => false)
+    }
+    return Promise.resolve(!video.paused)
+  }
+
+  return attemptPlay().then(played => {
+    if (played) return true
+
+    return new Promise(resolve => {
+      let settled = false
+      let retryTimer = 0
+
+      const cleanup = () => {
+        if (settled) return
+        settled = true
+        if (retryTimer) window.clearTimeout(retryTimer)
+        video.removeEventListener('loadedmetadata', retry)
+        video.removeEventListener('loadeddata', retry)
+        video.removeEventListener('canplay', retry)
+        video.removeEventListener('canplaythrough', retry)
+      }
+
+      const retry = () => {
+        attemptPlay().then(ok => {
+          if (!ok) return
+          cleanup()
+          resolve(true)
+        })
+      }
+
+      video.addEventListener('loadedmetadata', retry, { once: true })
+      video.addEventListener('loadeddata', retry, { once: true })
+      video.addEventListener('canplay', retry, { once: true })
+      video.addEventListener('canplaythrough', retry, { once: true })
+
+      retryTimer = window.setTimeout(() => {
+        attemptPlay().then(ok => {
+          cleanup()
+          resolve(ok)
+        })
+      }, 300)
+    })
+  })
+}
+
+function prepareInlineVideo(video) {
+  video.muted = true
+  video.defaultMuted = true
+  video.volume = 0
+  video.playsInline = true
+  video.preload = 'auto'
+  video.setAttribute('muted', '')
+  video.setAttribute('playsinline', '')
+  video.setAttribute('webkit-playsinline', 'true')
+  video.setAttribute('x5-playsinline', 'true')
+  video.setAttribute('x5-video-player-type', 'h5')
+  video.setAttribute('x5-video-player-fullscreen', 'false')
 }
