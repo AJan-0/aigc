@@ -63,6 +63,40 @@
   text-rendering: geometricPrecision;
 }
 
+.motion-clone-page [lang='zh-CN'] {
+  font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.motion-clone-page .mc-about-copy p:lang(zh-CN),
+.motion-clone-page .mc-principles p:lang(zh-CN),
+.motion-clone-page .mc-about-portrait figcaption p:lang(zh-CN),
+.motion-clone-page .mc-modal-summary:lang(zh-CN),
+.motion-clone-page .mc-modal-sections p:lang(zh-CN) {
+  line-height: 1.72;
+}
+
+.motion-clone-page .mc-contact-panel h2:lang(zh-CN) {
+  max-width: 11em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.motion-clone-page .mc-brand-tile small:lang(zh-CN) {
+  max-width: 17em;
+  line-height: 1.42;
+}
+
+.motion-clone-page .mc-modal-meta dt:lang(zh-CN),
+.motion-clone-page .mc-modal-metrics span:lang(zh-CN),
+.motion-clone-page .mc-modal-sections h3:lang(zh-CN) {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 html.mc-native-scroll {
   height: auto;
   min-height: 100%;

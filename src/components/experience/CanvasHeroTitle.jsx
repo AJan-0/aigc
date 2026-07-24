@@ -9,6 +9,7 @@ const glyphs = [
 
 const signals = ['ai film direction', 'scene systems', 'motion packaging']
 const heroLabel = 'AIGC Design Portfolio'
+const heroDescription = 'AIGC 设计作品集，聚焦 AI 影像导演、短剧叙事钩子与完整动态包装。'
 const mobileHeroMaxWidth = 560
 
 export default function CanvasHeroTitle({ scrollYProgress }) {
@@ -198,7 +199,7 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     <div
       ref={containerRef}
       className="mc-hero-mark mc-canvas-hero-mark"
-      aria-label={heroLabel}
+      aria-label="AIGC 设计作品集互动标题"
       role="button"
       tabIndex={0}
       onClick={handleClick}
@@ -212,9 +213,7 @@ export default function CanvasHeroTitle({ scrollYProgress }) {
     >
       <canvas className="mc-canvas-hero-canvas" ref={canvasRef} aria-hidden="true" />
       <h1 className="mc-screen-reader-only">{heroLabel}</h1>
-      <p className="mc-hero-caption">
-        AIGC Design Portfolio. AI film direction, short drama hooks and finished motion packaging.
-      </p>
+      <p className="mc-hero-caption" lang="zh-CN">{heroDescription}</p>
       <div className="mc-hero-signal" aria-hidden="true">
         {signals.map(signal => <span key={signal}>{signal}</span>)}
       </div>

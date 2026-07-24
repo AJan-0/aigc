@@ -1,7 +1,7 @@
 {
   "name": "AJan AIGC Portfolio",
   "short_name": "AJan AIGC",
-  "description": "Published AIGC video portfolio focused on AI drama, character continuity and moving-image delivery.",
+  "description": "AJan AIGC 影像作品集，聚焦海外 AI 短剧、角色一致性与完整视频交付。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070707",

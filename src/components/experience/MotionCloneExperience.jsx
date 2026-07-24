@@ -22,14 +22,14 @@ const navItems = [
 
 const tickerItems = ['aigc visual', 'ajan studio', 'ai drama', 'motion system', 'vertical reels']
 const brandItems = [
-  { label: 'COMFYUI', role: 'node graph workflow / visual pipeline', accent: '#bfff00', span: 'wide' },
-  { label: 'SEEDANCE 2.0', role: 'cinematic video generation / motion design', accent: '#fa340c' },
-  { label: 'GPT IMAGE', role: 'concept visual / image refinement', accent: '#f7e40f' },
-  { label: 'STORYBOARD SYSTEM', role: 'shot planning / scene breakdown', accent: '#b39fe3', span: 'wide' },
-  { label: 'LORA TRAINING', role: 'character consistency / custom style model', accent: '#fa75f0' },
-  { label: 'VIBE CODING', role: 'ai-assisted tool and interface prototyping', accent: '#9b30ff' },
-  { label: 'POST-PRODUCTION PIPELINE', role: 'editing / sound / color / delivery', accent: '#fffdfa', span: 'wide' },
-  { label: 'ASSET SYSTEM', role: 'reusable IP assets / production library', accent: '#bfff00', span: 'wide' },
+  { label: 'COMFYUI', role: '节点工作流 / 视觉生产管线', accent: '#bfff00', span: 'wide' },
+  { label: 'SEEDANCE 2.0', role: '电影感视频生成 / 动态设计', accent: '#fa340c' },
+  { label: 'GPT IMAGE', role: '概念视觉 / 图像精修', accent: '#f7e40f' },
+  { label: 'STORYBOARD SYSTEM', role: '镜头规划 / 场景拆解', accent: '#b39fe3', span: 'wide' },
+  { label: 'LORA TRAINING', role: '角色一致性 / 定制风格模型', accent: '#fa75f0' },
+  { label: 'VIBE CODING', role: 'AI 辅助工具与界面原型', accent: '#9b30ff' },
+  { label: 'POST-PRODUCTION PIPELINE', role: '剪辑 / 声音 / 调色 / 交付', accent: '#fffdfa', span: 'wide' },
+  { label: 'ASSET SYSTEM', role: '可复用 IP 素材 / 生产资源库', accent: '#bfff00', span: 'wide' },
 ]
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
@@ -72,136 +72,136 @@ const motionProjects = [
   {
     id: '01',
     slug: 'dreams-lead-to-my-alpha',
-    type: 'Vertical AI Drama',
+    type: '竖屏 AI 短剧',
     titleEn: 'Dreams Lead to My Alpha',
-    introEn: 'A wolf-romance opener built around fate, desire and escape.',
+    introZh: '以命运、欲望与逃离为核心的狼人爱情短剧开场。',
     cover: v1Cover,
     video: v1Video,
     duration: '0:52',
     year: '2026',
-    role: 'AI Director / Workflow Designer',
+    role: 'AI 导演 / 工作流设计',
     tools: ['SDXL', 'ComfyUI', 'LoRA', 'Runway', 'DaVinci Resolve'],
-    tags: ['AI drama', 'Wolf romance', 'Vertical reel'],
-    hook: 'Fate-driven wolf romance',
-    value: 'Fast emotional hook',
+    tags: ['AI 短剧', '狼人爱情', '竖屏叙事'],
+    hook: '命运驱动的狼人爱情',
+    value: '快速建立情绪钩子',
     challenge:
-      'The opening needs to translate a very abstract feeling of fate into frames that make the audience stop, understand the relationship and want the next beat.',
+      '开场需要把抽象的“命运感”转化为清晰的镜头，让观众停下来、理解人物关系，并期待下一段剧情。',
     approach:
-      'I compressed the first act into a rhythm of close-ups, low light, body language and vertical framing so the romance premise lands before the lore expands.',
+      '我用近景、低照度、肢体语言和竖屏构图压缩第一幕节奏，让爱情关系先于世界观信息被观众理解。',
     outcome:
-      'A repeatable first-look template for vertical AI romance reels with a clear emotional entry point.',
+      '形成了一套可复用的竖屏 AI 爱情短剧开场模板，能够快速建立明确的情绪入口。',
     metrics: [
-      { label: 'Shots', value: '42' },
-      { label: 'Iterations', value: '237' },
-      { label: 'Format', value: '9:16' },
+      { label: '镜头数', value: '42' },
+      { label: '迭代次数', value: '237' },
+      { label: '画幅', value: '9:16' },
     ],
   },
   {
     id: '02',
     slug: 'betrayed-by-the-wolf',
-    type: 'AI Short Drama',
+    type: 'AI 真人短剧',
     titleEn: 'Betrayed by the Wolf, Claimed by the Alpha',
-    introEn: 'A high-emotion drama test for betrayal, possession and continuity.',
+    introZh: '围绕背叛、占有与角色连续性展开的高情绪短剧测试。',
     cover: betrayalCover,
     video: betrayalVideo,
     duration: '2:24',
     year: '2026',
-    role: 'AI Drama Visual Direction',
+    role: 'AI 短剧视觉导演',
     tools: ['SDXL', 'RealisticVision', 'ControlNet', 'Sound Design'],
-    tags: ['Betrayal', 'Character continuity', 'Overseas drama'],
-    hook: 'Betrayal to possession',
-    value: 'High-emotion continuity',
+    tags: ['背叛冲突', '角色连续性', '海外短剧'],
+    hook: '从背叛到占有的关系转折',
+    value: '保持高情绪连续性',
     challenge:
-      'Short drama depends on immediate betrayal, pressure and attraction, while generated faces and micro-expressions can easily break the emotional line.',
+      '短剧需要迅速建立背叛、压迫与吸引力，但生成式人脸和微表情的不稳定很容易中断情绪线。',
     approach:
-      'I used composition, posture, lighting and sound design to hold emotional pressure even when individual generated moments needed cleanup.',
+      '我通过构图、姿态、光线与声音设计维持情绪压力，并用后期处理修正不稳定的生成片段。',
     outcome:
-      'A controlled atmosphere method for high-emotion AI short-drama scenes.',
+      '沉淀出一套通过氛围控制高情绪 AI 短剧场景的方法。',
     metrics: [
-      { label: 'Shots', value: '38' },
-      { label: 'Duration', value: '2:24' },
-      { label: 'Mood', value: 'Betrayal' },
+      { label: '镜头数', value: '38' },
+      { label: '时长', value: '2:24' },
+      { label: '核心情绪', value: '背叛' },
     ],
   },
   {
     id: '03',
     slug: 'mated-to-the-alpha-curse',
-    type: 'Supernatural Romance',
+    type: '超自然爱情短剧',
     titleEn: "Mated to the Alpha's Curse",
-    introEn: 'A supernatural romance reel about curse, intimacy and shot continuity.',
+    introZh: '围绕诅咒、亲密关系与镜头连续性的超自然爱情短片。',
     cover: curseCover,
     video: curseVideo,
     duration: '1:39',
     year: '2026',
-    role: 'Continuity Workflow',
+    role: '角色与场景连续性工作流',
     tools: ['SDXL', 'ControlNet', 'Img2Img', 'Prompt System'],
-    tags: ['Supernatural romance', 'Continuity', 'Scene DNA'],
-    hook: 'Curse-led intimacy',
-    value: 'Consistent scene DNA',
+    tags: ['超自然爱情', '连续性控制', '场景 DNA'],
+    hook: '由诅咒推动的亲密关系',
+    value: '统一的场景 DNA',
     challenge:
-      'Multiple generated shots need to feel like they belong to the same film, not a set of similar posters.',
+      '多个独立生成的镜头需要呈现为同一部影片，而不是一组风格相近但彼此割裂的海报。',
     approach:
-      'I locked color, light source, wardrobe logic and scene rules, then edited around the strongest continuity anchors.',
+      '我锁定色彩、光源、服装逻辑和场景规则，再围绕最稳定的连续性锚点完成剪辑。',
     outcome:
-      'A scene-DNA rule set for moody supernatural romance packaging.',
+      '建立了一套适用于暗调超自然爱情题材的“场景 DNA”规则。',
     metrics: [
-      { label: 'Shots', value: '56' },
-      { label: 'Duration', value: '1:39' },
-      { label: 'System', value: 'DNA' },
+      { label: '镜头数', value: '56' },
+      { label: '时长', value: '1:39' },
+      { label: '系统', value: 'DNA' },
     ],
   },
   {
     id: '04',
     slug: 'reborn-killers-uncle',
-    type: 'AI Romance Drama',
+    type: 'AI 复仇爱情短剧',
     titleEn: "Reborn This Time I Choose My Killer's Uncle",
-    introEn: 'A revenge-romance concept shaped through noir pacing and live-action framing.',
+    introZh: '通过黑色电影节奏与真人影视构图呈现的重生复仇爱情概念。',
     cover: rebornCover,
     video: rebornVideo,
     duration: '1:24',
     year: '2026',
-    role: 'AI Short Drama Packaging',
+    role: 'AI 短剧视觉包装',
     tools: ['ComfyUI', 'LoRA', 'Kling', 'DaVinci Resolve'],
-    tags: ['Rebirth revenge', 'Noir romance', 'English short drama'],
-    hook: 'Revenge romance switch',
-    value: 'Noir trailer pacing',
+    tags: ['重生复仇', '黑色爱情', '海外短剧'],
+    hook: '重生后的关系选择',
+    value: '黑色预告片节奏',
     challenge:
-      'The rebirth revenge premise needs identity, danger and choice to become readable fast without becoming only mood imagery.',
+      '重生复仇的设定需要在短时间内交代身份、危险与选择，避免影片只剩氛围而缺少清晰叙事。',
     approach:
-      'I used blocking, contrast, edit rhythm and noir color to separate power positions and make the relationship stakes legible.',
+      '我利用人物调度、明暗对比、剪辑节奏和黑色电影调色区分权力位置，让关系代价更容易被理解。',
     outcome:
-      'A compact noir-romance trailer system for AI-generated drama concepts.',
+      '形成了一套紧凑的黑色爱情预告片结构，用于包装 AI 生成短剧概念。',
     metrics: [
-      { label: 'Duration', value: '1:24' },
-      { label: 'Tone', value: 'Noir' },
-      { label: 'Format', value: 'Drama' },
+      { label: '时长', value: '1:24' },
+      { label: '影调', value: 'Noir' },
+      { label: '类型', value: '短剧' },
     ],
   },
   {
     id: '05',
     slug: 'picking-up-governor',
-    type: 'Absurd Drama Concept',
+    type: '荒诞题材概念片',
     titleEn: 'Picking Up a Governor from the Street',
-    introEn: 'A power-reversal concept mixing street realism and absurd identity contrast.',
+    introZh: '将街头现实感与身份反差结合的权力逆转概念短片。',
     cover: pickingCover,
     video: pickingVideo,
     duration: '1:46',
     year: '2026',
-    role: 'Concept Trailer Direction',
+    role: '概念预告片导演',
     tools: ['SDXL', 'Video Generation', 'Editing', 'Color Grade'],
-    tags: ['Absurd premise', 'Power reversal', 'Concept trailer'],
-    hook: 'Street-level power reversal',
-    value: 'Concept trailer clarity',
+    tags: ['荒诞设定', '权力逆转', '概念预告片'],
+    hook: '街头语境中的权力逆转',
+    value: '清晰传达高概念设定',
     challenge:
-      'The absurd premise can float away unless the street realism and the identity reversal feel grounded at the same time.',
+      '荒诞设定如果缺少现实支点，很容易失去可信度，因此街头质感与身份反转必须同时成立。',
     approach:
-      'I kept the environment tactile and the costume hierarchy clear, using contrast as the engine of the concept.',
+      '我保留环境的真实触感，并明确服装与身份层级，用视觉反差推动核心概念。',
     outcome:
-      'A grounded high-concept test for short-drama pitch reels.',
+      '完成了一次具有现实质感的高概念短剧提案测试。',
     metrics: [
-      { label: 'Duration', value: '1:46' },
-      { label: 'Hook', value: 'Power' },
-      { label: 'Style', value: 'Street' },
+      { label: '时长', value: '1:46' },
+      { label: '钩子', value: '权力反转' },
+      { label: '风格', value: '街头现实' },
     ],
   },
 ]
@@ -276,7 +276,7 @@ export default function MotionCloneExperience() {
       <NoiseLayer />
       <MotionNav activeSection={activeSection} onNavigate={goToSection} />
 
-      <section className="mc-hero" id="home" aria-label="AIGC Design Portfolio hero">
+      <section className="mc-hero" id="home" aria-label="AIGC 设计作品集首页">
         <div className={shouldReduceMotion ? 'mc-hero-stage' : 'mc-hero-stage has-entry-motion'}>
           <HeroExperience shouldReduceMotion={shouldReduceMotion} scrollYProgress={scrollYProgress} />
         </div>
@@ -401,11 +401,11 @@ function useActiveSectionObserver(onChange) {
 function MotionNav({ activeSection, onNavigate }) {
   return (
     <header className="mc-nav">
-      <button className="mc-nav-logo" type="button" onClick={() => onNavigate('home')} aria-label="Go to home">
+      <button className="mc-nav-logo" type="button" onClick={() => onNavigate('home')} aria-label="返回首页">
         <LogoMark />
       </button>
 
-      <nav className="mc-nav-links" aria-label="Primary navigation">
+      <nav className="mc-nav-links" aria-label="主导航">
         {navItems.slice(1).map(item => (
           <button
             key={item.id}
@@ -844,7 +844,7 @@ function ShowreelSection() {
   }, [videoRef])
 
   return (
-    <section className="mc-showreel mc-section" id="showreel" aria-label="AIGC motion bumper loop">
+    <section className="mc-showreel mc-section" id="showreel" aria-label="AIGC 动态视觉片头">
       <motion.div
         className={showVideoPlayPrompt ? 'mc-video-shell has-play-prompt' : 'mc-video-shell is-playing'}
         initial={{ opacity: 0, y: 60, scale: 0.985 }}
@@ -871,7 +871,7 @@ function ShowreelSection() {
           onPause={() => setShowVideoPlayPrompt(true)}
           onPlay={() => setShowVideoPlayPrompt(false)}
           onPlaying={() => setShowVideoPlayPrompt(false)}
-          aria-label="AIGC visual studio motion bumper"
+          aria-label="AIGC 视觉工作室动态片头"
         />
         {showVideoPlayPrompt && (
           <button
@@ -879,7 +879,7 @@ function ShowreelSection() {
             type="button"
             onClick={playShowreelVideo}
             onPointerDown={playShowreelVideo}
-            aria-label="Play motion bumper"
+            aria-label="播放动态片头"
           >
             <span aria-hidden="true" />
           </button>
@@ -1012,7 +1012,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
   if (!workProjects.length) return null
 
   return (
-    <section className="mc-work mc-section" id="work" aria-label="Selected AIGC work">
+    <section className="mc-work mc-section" id="work" aria-label="AIGC 精选作品">
       <div className="mc-work-inner">
         <motion.div
           className="mc-work-heading"
@@ -1021,7 +1021,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
           whileInView="show"
           viewport={{ once: true, amount: 0.55 }}
         >
-          <p className="mc-kicker">work</p>
+          <p className="mc-kicker" lang="zh-CN">作品</p>
           <h2>Work shaped for motion.</h2>
         </motion.div>
 
@@ -1036,13 +1036,13 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
             <div className="mc-work-preview-top">
               <span className="mc-work-count">{activeProject.id} / {String(workProjects.length).padStart(2, '0')}</span>
               <div className="mc-work-controls">
-                <button type="button" onClick={() => onMoveProject(-1)} aria-label="Previous reel">
+                <button type="button" onClick={() => onMoveProject(-1)} aria-label="上一个作品">
                   <span aria-hidden="true" />
                 </button>
                 <div aria-hidden="true">
                   <span style={{ width: `${progress}%` }} />
                 </div>
-                <button type="button" onClick={() => onMoveProject(1)} aria-label="Next reel">
+                <button type="button" onClick={() => onMoveProject(1)} aria-label="下一个作品">
                   <span aria-hidden="true" />
                 </button>
               </div>
@@ -1076,7 +1076,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
             <div
               className="mc-work-list"
               role="listbox"
-              aria-label="AIGC reel list"
+              aria-label="AIGC 作品列表"
               ref={listRef}
               onScroll={syncActiveProjectFromScroll}
             >
@@ -1089,7 +1089,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   type="button"
                   role="option"
                   aria-selected={index === activeIndex}
-                  aria-label={`${index === activeIndex ? 'Open' : 'Select'} ${project.titleEn}`}
+                  aria-label={`${index === activeIndex ? '查看' : '选择'}作品：${project.titleEn}`}
                   className={index === activeIndex ? 'mc-work-row is-active' : 'mc-work-row'}
                   onMouseEnter={() => onActiveIndexChange(index)}
                   onFocus={() => onActiveIndexChange(index)}
@@ -1115,8 +1115,8 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                     <span>{project.titleEn}</span>
                   </strong>
                   <small className="mc-work-meta">
-                    <span>{project.type} / {project.duration}</span>
-                    <em aria-hidden="true">{index === activeIndex ? 'open reel' : 'select reel'}</em>
+                    <span lang="zh-CN">{project.type} / {project.duration}</span>
+                    <em lang="zh-CN" aria-hidden="true">{index === activeIndex ? '查看详情' : '选择作品'}</em>
                   </small>
                   <i aria-hidden="true" />
                 </motion.button>
@@ -1146,7 +1146,7 @@ function PreviewVideo({ project }) {
       x5-playsinline="true"
       x5-video-player-type="h5"
       x5-video-player-fullscreen="false"
-      aria-label={`${project.titleEn} preview`}
+      aria-label={`${project.titleEn} 作品预览`}
     />
   )
 }
@@ -1204,33 +1204,33 @@ function AboutSection() {
   const principles = [
     {
       title: 'Observation',
-      body: 'I catch subtle emotions, visual tension and story signals before the first frame.',
-      signal: 'INFJ lens',
+      body: '在生成第一帧前，先捕捉人物情绪、视觉张力与故事信号。',
+      signal: 'INFJ 视角',
       accent: 'var(--mc-lavender)',
     },
     {
       title: 'Drive',
-      body: 'I move from curiosity to tests, from tests to finished AI video output.',
-      signal: 'self-driven',
+      body: '从好奇出发，通过持续测试，把想法推进为可观看、可交付的 AI 视频成片。',
+      signal: '自驱型',
       accent: 'var(--mc-acid)',
     },
     {
       title: 'Continuity',
-      body: 'I keep character, scene, style and rhythm aligned across generated shots.',
-      signal: 'character lock',
+      body: '让角色、场景、风格和节奏在连续生成镜头中保持统一。',
+      signal: '角色锁定',
       accent: 'var(--mc-pink)',
     },
     {
       title: 'Pipeline',
-      body: 'I turn prompts, models, edits and assets into reusable production systems.',
-      signal: 'AIGC system',
+      body: '把提示词、模型、剪辑与素材沉淀为可复用的生产系统。',
+      signal: 'AIGC 系统',
       accent: 'var(--mc-red)',
     },
   ]
   const active = principles[activePrinciple]
 
   return (
-    <section className="mc-about mc-section" id="about" aria-label="About AJan">
+    <section className="mc-about mc-section" id="about" aria-label="关于 AJan">
       <motion.div
         className="mc-about-main"
         variants={reveal}
@@ -1239,7 +1239,7 @@ function AboutSection() {
         viewport={{ once: true, amount: 0.42 }}
       >
         <div className="mc-about-copy">
-          <p className="mc-kicker">about</p>
+          <p className="mc-kicker" lang="zh-CN">关于</p>
           <h2 className="mc-about-title" aria-label="Quiet observer. Relentless maker." tabIndex={0}>
             {aboutTitleWords.map((word, index) => (
               <span
@@ -1253,10 +1253,9 @@ function AboutSection() {
               </span>
             ))}
           </h2>
-          <p>
-            I am a self-driven 2026 graduate focused on AIGC video and short-drama production. I connect story hooks,
-            visual direction, model workflows, character consistency, motion generation and post-production into a
-            repeatable creative pipeline.
+          <p lang="zh-CN">
+            我是 2026 届毕业生，专注于 AIGC 视频与海外短剧制作。我的工作覆盖故事钩子、视觉方向、模型工作流、
+            角色一致性、动态生成与后期制作，并将这些环节整理为可复用的创作流程。
           </p>
         </div>
 
@@ -1266,7 +1265,7 @@ function AboutSection() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.3 }}
-          aria-label="Creative principles"
+          aria-label="创作能力"
         >
           {principles.map((item, index) => (
             <motion.button
@@ -1285,8 +1284,8 @@ function AboutSection() {
             >
               <span className="mc-principle-index">{String(index + 1).padStart(2, '0')}</span>
               <SimpleBadge label={item.title} />
-              <p>{item.body}</p>
-              <small>{item.signal}</small>
+              <p lang="zh-CN">{item.body}</p>
+              <small lang="zh-CN">{item.signal}</small>
             </motion.button>
           ))}
         </motion.div>
@@ -1300,11 +1299,11 @@ function AboutSection() {
         whileInView="show"
         viewport={{ once: true, amount: 0.35 }}
       >
-        <img src="/ajan-about-portrait.jpg" alt="Portrait of AJan" loading="lazy" />
+        <img src="/ajan-about-portrait.jpg" alt="AJan 个人照片" loading="lazy" />
         <div className="mc-about-portrait-meta" aria-hidden="true">
-          <span>2026 grad</span>
+          <span lang="zh-CN">2026 应届生</span>
           <span>INFJ</span>
-          <span>self-driven</span>
+          <span lang="zh-CN">自驱型</span>
         </div>
         <figcaption id="about-portrait-note">
           <AnimatePresence mode="wait">
@@ -1315,9 +1314,9 @@ function AboutSection() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span>{active.signal}</span>
+              <span lang="zh-CN">{active.signal}</span>
               <strong>{active.title}</strong>
-              <p>{active.body}</p>
+              <p lang="zh-CN">{active.body}</p>
             </motion.div>
           </AnimatePresence>
         </figcaption>
@@ -1328,7 +1327,7 @@ function AboutSection() {
 
 function BrandSection() {
   return (
-    <section className="mc-brands mc-section" aria-label="Workflow tools and brand grid">
+    <section className="mc-brands mc-section" aria-label="AI 工作流与能力系统">
       <motion.div
         className="mc-brand-heading"
         variants={reveal}
@@ -1336,7 +1335,7 @@ function BrandSection() {
         whileInView="show"
         viewport={{ once: true, amount: 0.5 }}
       >
-        <p className="mc-kicker">system</p>
+        <p className="mc-kicker" lang="zh-CN">能力系统</p>
         <h2>AI production stack and asset pipeline.</h2>
       </motion.div>
       <motion.div
@@ -1358,7 +1357,7 @@ function BrandSection() {
           >
             <span className="mc-brand-index">{String(index + 1).padStart(2, '0')}</span>
             <strong>{brand.label}</strong>
-            <small>{brand.role}</small>
+            <small lang="zh-CN">{brand.role}</small>
             <i aria-hidden="true" />
           </motion.article>
         ))}
@@ -1369,7 +1368,7 @@ function BrandSection() {
 
 function ContactSection() {
   return (
-    <section className="mc-contact mc-section" id="contact" aria-label="Contact">
+    <section className="mc-contact mc-section" id="contact" aria-label="联系 AJan">
       <motion.div
         className="mc-contact-panel"
         initial={{ opacity: 0, y: 38, scale: 0.98 }}
@@ -1377,8 +1376,8 @@ function ContactSection() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.74, ease: [0.16, 1, 0.3, 1] }}
       >
-        <p className="mc-kicker">contact</p>
-        <h2>Let&apos;s shape an AI reel that feels finished.</h2>
+        <p className="mc-kicker" lang="zh-CN">联系</p>
+        <h2 lang="zh-CN">一起把 AI 影像做到真正可交付。</h2>
         <a href={`mailto:${contactEmail}`}><span>{contactEmail}</span></a>
       </motion.div>
     </section>
@@ -1403,16 +1402,16 @@ function ProjectModal({ project, onClose }) {
   const [isVideoWaiting, setIsVideoWaiting] = useState(false)
   const [isVideoControlsVisible, setIsVideoControlsVisible] = useState(false)
   const metaItems = [
-    ['Role', project?.role],
-    ['Duration', project?.duration],
-    ['Year', project?.year],
-    ['Hook', project?.hook],
-    ['Value', project?.value],
+    ['职责', project?.role],
+    ['时长', project?.duration],
+    ['年份', project?.year],
+    ['叙事钩子', project?.hook],
+    ['项目价值', project?.value],
   ].filter(([, value]) => Boolean(value))
   const detailSections = [
-    ['Challenge', project?.challenge],
-    ['Approach', project?.approach],
-    ['Outcome', project?.outcome],
+    ['项目挑战', project?.challenge],
+    ['解决思路', project?.approach],
+    ['最终产出', project?.outcome],
   ].filter(([, value]) => Boolean(value))
   const metrics = Array.isArray(project?.metrics) ? project.metrics : []
 
@@ -1618,7 +1617,7 @@ function ProjectModal({ project, onClose }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <button className="mc-modal-scrim" type="button" onClick={onClose} aria-label="Close project details" />
+          <button className="mc-modal-scrim" type="button" onClick={onClose} aria-label="关闭项目详情" />
           <motion.article
             className="mc-project-modal"
             role="dialog"
@@ -1629,7 +1628,7 @@ function ProjectModal({ project, onClose }) {
             exit={{ opacity: 0, y: 18, scale: 0.985 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
-            <button className="mc-modal-close" type="button" onClick={onClose} aria-label="Close project details">
+            <button className="mc-modal-close" type="button" onClick={onClose} aria-label="关闭项目详情">
               <span aria-hidden="true" />
             </button>
             <div className={modalMediaClassName} onPointerMove={handleVideoControlReveal}>
@@ -1645,7 +1644,7 @@ function ProjectModal({ project, onClose }) {
                 x5-playsinline="true"
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="false"
-                aria-label={`${project.titleEn} video`}
+                aria-label={`${project.titleEn} 项目视频`}
                 onLoadedData={event => syncVideoState(event.currentTarget)}
                 onCanPlay={event => {
                   syncVideoState(event.currentTarget)
@@ -1693,7 +1692,7 @@ function ProjectModal({ project, onClose }) {
                 ].filter(Boolean).join(' ')}
                 type="button"
                 onClick={handleVideoToggle}
-                aria-label={isVideoPlaying ? 'Pause video' : 'Play video'}
+                aria-label={isVideoPlaying ? '暂停视频' : '播放视频'}
                 tabIndex={isVideoControlButtonVisible ? 0 : -1}
                 aria-hidden={isVideoControlButtonVisible ? undefined : true}
               >
@@ -1703,34 +1702,34 @@ function ProjectModal({ project, onClose }) {
                 className="mc-modal-video-fullscreen"
                 type="button"
                 onClick={handleVideoFullscreen}
-                aria-label="Open fullscreen video"
+                aria-label="全屏播放视频"
               >
                 <span aria-hidden="true" />
               </button>
             </div>
-            <div className="mc-modal-copy" tabIndex={0} aria-label={`${project.titleEn} project details`}>
+            <div className="mc-modal-copy" tabIndex={0} aria-label={`${project.titleEn} 项目详情`}>
               <header className="mc-modal-copy-head">
-                <p className="mc-kicker">{project.type}</p>
+                <p className="mc-kicker" lang="zh-CN">{project.type}</p>
                 <h2>{project.titleEn}</h2>
-                <p className="mc-modal-summary">{project.introEn}</p>
+                <p className="mc-modal-summary" lang="zh-CN">{project.introZh}</p>
               </header>
 
               {metaItems.length > 0 && (
-                <dl className="mc-modal-meta" aria-label="Project metadata">
+                <dl className="mc-modal-meta" aria-label="项目元数据">
                   {metaItems.map(([label, value]) => (
                     <div key={label}>
-                      <dt>{label}</dt>
-                      <dd>{value}</dd>
+                      <dt lang="zh-CN">{label}</dt>
+                      <dd lang="zh-CN">{value}</dd>
                     </div>
                   ))}
                 </dl>
               )}
 
               {metrics.length > 0 && (
-                <div className="mc-modal-metrics" aria-label="Project metrics">
+                <div className="mc-modal-metrics" aria-label="项目数据">
                   {metrics.map(metric => (
                     <div key={metric.label}>
-                      <span>{metric.label}</span>
+                      <span lang="zh-CN">{metric.label}</span>
                       <strong>{metric.value}</strong>
                     </div>
                   ))}
@@ -1741,20 +1740,20 @@ function ProjectModal({ project, onClose }) {
                 <div className="mc-modal-sections">
                   {detailSections.map(([label, value]) => (
                     <section key={label}>
-                      <h3>{label}</h3>
-                      <p>{value}</p>
+                      <h3 lang="zh-CN">{label}</h3>
+                      <p lang="zh-CN">{value}</p>
                     </section>
                   ))}
                 </div>
               )}
 
               {project.tags?.length > 0 && (
-                <div className="mc-modal-tags" aria-label="Project tags">
-                  {project.tags.map(tag => <span key={tag}>{tag}</span>)}
+                <div className="mc-modal-tags" aria-label="项目标签">
+                  {project.tags.map(tag => <span lang="zh-CN" key={tag}>{tag}</span>)}
                 </div>
               )}
 
-              <div className="mc-modal-tools" aria-label="Project tools">
+              <div className="mc-modal-tools" aria-label="项目工具">
                 {project.tools.map(tool => <span key={tool}>{tool}</span>)}
               </div>
             </div>
