@@ -1705,6 +1705,10 @@ html.mc-native-scroll .motion-clone-page {
   transition: color 220ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.mc-kicker--section {
+  text-transform: none;
+}
+
 .mc-kicker::before {
   content: '';
   width: 9px;
@@ -4228,9 +4232,14 @@ html.mc-native-scroll .motion-clone-page {
 
 .motion-clone-page .mc-work-row {
   min-height: 96px;
-  grid-template-columns: 54px minmax(0, 1fr) minmax(130px, 0.32fr) 36px;
+  grid-template-columns: minmax(0, 1fr) minmax(112px, 0.28fr) 36px;
   align-items: center;
   padding: 12px 0;
+}
+
+.motion-clone-page .mc-work-meta em {
+  opacity: 1;
+  transform: none;
 }
 
 .motion-clone-page .mc-work-row strong {
@@ -4272,7 +4281,7 @@ html.mc-native-scroll .motion-clone-page {
   .motion-clone-page .mc-work-row {
     flex: 0 0 min(86vw, 360px);
     min-height: 0;
-    grid-template-columns: 34px minmax(0, 1fr) 28px;
+    grid-template-columns: minmax(0, 1fr) 28px;
     grid-template-rows: auto auto;
     gap: 12px 10px;
     align-items: start;
@@ -4281,14 +4290,14 @@ html.mc-native-scroll .motion-clone-page {
   }
 
   .motion-clone-page .mc-work-row strong {
-    grid-column: 2 / 3;
+    grid-column: 1 / 2;
     grid-row: 1 / 2;
     font-size: clamp(1.24rem, 6vw, 2rem);
     line-height: 1;
   }
 
   .motion-clone-page .mc-work-row small {
-    grid-column: 2 / 3;
+    grid-column: 1 / 2;
     grid-row: 2 / 3;
     justify-self: start;
     align-self: start;

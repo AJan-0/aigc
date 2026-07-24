@@ -1003,7 +1003,6 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
   const handleRowAction = (project, index) => {
     if (index !== activeIndex) {
       onActiveIndexChange(index)
-      return
     }
 
     onOpenProject(project)
@@ -1021,7 +1020,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
           whileInView="show"
           viewport={{ once: true, amount: 0.55 }}
         >
-          <p className="mc-kicker" lang="zh-CN">作品</p>
+          <p className="mc-kicker mc-kicker--section">Work</p>
           <h2>Work shaped for motion.</h2>
         </motion.div>
 
@@ -1089,7 +1088,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   type="button"
                   role="option"
                   aria-selected={index === activeIndex}
-                  aria-label={`${index === activeIndex ? '查看' : '选择'}作品：${project.titleEn}`}
+                  aria-label={`查看作品：${project.titleEn}，时长 ${project.duration}`}
                   className={index === activeIndex ? 'mc-work-row is-active' : 'mc-work-row'}
                   onMouseEnter={() => onActiveIndexChange(index)}
                   onFocus={() => onActiveIndexChange(index)}
@@ -1110,13 +1109,12 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.42, delay: index * 0.045, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span className="mc-work-row-index">{project.id}</span>
                   <strong className="mc-work-title" data-title={project.titleEn}>
                     <span>{project.titleEn}</span>
                   </strong>
                   <small className="mc-work-meta">
-                    <span lang="zh-CN">{project.type} / {project.duration}</span>
-                    <em lang="zh-CN" aria-hidden="true">{index === activeIndex ? '查看详情' : '选择作品'}</em>
+                    <span>{project.duration}</span>
+                    <em lang="zh-CN">查看详情</em>
                   </small>
                   <i aria-hidden="true" />
                 </motion.button>
@@ -1239,7 +1237,7 @@ function AboutSection() {
         viewport={{ once: true, amount: 0.42 }}
       >
         <div className="mc-about-copy">
-          <p className="mc-kicker" lang="zh-CN">关于</p>
+          <p className="mc-kicker mc-kicker--section">About me</p>
           <h2 className="mc-about-title" aria-label="Quiet observer. Relentless maker." tabIndex={0}>
             {aboutTitleWords.map((word, index) => (
               <span
@@ -1335,7 +1333,7 @@ function BrandSection() {
         whileInView="show"
         viewport={{ once: true, amount: 0.5 }}
       >
-        <p className="mc-kicker" lang="zh-CN">能力系统</p>
+        <p className="mc-kicker mc-kicker--section">Capabilities</p>
         <h2>AI production stack and asset pipeline.</h2>
       </motion.div>
       <motion.div
@@ -1376,7 +1374,7 @@ function ContactSection() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.74, ease: [0.16, 1, 0.3, 1] }}
       >
-        <p className="mc-kicker" lang="zh-CN">联系</p>
+        <p className="mc-kicker mc-kicker--section">Contact</p>
         <h2 lang="zh-CN">一起把 AI 影像做到真正可交付。</h2>
         <a href={`mailto:${contactEmail}`}><span>{contactEmail}</span></a>
       </motion.div>
