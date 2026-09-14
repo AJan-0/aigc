@@ -1,5 +1,5 @@
 ﻿import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Lenis from 'lenis'
 import CanvasHeroTitle from './CanvasHeroTitle'
 import v1Video from '../../../v1_mobile.mp4'
