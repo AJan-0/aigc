@@ -4879,6 +4879,200 @@ html.mc-native-scroll .motion-clone-page {
   }
 }
 
+/* Interactive polish: cinematic project transitions, depth, and touch feedback. */
+.motion-clone-page .mc-cover-card {
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  touch-action: pan-y;
+}
+
+.motion-clone-page .mc-cover-card::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid rgba(255, 253, 250, 0.22);
+  transform: translateZ(24px);
+  opacity: 0;
+  transition: opacity 260ms ease, inset 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-clone-page .mc-cover-card:hover::before,
+.motion-clone-page .mc-cover-card:focus-visible::before {
+  inset: 5%;
+  opacity: 1;
+}
+
+.motion-clone-page .mc-cover-card img,
+.motion-clone-page .mc-cover-card video {
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 420ms ease;
+  transform: translateZ(0) scale(1.01);
+}
+
+.motion-clone-page .mc-cover-card:hover img,
+.motion-clone-page .mc-cover-card:focus-visible img,
+.motion-clone-page .mc-cover-card:hover video,
+.motion-clone-page .mc-cover-card:focus-visible video {
+  transform: translateZ(14px) scale(1.045);
+  filter: saturate(1.12) contrast(1.04);
+}
+
+.motion-clone-page .mc-work-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mc-acid) transparent;
+  overscroll-behavior-x: contain;
+}
+
+.motion-clone-page .mc-work-row {
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), color 220ms ease, background-color 220ms ease;
+}
+
+.motion-clone-page .mc-work-row.is-active {
+  transform: translateX(8px);
+}
+
+.motion-clone-page .mc-about {
+  --about-depth: 0;
+}
+
+.motion-clone-page .mc-about-copy {
+  transform: translate3d(0, calc((0.5 - var(--about-depth)) * 22px), 0);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-clone-page .mc-about-portrait {
+  transform: translate3d(0, calc((0.5 - var(--about-depth)) * -34px), 0) rotate(calc((0.5 - var(--about-depth)) * 1.6deg));
+  transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-clone-page .mc-principle-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.motion-clone-page .mc-principle-body {
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0.4;
+  transition: max-height 420ms cubic-bezier(0.16, 1, 0.3, 1), margin-top 320ms ease, opacity 240ms ease;
+}
+
+.motion-clone-page .mc-principle-card.is-active .mc-principle-body,
+.motion-clone-page .mc-principle-card:hover .mc-principle-body,
+.motion-clone-page .mc-principle-card:focus-visible .mc-principle-body {
+  max-height: 110px;
+  margin-top: 24px;
+  opacity: 1;
+}
+
+.motion-clone-page .mc-principle-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--principle-accent, var(--mc-acid));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-clone-page .mc-principle-card.is-active::after,
+.motion-clone-page .mc-principle-card:hover::after,
+.motion-clone-page .mc-principle-card:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.motion-clone-page .mc-contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.motion-clone-page .mc-contact-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: min(78vw, 860px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(191, 255, 0, 0.28);
+  border-radius: 50%;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.motion-clone-page .mc-contact-orbit::before,
+.motion-clone-page .mc-contact-orbit::after {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(250, 52, 12, 0.3);
+  border-radius: 50%;
+}
+
+.motion-clone-page .mc-contact-orbit::after {
+  inset: 28%;
+  border-color: rgba(255, 253, 250, 0.22);
+}
+
+.motion-clone-page .mc-contact-orbit span {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--mc-acid);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.motion-clone-page .mc-contact-orbit span:nth-child(1) { left: 10%; top: 48%; }
+.motion-clone-page .mc-contact-orbit span:nth-child(2) { right: 18%; top: 16%; background: var(--mc-red); }
+.motion-clone-page .mc-contact-orbit span:nth-child(3) { right: 28%; bottom: 7%; background: var(--mc-pink); }
+
+@media (max-width: 808px) {
+  .motion-clone-page .mc-cover-card {
+    touch-action: pan-x;
+  }
+
+  .motion-clone-page .mc-work-row.is-active {
+    transform: none;
+  }
+
+  .motion-clone-page .mc-about-copy,
+  .motion-clone-page .mc-about-portrait {
+    transform: none;
+  }
+
+  .motion-clone-page .mc-principle-body {
+    max-height: none;
+    margin-top: 18px;
+    opacity: 1;
+  }
+
+  .motion-clone-page .mc-contact-orbit {
+    width: 112vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-clone-page .mc-cover-card,
+  .motion-clone-page .mc-cover-card img,
+  .motion-clone-page .mc-cover-card video,
+  .motion-clone-page .mc-work-row,
+  .motion-clone-page .mc-about-copy,
+  .motion-clone-page .mc-about-portrait,
+  .motion-clone-page .mc-principle-card::after {
+    transition-duration: 0.001ms !important;
+    transform: none !important;
+  }
+
+  .motion-clone-page .mc-principle-body {
+    transition-duration: 0.001ms !important;
+  }
+}
+
 /* About section: laptop-safe layout and interactive title type. */
 .motion-clone-page .mc-about {
   max-width: min(1380px, calc(100% - 48px));
@@ -5019,6 +5213,22 @@ html.mc-native-scroll .motion-clone-page {
   overflow: hidden;
 }
 
+.motion-clone-page .mc-principle-body {
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0.45;
+  transition: max-height 420ms cubic-bezier(0.16, 1, 0.3, 1), margin-top 320ms ease, opacity 240ms ease;
+}
+
+.motion-clone-page .mc-principle-card.is-active .mc-principle-body,
+.motion-clone-page .mc-principle-card:hover .mc-principle-body,
+.motion-clone-page .mc-principle-card:focus-visible .mc-principle-body {
+  max-height: 110px;
+  margin-top: 24px;
+  opacity: 1;
+}
+
 @media (max-width: 1380px) {
   .motion-clone-page .mc-about {
     max-width: min(1180px, calc(100% - 36px));
@@ -5096,6 +5306,12 @@ html.mc-native-scroll .motion-clone-page {
 
   .motion-clone-page .mc-about-portrait figcaption {
     min-height: 166px;
+  }
+
+  .motion-clone-page .mc-principle-body {
+    max-height: none;
+    margin-top: 18px;
+    opacity: 1;
   }
 }
 

@@ -1032,6 +1032,8 @@ function ShowreelSection() {
 
 function WorkSection({ projects: workProjects, activeIndex, activeProject, onActiveIndexChange, onMoveProject, onOpenProject }) {
   const progress = workProjects.length ? ((activeIndex + 1) / workProjects.length) * 100 : 0
+  const shouldReduceMotion = useReducedMotion()
+  const [previewTilt, setPreviewTilt] = useState({ x: 0, y: 0 })
   const listRef = useRef(null)
   const rowRefs = useRef([])
   const scrollFrameRef = useRef(0)
@@ -1094,6 +1096,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
   }
 
   const handlePreviewPointerDown = event => {
+    event.currentTarget.setPointerCapture?.(event.pointerId)
     previewPointerRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -1101,6 +1104,17 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
     }
     wasDraggingPreviewRef.current = false
   }
+
+  const handlePreviewPointerMoveWithTilt = event => {
+    handlePreviewPointerMove(event)
+    if (shouldReduceMotion || event.pointerType === 'touch') return
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 7
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * -7
+    setPreviewTilt({ x, y })
+  }
+
+  const resetPreviewTilt = () => setPreviewTilt({ x: 0, y: 0 })
 
   const handlePreviewPointerMove = event => {
     const start = previewPointerRef.current
@@ -1132,6 +1146,7 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
     }
 
     previewPointerRef.current = null
+    event.currentTarget.releasePointerCapture?.(event.pointerId)
   }
 
   const handlePreviewPointerCancel = () => {
@@ -1197,13 +1212,15 @@ function WorkSection({ projects: workProjects, activeIndex, activeProject, onAct
                   onOpenProject(activeProject)
                 }}
                 onPointerDown={handlePreviewPointerDown}
-                onPointerMove={handlePreviewPointerMove}
+                onPointerMove={handlePreviewPointerMoveWithTilt}
                 onPointerUp={handlePreviewPointerUp}
-                onPointerCancel={handlePreviewPointerCancel}
-                initial={{ opacity: 0, y: 22, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.985 }}
-                transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                onPointerCancel={() => { handlePreviewPointerCancel(); resetPreviewTilt() }}
+                onPointerLeave={resetPreviewTilt}
+                initial={{ opacity: 0, x: 42, y: 22, scale: 0.91, rotateY: -8, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateY: previewTilt.x, rotateX: previewTilt.y, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, x: -46, y: -18, scale: 1.04, rotateY: 8, filter: 'blur(8px)' }}
+                transition={{ duration: shouldReduceMotion ? 0.001 : 0.52, ease: [0.16, 1, 0.3, 1] }}
+                style={{ transformPerspective: 900, transformOrigin: 'center center' }}
               >
                 <img className="mc-cover-fallback" src={activeProject.cover} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <PreviewVideo project={activeProject} />
@@ -1339,37 +1356,51 @@ function useAutoplayVideo(resetKey) {
 
 function AboutSection() {
   const [activePrinciple, setActivePrinciple] = useState(0)
+  const aboutRef = useRef(null)
+  const [aboutDepth, setAboutDepth] = useState(0)
   const aboutTitleWords = ['Quiet', 'observer.', 'Relentless', 'maker.']
   const principles = [
     {
-      title: 'Observation',
+      title: 'Hook',
       body: '在生成第一帧前，先捕捉人物情绪、视觉张力与故事信号。',
-      signal: 'INFJ 视角',
+      signal: '故事先行',
       accent: 'var(--mc-lavender)',
-    },
-    {
-      title: 'Drive',
-      body: '从好奇出发，通过持续测试，把想法推进为可观看、可交付的 AI 视频成片。',
-      signal: '自驱型',
-      accent: 'var(--mc-acid)',
     },
     {
       title: 'Continuity',
       body: '让角色、场景、风格和节奏在连续生成镜头中保持统一。',
       signal: '角色锁定',
-      accent: 'var(--mc-pink)',
+      accent: 'var(--mc-acid)',
     },
     {
-      title: 'Pipeline',
+      title: 'Delivery',
       body: '把提示词、模型、剪辑与素材沉淀为可复用的生产系统。',
-      signal: 'AIGC 系统',
-      accent: 'var(--mc-red)',
+      signal: '交付成片',
+      accent: 'var(--mc-pink)',
     },
   ]
   const active = principles[activePrinciple]
 
+  useEffect(() => {
+    const updateDepth = () => {
+      const node = aboutRef.current
+      if (!node) return
+      const rect = node.getBoundingClientRect()
+      const viewport = window.innerHeight || 1
+      const progress = Math.max(0, Math.min(1, (viewport * 0.82 - rect.top) / Math.max(rect.height, 1)))
+      setAboutDepth(progress)
+    }
+    updateDepth()
+    window.addEventListener('scroll', updateDepth, { passive: true })
+    window.addEventListener('resize', updateDepth)
+    return () => {
+      window.removeEventListener('scroll', updateDepth)
+      window.removeEventListener('resize', updateDepth)
+    }
+  }, [])
+
   return (
-    <section className="mc-about mc-section" id="about" aria-label="关于 AJan">
+    <section ref={aboutRef} className="mc-about mc-section" id="about" aria-label="关于 AJan" style={{ '--about-depth': aboutDepth }}>
       <motion.div
         className="mc-about-main"
         variants={reveal}
@@ -1423,7 +1454,7 @@ function AboutSection() {
             >
               <span className="mc-principle-index">{String(index + 1).padStart(2, '0')}</span>
               <SimpleBadge label={item.title} />
-              <p lang="zh-CN">{item.body}</p>
+              <p className="mc-principle-body" lang="zh-CN">{item.body}</p>
               <small lang="zh-CN">{item.signal}</small>
             </motion.button>
           ))}
@@ -1506,8 +1537,16 @@ function BrandSection() {
 }
 
 function ContactSection() {
+  const contactRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: contactRef, offset: ['start end', 'end start'] })
+  const contactScale = useTransform(scrollYProgress, [0.12, 0.55, 0.92], [0.84, 1, 0.9])
+  const contactRotate = useTransform(scrollYProgress, [0.12, 0.55, 0.92], [-5, 0, 5])
+
   return (
-    <section className="mc-contact mc-section" id="contact" aria-label="联系 AJan">
+    <section ref={contactRef} className="mc-contact mc-section" id="contact" aria-label="联系 AJan">
+      <motion.div className="mc-contact-orbit" style={{ scale: contactScale, rotate: contactRotate }} aria-hidden="true">
+        <span /><span /><span />
+      </motion.div>
       <motion.div
         className="mc-contact-panel"
         initial={{ opacity: 0, y: 38, scale: 0.98 }}
