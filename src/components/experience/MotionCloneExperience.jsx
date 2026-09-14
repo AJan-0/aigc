@@ -12,6 +12,16 @@ import rebornVideo from '../../../reborn.mp4'
 import rebornCover from '../../../reborn_cover.jpg'
 import pickingVideo from '../../../picking.mp4'
 import pickingCover from '../../../picking_cover.jpg'
+import heOrderedVideo from '../../../he-ordered-me-to-tame-his-new-lover.mp4'
+import heOrderedCover from '../../../he-ordered-me-to-tame-his-new-lover_cover.jpg'
+import conquerorsRoseVideo from '../../../the-conquerors-caged-rose.mp4'
+import conquerorsRoseCover from '../../../the-conquerors-caged-rose_cover.jpg'
+import pregnantUncleVideo from '../../../pregnant-by-my-ex-claimed-by-his-uncle.mp4'
+import pregnantUncleCover from '../../../pregnant-by-my-ex-claimed-by-his-uncle_cover.jpg'
+import writingStepsonVideo from '../../../writing-my-stepson-into-desire.mp4'
+import writingStepsonCover from '../../../writing-my-stepson-into-desire_cover.jpg'
+import boundLordVideo from '../../../bound-to-the-lord-who-hates-me.mp4'
+import boundLordCover from '../../../bound-to-the-lord-who-hates-me_cover.jpg'
 
 const navItems = [
   { id: 'home', label: 'home', shortLabel: 'h' },
@@ -68,7 +78,7 @@ const heroTitleLines = [
   ],
 ]
 
-const motionProjects = [
+const motionProjectArchive = [
   {
     id: '01',
     slug: 'dreams-lead-to-my-alpha',
@@ -204,6 +214,137 @@ const motionProjects = [
       { label: '风格', value: '街头现实' },
     ],
   },
+  {
+    id: '06',
+    slug: 'he-ordered-me-to-tame-his-new-lover',
+    type: 'AI 真人短剧',
+    titleEn: 'He Ordered Me to Tame His New Lover',
+    introZh: '围绕命令、嫉妒与危险吸引力展开的高张力关系短剧。',
+    cover: heOrderedCover,
+    video: heOrderedVideo,
+    duration: '1:36',
+    year: '2026',
+    role: 'AI 短剧视觉导演',
+    tools: ['AI Video', 'Character Continuity', 'Editing', 'Color Grade'],
+    tags: ['关系博弈', '情绪钩子', '竖屏短剧'],
+    hook: '被迫驯服新情人的危险任务',
+    value: '持续升级的关系张力',
+    challenge: '故事需要在极短时间内让命令关系、嫉妒和潜在反转同时成立。',
+    approach: '通过近景对峙、视线关系和高反差光线压缩信息，让人物权力变化始终清晰。',
+    outcome: '完成一支以关系博弈为核心、适合竖屏传播的 AI 短剧概念片。',
+    metrics: [
+      { label: '时长', value: '1:36' },
+      { label: '画幅', value: '9:16' },
+      { label: '核心', value: '关系张力' },
+    ],
+  },
+  {
+    id: '07',
+    slug: 'the-conquerors-caged-rose',
+    type: 'AI 历史爱情短剧',
+    titleEn: 'The Conqueror’s Caged Rose',
+    introZh: '以征服、囚笼与禁忌情感为视觉核心的历史爱情短剧。',
+    cover: conquerorsRoseCover,
+    video: conquerorsRoseVideo,
+    duration: '0:52',
+    year: '2026',
+    role: 'AI 短剧视觉包装',
+    tools: ['AI Video', 'Cinematic Lighting', 'Editing', 'Sound Design'],
+    tags: ['历史爱情', '禁忌关系', '电影感竖屏'],
+    hook: '征服者与笼中玫瑰',
+    value: '建立压迫感与欲望的反差',
+    challenge: '需要让历史质感、囚禁处境与情感吸引力在第一眼画面中同时被读懂。',
+    approach: '用冷暖色对照、门框构图和慢速推进强化空间限制，再用节奏切换释放情绪。',
+    outcome: '形成一套适用于历史爱情题材的压迫感视觉表达和短剧开场结构。',
+    metrics: [
+      { label: '时长', value: '0:52' },
+      { label: '画幅', value: '9:16' },
+      { label: '影调', value: '历史电影感' },
+    ],
+  },
+  {
+    id: '08',
+    slug: 'pregnant-by-my-ex-claimed-by-his-uncle',
+    type: 'AI 情感短剧',
+    titleEn: 'Pregnant by My Ex, Claimed by His Uncle',
+    introZh: '围绕旧爱、意外怀孕与家族权力关系展开的情感短剧。',
+    cover: pregnantUncleCover,
+    video: pregnantUncleVideo,
+    duration: '2:53',
+    year: '2026',
+    role: 'AI 短剧叙事与剪辑',
+    tools: ['AI Video', 'Story Hook Design', 'Editing', 'Subtitles'],
+    tags: ['情感反转', '家族关系', '海外短剧'],
+    hook: '旧爱离场后的意外认领',
+    value: '连续释放剧情反转',
+    challenge: '多重身份关系需要快速交代，同时保留怀孕、背叛与新关系带来的情绪冲击。',
+    approach: '围绕关键台词和人物反应剪辑，用信息递进替代冗长铺垫，保持每个镜头都有叙事功能。',
+    outcome: '完成一支以连续反转驱动观看欲望的情感短剧成片。',
+    metrics: [
+      { label: '时长', value: '2:53' },
+      { label: '结构', value: '连续反转' },
+      { label: '画幅', value: '9:16' },
+    ],
+  },
+  {
+    id: '09',
+    slug: 'writing-my-stepson-into-desire',
+    type: 'AI 情感短剧',
+    titleEn: 'Writing My Stepson Into Desire',
+    introZh: '以秘密写作、禁忌欲望与家庭边界为冲突核心的情感概念片。',
+    cover: writingStepsonCover,
+    video: writingStepsonVideo,
+    duration: '0:39',
+    year: '2026',
+    role: 'AI 短剧概念导演',
+    tools: ['AI Video', 'Prompt System', 'Editing', 'Sound Design'],
+    tags: ['禁忌情感', '秘密写作', '概念短剧'],
+    hook: '文字让秘密越过边界',
+    value: '把内心欲望转成画面冲突',
+    challenge: '抽象的写作欲望需要通过动作、道具和空间关系转译成可见的戏剧冲突。',
+    approach: '以手稿、凝视和距离变化作为视觉线索，让未说出口的关系在剪辑中逐步显形。',
+    outcome: '建立一套以道具和空间隐喻承载复杂情绪的 AI 短剧表达方式。',
+    metrics: [
+      { label: '时长', value: '0:39' },
+      { label: '核心', value: '欲望隐喻' },
+      { label: '画幅', value: '9:16' },
+    ],
+  },
+  {
+    id: '10',
+    slug: 'bound-to-the-lord-who-hates-me',
+    type: 'AI 奇幻爱情短剧',
+    titleEn: 'Bound to the Lord Who Hates Me',
+    introZh: '围绕宿命束缚、敌意与危险亲密关系展开的奇幻爱情短剧。',
+    cover: boundLordCover,
+    video: boundLordVideo,
+    duration: '0:41',
+    year: '2026',
+    role: 'AI 奇幻短剧视觉导演',
+    tools: ['AI Video', 'Fantasy Worldbuilding', 'Editing', 'Color Grade'],
+    tags: ['奇幻爱情', '宿命束缚', '角色对峙'],
+    hook: '被迫绑定于憎恨我的领主',
+    value: '用敌意制造亲密张力',
+    challenge: '奇幻设定信息量很大，需要在不牺牲人物情绪的情况下快速建立世界与关系规则。',
+    approach: '用仪式感构图、冷色环境和人物距离变化交代束缚关系，让冲突先于设定说明发生。',
+    outcome: '完成一支以宿命绑定为入口、强调人物对峙的奇幻爱情概念片。',
+    metrics: [
+      { label: '时长', value: '0:41' },
+      { label: '类型', value: '奇幻爱情' },
+      { label: '画幅', value: '9:16' },
+    ],
+  },
+]
+
+const motionProjects = [
+  ...motionProjectArchive.slice(5).map((project, index) => ({
+    ...project,
+    id: String(index + 1).padStart(2, '0'),
+  })),
+  ...motionProjectArchive.slice(0, 5).map((project, index) => ({
+    ...project,
+    id: String(index + 6).padStart(2, '0'),
+  })),
 ]
 
 const reveal = {
