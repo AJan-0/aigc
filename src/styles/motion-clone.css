@@ -53,7 +53,7 @@
   --mc-violet: #9b30ff;
   --mc-lavender: #b39fe3;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   touch-action: pan-y;
   overscroll-behavior-y: auto;
   color: var(--mc-ink);
@@ -1764,6 +1764,10 @@ html.mc-native-scroll .motion-clone-page {
 .mc-work-preview {
   position: sticky;
   top: 88px;
+  /* Let the preview remain sticky until the full work list has passed. The
+     negative margin extends the sticky containing block without adding a
+     blank tail below the list. */
+  margin-bottom: -700px;
 }
 
 .mc-work-preview-top {
@@ -3630,6 +3634,7 @@ html.mc-native-scroll .motion-clone-page {
   .mc-work-preview {
     position: relative;
     top: auto;
+    margin-bottom: 0;
   }
 
   .mc-work-preview-top {
