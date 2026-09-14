@@ -44,7 +44,7 @@ const brandItems = [
 const contactEmail = '1248567324@qq.com'
 const riveHeroSrc = '/rive/hero-title.riv'
 const isRiveHeroEnabled = import.meta.env.VITE_ENABLE_RIVE_HERO === 'true'
-const showreelBumperVersion = '20260702-fluid-rhythm'
+const showreelBumperVersion = '20260914-collage-mv'
 const showreelBumperVideo = `/motion/showreel-motion-bumper.mp4?v=${showreelBumperVersion}`
 const showreelBumperPoster = `/motion/showreel-motion-bumper-poster.png?v=${showreelBumperVersion}`
 const RiveHeroTitle = lazy(() => import('./RiveHeroTitle'))
