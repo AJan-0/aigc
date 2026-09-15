@@ -337,15 +337,14 @@ const motionProjectArchive = [
 ]
 
 const motionProjects = [
-  ...motionProjectArchive.slice(5).map((project, index) => ({
-    ...project,
-    id: String(index + 1).padStart(2, '0'),
-  })),
-  ...motionProjectArchive.slice(0, 5).map((project, index) => ({
-    ...project,
-    id: String(index + 6).padStart(2, '0'),
-  })),
-]
+  ...motionProjectArchive.slice(6, 8),
+  motionProjectArchive[5],
+  ...motionProjectArchive.slice(8),
+  ...motionProjectArchive.slice(0, 5),
+].map((project, index) => ({
+  ...project,
+  id: String(index + 1).padStart(2, '0'),
+}))
 
 const reveal = {
   hidden: { opacity: 0, y: 30 },
