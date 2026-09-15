@@ -5340,3 +5340,15 @@ html.mc-native-scroll .motion-clone-page {
     transition-duration: 0.001ms !important;
   }
 }
+
+.motion-clone-page .mc-principles small,
+.motion-clone-page .mc-about-portrait-meta span {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 808px) {
+  .motion-clone-page .mc-about-portrait-meta span {
+    max-width: 100%;
+  }
+}

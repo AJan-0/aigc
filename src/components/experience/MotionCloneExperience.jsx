@@ -1360,22 +1360,28 @@ function AboutSection() {
   const aboutTitleWords = ['Quiet', 'observer.', 'Relentless', 'maker.']
   const principles = [
     {
-      title: 'Hook',
-      body: '在生成第一帧前，先捕捉人物情绪、视觉张力与故事信号。',
-      signal: '故事先行',
+      title: 'BRIEF',
+      body: '这支视频为什么要被看？先明确受众、人物关系、情绪冲突与前三秒的观看理由。',
+      signal: 'CREATIVE BRIEF / HOOK MAP / SHOT LIST',
       accent: 'var(--mc-lavender)',
     },
     {
-      title: 'Continuity',
-      body: '让角色、场景、风格和节奏在连续生成镜头中保持统一。',
-      signal: '角色锁定',
+      title: 'VISUAL SYSTEM',
+      body: '它应该长什么样，并且如何保持统一？把色彩、光线、角色与场景规则变成可复用的视觉系统。',
+      signal: 'MOODBOARD / STYLEFRAME / CHARACTER BIBLE / SCENE DNA',
       accent: 'var(--mc-acid)',
     },
     {
-      title: 'Delivery',
-      body: '把提示词、模型、剪辑与素材沉淀为可复用的生产系统。',
-      signal: '交付成片',
+      title: 'AI PRODUCTION',
+      body: '如何让模型稳定地产生可用镜头？根据镜头目标组织模型、参考图、提示词、节点流程与多轮筛选。',
+      signal: 'PROMPT SYSTEM / NODE WORKFLOW / SELECTS',
       accent: 'var(--mc-pink)',
+    },
+    {
+      title: 'FINISHING',
+      body: '如何把素材变成真正能交付的视频？用剪辑、声音、字幕、调色与画幅适配完成最终成片。',
+      signal: 'EDIT PASS / SOUND / SUBTITLE / DELIVERY MASTER',
+      accent: 'var(--mc-red)',
     },
   ]
   const active = principles[activePrinciple]
@@ -1470,9 +1476,9 @@ function AboutSection() {
       >
         <img src="/ajan-about-portrait.jpg" alt="AJan 个人照片" loading="lazy" />
         <div className="mc-about-portrait-meta" aria-hidden="true">
-          <span lang="zh-CN">2026 应届生</span>
-          <span>INFJ</span>
-          <span lang="zh-CN">自驱型</span>
+          <span>AI VIDEO DESIGNER</span>
+          <span>VISUAL DIRECTION</span>
+          <span>SHORT DRAMA / VERTICAL FILM</span>
         </div>
         <figcaption id="about-portrait-note">
           <AnimatePresence mode="wait">
